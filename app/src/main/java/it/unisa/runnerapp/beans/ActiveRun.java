@@ -15,7 +15,7 @@ public class ActiveRun extends Run
         super();
     }
 
-    public ActiveRun(int id, LatLng meetingPoint, Date start, User master,double estimatedKm, int estimatedHours, int estimatedMinutes)
+    public ActiveRun(int id, LatLng meetingPoint, Date start, Runner master, double estimatedKm, int estimatedHours, int estimatedMinutes)
     {
         super(id,meetingPoint,start,master);
         this.estimatedKm=estimatedKm;

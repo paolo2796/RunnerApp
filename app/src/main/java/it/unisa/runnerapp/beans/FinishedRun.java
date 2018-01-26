@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class FinishedRun extends Run
 {
-    private User   runner;
+    private Runner runner;
     private double traveledKm;
     private double burnedCal;
     private double averageSpeed;
@@ -16,7 +16,7 @@ public class FinishedRun extends Run
         super();
     }
 
-    public FinishedRun(int id, LatLng meetingPoint, Date start, User master,User runner,double traveledKm,double burnedCal,double averageSpeed)
+    public FinishedRun(int id, LatLng meetingPoint, Date start, Runner master, Runner runner, double traveledKm, double burnedCal, double averageSpeed)
     {
         super(id,meetingPoint,start,master);
         this.runner=runner;
@@ -25,12 +25,12 @@ public class FinishedRun extends Run
         this.averageSpeed=averageSpeed;
     }
 
-    public void setRunner(User runner)
+    public void setRunner(Runner runner)
     {
         this.runner=runner;
     }
 
-    public User getRunner()
+    public Runner getRunner()
     {
         return runner;
     }
