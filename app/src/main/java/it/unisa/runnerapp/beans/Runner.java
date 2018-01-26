@@ -4,9 +4,8 @@ import android.graphics.drawable.Drawable;
 
 import java.util.Date;
 
-public class User
+public class Runner extends GeoUser
 {
-    private String   email;
     private String   password;
     private String   name;
     private String   surname;
@@ -16,13 +15,14 @@ public class User
     private double   traveledKm;
     private short    level;
 
-    public User()
+    public Runner()
     {
+        super();
     }
 
-    public User(String email,String password,String name,String surname,Drawable img,Date birthDate,double weight,double traveledKm,short level)
+    public Runner(String nickname, String password, String name, String surname, Drawable img, Date birthDate, double weight, double traveledKm, short level)
     {
-        this.email=email;
+        super(nickname);
         this.password=password;
         this.name=name;
         this.surname=surname;
@@ -31,16 +31,6 @@ public class User
         this.weight=weight;
         this.traveledKm=traveledKm;
         this.level=level;
-    }
-
-    public void setEmail(String email)
-    {
-        this.email=email;
-    }
-
-    public String getEmail()
-    {
-        return email;
     }
 
     public void setPassword(String password)

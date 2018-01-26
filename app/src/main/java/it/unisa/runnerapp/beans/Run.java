@@ -9,13 +9,13 @@ public class Run
     private int    id;
     private LatLng meetingPoint;
     private Date   start;
-    private User   master;
+    private Runner master;
 
     public Run()
     {
     }
 
-    public Run(int id,LatLng meetingPoint,Date start,User master)
+    public Run(int id,LatLng meetingPoint,Date start,Runner master)
     {
         this.id=id;
         this.meetingPoint=meetingPoint;
@@ -53,12 +53,12 @@ public class Run
         return start;
     }
 
-    public void setMaster(User master)
+    public void setMaster(Runner master)
     {
         this.master=master;
     }
 
-    public User getMaster()
+    public Runner getMaster()
     {
         return master;
     }
