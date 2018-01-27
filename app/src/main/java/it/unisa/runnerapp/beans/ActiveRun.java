@@ -1,5 +1,7 @@
 package it.unisa.runnerapp.beans;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;

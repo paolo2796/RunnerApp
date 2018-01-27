@@ -23,6 +23,14 @@ public class Run
         this.master=master;
     }
 
+    public Run(LatLng meetingPoint,Date start,Runner master)
+    {
+        this.id=id;
+        this.meetingPoint=meetingPoint;
+        this.start=start;
+        this.master=master;
+    }
+
     public void setId(int id)
     {
         this.id=id;

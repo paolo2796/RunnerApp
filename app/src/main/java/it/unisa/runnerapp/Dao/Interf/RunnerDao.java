@@ -11,4 +11,8 @@ import it.unisa.runnerapp.beans.Runner;
 public interface RunnerDao {
 
     public List<Runner> getAllRunners();
+    public void createRunner(Runner runner);
+    public void updateRunner(Runner runner);
+    public void deleteRunner(int nickuser);
+    public Runner getByNick(String nickname);
 }

@@ -21,7 +21,6 @@ public class ConnectionUtil {
             try {
 
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-
                 connection = DriverManager.getConnection("jdbc:mysql://runnerinstance.cszqnohnholf.us-west-2.rds.amazonaws.com:3306/runnerDatabase", "root", "it.uniSA.app_1996_.");
 
             }

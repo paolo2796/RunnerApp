@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class Runner extends GeoUser
 {
-    private String   email;
     private String   password;
     private String   name;
     private String   surname;
@@ -21,11 +20,10 @@ public class Runner extends GeoUser
         super();
     }
 
-    public Runner(String nickname, String email, String password, String name, String surname, Drawable img, Date birthDate, double weight, double traveledKm, short level)
+    public Runner(String nickname, String password, String name, String surname, Drawable img, Date birthDate, double weight, double traveledKm, short level)
     {
         super(nickname);
 
-        this.email=email;
         this.password=password;
         this.name=name;
         this.surname=surname;
@@ -36,9 +34,6 @@ public class Runner extends GeoUser
         this.level=level;
     }
 
-    public void setEmail(String email){this.email=email;}
-
-    public String getEmail(){return  email;}
     public void setPassword(String password)
     {
         this.password=password;
