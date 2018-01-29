@@ -33,5 +33,7 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.0.4'
     //API GeoFire
     compile 'com.firebase:geofire-android:2.2.0'
+    //Circular ImageView
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

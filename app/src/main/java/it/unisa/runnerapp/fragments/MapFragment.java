@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import it.unisa.runnerapp.adapters.MarkerWindowAdapter;
 import it.unisa.runnerapp.beans.GeoUser;
 import it.unisa.runnerapp.utils.GeoUtils;
 import testapp.com.runnerapp.MainActivity;
@@ -108,6 +109,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         {
             gMap=googleMap;
             gMap.setMyLocationEnabled(true);
+            gMap.setInfoWindowAdapter(new MarkerWindowAdapter(getContext()));
             Location location=lManager.getLastKnownLocation(lProvider.getName());
             if(location!=null)
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),ZOOM_CAMERA));
