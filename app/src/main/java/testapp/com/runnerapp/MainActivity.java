@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity
         Runner runner = new RunnerDaoImpl().getByNick("paolo2796");
 
         ActiveRun activerun = new ActiveRun(new LatLng(40.6739591,9.186515999999983), datainizio,runner, 15.20, 7,10);
-        new ActiveRunDaoImpl().createActiveRun(activerun); */
+        new ActiveRunDaoImpl().createActiveRun(activerun);
+
+        */
 
 
 
