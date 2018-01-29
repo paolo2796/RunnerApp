@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,19 +40,41 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
 
                     try {
 
-                        String sql = "INSERT INTO Corse_Attive "
-                                + " (corsa, km_previsti, ore_previste, minuti_previsti)" +
-                                "    VALUES (?, ?, ?,?)";
+                        String sql = "INSERT INTO Corse "
+                                + " (punto_ritrovo_lat, punto_ritrovo_lng, data_inizio, master)" +
+                                "    VALUES (?, ?, ?, ?)";
 
                         ps = ConnectionUtil.getConnection().prepareStatement(sql);
 
+                        ps.setDouble(1,activerun.getMeetingPoint().latitude);
+                        ps.setDouble(2,activerun.getMeetingPoint().longitude);
+                        ps.setTimestamp(3,new Timestamp(activerun.getStartDate().getTime()));
+                        ps.setString(4,activerun.getMaster().getNickname());
+
+                        int result = ps.executeUpdate();
+
+
+                        sql = "SELECT MAX(id) AS lastcorsa FROM Corse";
+                        ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        ResultSet rslastidcorsa = ps.executeQuery();
+                        rslastidcorsa.next();
+                        activerun.setId(rslastidcorsa.getInt("lastcorsa"));
+
+
+                        sql = "INSERT INTO Corse_Attive "
+                                + " (corsa, km_previsti, ore_previste, minuti_previsti)" +
+                                "    VALUES (?, ?, ?,?)";
+
+
+
+                        ps = ConnectionUtil.getConnection().prepareStatement(sql);
 
                         ps.setInt(1,activerun.getId());
                         ps.setDouble(2,activerun.getEstimatedKm());
                         ps.setInt(3,activerun.getEstimatedHours());
                         ps.setInt(4,activerun.getEstimatedMinutes());
 
-                        int result = ps.executeUpdate();
+                        result = ps.executeUpdate();
 
                     }
 
@@ -88,11 +111,15 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                 @Override
                 protected Void doInBackground( final Void ... params ) {
                     PreparedStatement ps = null;
-                    String sql = "UPDATE Corse_Attive SET Corse_Attive.km_previsti ='" + activerun.getEstimatedKm() + "', Corse_Attive.ore_previste='" + activerun.getEstimatedHours() + "', Corse_Attive.minuti_previsti='" + activerun.getEstimatedMinutes();
+                    String sql = "UPDATE Corse_Attive SET Corse_Attive.km_previsti = ? , Corse_Attive.ore_previste= ?, Corse_Attive.minuti_previsti= ? where Corse_Attive.corsa = ?";
 
                     try {
 
                         ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        ps.setDouble(1,activerun.getEstimatedKm());
+                        ps.setDouble(2,activerun.getEstimatedHours());
+                        ps.setDouble(3,activerun.getEstimatedMinutes());
+                        ps.setInt(4,activerun.getId());
                         int result = ps.executeUpdate();
 
                     }
@@ -128,11 +155,12 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                 @Override
                 protected Void doInBackground( final Void ... params ) {
                     PreparedStatement ps = null;
-                    String sql = "DELETE FROM Corse_Attive WHERE Corse_Attive.corsa =" + idactiverun;
+                    String sql = "DELETE FROM Corse_Attive WHERE Corse_Attive.corsa =?";
 
                     try {
 
                         ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        ps.setInt(1,idactiverun);
                         int result = ps.executeUpdate();
 
                     }
@@ -261,7 +289,8 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                     ActiveRun run = null;
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id WHERE Corse_Attive.corsa = " + idrun + "");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id WHERE Corse_Attive.corsa = ?");
+                        ps.setInt(1,idrun);
                         rs = ps.executeQuery();
 
 

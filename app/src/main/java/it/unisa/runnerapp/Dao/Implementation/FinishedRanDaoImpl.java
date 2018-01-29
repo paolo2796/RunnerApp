@@ -210,7 +210,7 @@ public class FinishedRanDaoImpl implements FinishedRanDao{
                     FinishedRun run = null;
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Terminate join Corse on Corse_Terminate.corsa = Corse.id join Utenti on Utenti.nickname = Corse_Terminate.partecipante WHERE Corse_Terminate.corsa = " + idfinishedrun + "");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Terminate join Corse on Corse_Terminate.corsa = Corse.id join Utenti on Utenti.nickname = Corse_Terminate.partecipante WHERE Corse_Terminate.corsa = " + idfinishedrun);
                         rs = ps.executeQuery();
 
 

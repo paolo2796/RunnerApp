@@ -4,6 +4,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -35,6 +36,19 @@ public class MainActivity extends AppCompatActivity
         ft.add(R.id.container,mf);
         ft.commit();
         user=new Runner("mavit","pass","Mauro","Vitale",null,null,70,200,(short)1); */
+
+
+         /* Date datainizio = new Date();
+        datainizio.setHours(20);
+        datainizio.setMinutes(10);
+
+
+
+        Runner runner = new RunnerDaoImpl().getByNick("paolo2796");
+
+        ActiveRun activerun = new ActiveRun(new LatLng(40.6739591,9.186515999999983), datainizio,runner, 15.20, 7,10);
+        new ActiveRunDaoImpl().createActiveRun(activerun); */
+
 
 
 

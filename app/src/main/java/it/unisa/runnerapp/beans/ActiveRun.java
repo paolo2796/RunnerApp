@@ -25,6 +25,15 @@ public class ActiveRun extends Run
         setEstimatedMinutes(estimatedMinutes);
     }
 
+
+    public ActiveRun(LatLng meetingPoint, Date start, Runner master, double estimatedKm, int estimatedHours, int estimatedMinutes)
+    {
+        super(meetingPoint,start,master);
+        this.estimatedKm=estimatedKm;
+        setEstimatedHours(estimatedHours);
+        setEstimatedMinutes(estimatedMinutes);
+    }
+
     public void setEstimatedKm(double estimatedKm)
     {
         this.estimatedKm=estimatedKm;

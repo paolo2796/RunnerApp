@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,11 +44,8 @@ public class RunDaoImpl implements RunDao {
 
                         ps.setDouble(1,run.getMeetingPoint().latitude);
                         ps.setDouble(2,run.getMeetingPoint().longitude);
-                        ps.setDate(3,new Date(run.getStartDate().getTime()));
+                        ps.setTimestamp(3,new Timestamp(run.getStartDate().getTime()));
                         ps.setString(4,run.getMaster().getNickname());
-
-
-
 
                         int result = ps.executeUpdate();
 
@@ -85,11 +83,14 @@ public class RunDaoImpl implements RunDao {
                 @Override
                 protected Void doInBackground( final Void ... params ) {
                     PreparedStatement ps = null;
-                    String sql = "UPDATE Utenti SET Corse.punto_ritrovo_lat ='" + run.getMeetingPoint().latitude + "', Corse.punto_ritrovo_lng='" + run.getMeetingPoint().longitude + "', Corse.data_inizio='" + new Date(run.getStartDate().getTime());
+                    String sql = "UPDATE Utenti SET Corse.punto_ritrovo_lat = ?, Corse.punto_ritrovo_lng= ? , Corse.data_inizio= ?";
 
                     try {
 
                         ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        ps.setDouble(1, run.getMeetingPoint().latitude);
+                        ps.setDouble(2,run.getMeetingPoint().longitude);
+                        ps.setTimestamp(3,new Timestamp(run.getStartDate().getTime()));
                         int result = ps.executeUpdate();
 
                     }
