@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RunnerApp</string>
+    <string name="live_run_request_tooltip">Correte insieme!</string>
+    <string name="live_run_request_ad_message">Vuoi davvero inviare la richiesta per una corsa insieme?</string>
+    <string name="live_run_request_ad_positive_button">Corri!</string>
+    <string name="live_run_request_ad_negative_button">Chiudi</string>
 </resources>

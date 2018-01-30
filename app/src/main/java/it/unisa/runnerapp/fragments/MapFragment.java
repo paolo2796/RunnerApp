@@ -1,6 +1,9 @@
 package it.unisa.runnerapp.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,18 +26,22 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import it.unisa.runnerapp.adapters.MarkerWindowAdapter;
 import it.unisa.runnerapp.beans.GeoUser;
+import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.MainActivity;
-
+import testapp.com.runnerapp.R;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
@@ -51,6 +58,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private HashMap<String,Marker> nearbyRunners;
 
     private FirebaseDatabase  locationsDB;
+    private FirebaseDatabase  liveRequestsDB;
     private DatabaseReference userLocationReference;
 
     private GeoFire               gFire;
@@ -62,7 +70,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private static final int   DISTANCE_UPDATES=1;
     private static final float ZOOM_CAMERA=19.0f;
 
-    private static final String ROOT_LOCATIONS="runners";
     private static final String LOCATION_DEBUG_KEY="Location Update";
 
     @Override
@@ -73,8 +80,15 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         nearbyRunners=new HashMap<>();
         lManager = GeoUtils.getLocationManager(ctx);
         lProvider = GeoUtils.getBestProvider(lManager);
-        locationsDB=FirebaseDatabase.getInstance();
 
+        locationsDB=FirebaseDatabase.getInstance();
+        FirebaseApp liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
+                RunnersDatabases.LIVE_REQUEST_APP_ID,
+                RunnersDatabases.LIVE_REQUEST_API_KEY,
+                RunnersDatabases.LIVE_REQUEST_DB_URL,
+                RunnersDatabases.LIVE_REQUEST_DB_NAME);
+        liveRequestsDB=FirebaseUtils.connectToDatabase(liveRequestsApp);
+        registerRunnerForRequests();
     }
 
     @Override
@@ -110,6 +124,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             gMap=googleMap;
             gMap.setMyLocationEnabled(true);
             gMap.setInfoWindowAdapter(new MarkerWindowAdapter(getContext()));
+            gMap.setOnInfoWindowLongClickListener(getInfoWindowClickListener());
             Location location=lManager.getLastKnownLocation(lProvider.getName());
             if(location!=null)
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),ZOOM_CAMERA));
@@ -138,7 +153,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     {
                         gUser=new GeoUser(MainActivity.user.getNickname());
                         //Si procede ad ottenere il root di tutti i runner nel db
-                        userLocationReference=locationsDB.getReference(ROOT_LOCATIONS);
+                        userLocationReference=locationsDB.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
                         gFire=new GeoFire(userLocationReference);
                         //al nodo rappresentante l'utente viene associato il nickname come chiave
                         userLocationReference=userLocationReference.child(gUser.getNickname());
@@ -230,6 +245,104 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             public void onGeoQueryError(DatabaseError error)
             {
             }
+        };
+    }
+
+    private GoogleMap.OnInfoWindowLongClickListener getInfoWindowClickListener()
+    {
+        //Alert Dialog di conferma alla pressione lunga dell'info window
+        //associato ad un marker
+        return new GoogleMap.OnInfoWindowLongClickListener()
+        {
+            @Override
+            public void onInfoWindowLongClick(Marker marker)
+            {
+                AlertDialog.OnClickListener dialogListener=getDialogClickListener(marker);
+                AlertDialog sendRequestDialog=new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.live_run_request_ad_message)
+                        .setPositiveButton(R.string.live_run_request_ad_positive_button,dialogListener)
+                        .setNegativeButton(R.string.live_run_request_ad_negative_button,dialogListener)
+                        .show();
+            }
+        };
+    }
+
+    private AlertDialog.OnClickListener getDialogClickListener(final Marker marker)
+    {
+        return new AlertDialog.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                switch (i)
+                {
+                    case Dialog.BUTTON_POSITIVE:
+                    {
+                        String runnerKey=null;
+                        //Viene ricercata la chiave associata al marker cliccato
+                        //per poter inviare la richiesta al runner associato al marker
+                        for(HashMap.Entry entry : nearbyRunners.entrySet())
+                        {
+                            if (marker.equals(entry.getValue()))
+                            {
+                                runnerKey = (String) entry.getKey();
+                                break;
+                            }
+                        }
+                        //Invio Richiesta
+                        sendRequest(runnerKey);
+
+                    }
+                    break;
+                    case Dialog.BUTTON_NEGATIVE:
+                    {
+                    }
+                    break;
+                }
+            }
+        };
+    }
+
+    private void registerRunnerForRequests()
+    {
+        //Registrazione presso il db che consente di gestire le richieste
+        DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
+        consumerReference=consumerReference.child(MainActivity.user.getNickname());
+        consumerReference.setValue("");
+        //Registrazione listener che gestirà le richieste in arrivo
+        consumerReference.addChildEventListener(getChildEventListener());
+    }
+
+    private void sendRequest(String runner)
+    {
+        //Navigo verso il nodo a cui inviare la richiesta
+        DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
+        consumerReference=consumerReference.child(runner+"/"+MainActivity.user.getNickname());
+        consumerReference.setValue("");
+    }
+
+    private ChildEventListener getChildEventListener()
+    {
+        return new ChildEventListener()
+        {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                String key=dataSnapshot.getKey();
+                Toast.makeText(getContext(),"Richiesta ricevuta da "+key,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         };
     }
 }
