@@ -35,11 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.RunnerDao;
@@ -233,6 +230,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 if(!key.equals(gUser.getNickname())&&nearbyRunners.get(key)==null)
                 {
                     Marker marker=gMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
+                    marker.setTag(key);
                     nearbyRunners.put(key,marker);
                 }
             }
