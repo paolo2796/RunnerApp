@@ -1,7 +1,9 @@
 package testapp.com.runnerapp;
 
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
+import it.unisa.runnerapp.fragments.MapFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -41,18 +44,20 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle aBarToggle;
 
-    public static Runner user;
+    public static Runner user=new Runner("mavit","pass","Mauro","Vitale",null,null,70,200,(short)1);;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        /*
+        //Da Commentare
         setContentView(R.layout.live_run_panel);
 
+        ListView lw=(ListView)findViewById(R.id.receivedRequestsList);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -76,10 +81,9 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fm=getSupportFragmentManager();
         FragmentTransaction ft=fm.beginTransaction();
-        Fragment mf=new MapFragment();
+        MapFragment mf=new MapFragment();
         ft.add(R.id.container,mf);
         ft.commit();
-        user=new Runner("mavit","pass","Mauro","Vitale",null,null,70,200,(short)1); */
 
 
          /* Date datainizio = new Date();
@@ -91,14 +95,16 @@ public class MainActivity extends AppCompatActivity
         new ActiveRunDaoImpl().createActiveRun(activerun);
         */
 
-        /*
-        ListView lw=(ListView)findViewById(R.id.receivedRequestsList);
+
         lw.addHeaderView(getLayoutInflater().inflate(R.layout.nv_liverequests_header,lw,false));
-        user=new Runner("mavit","pass","Mauro","Vitale",getResources().getDrawable(R.mipmap.ic_launcher),new Date(),70,200,(short)1);
-        List<LiveRequest> l=new ArrayList<>();
-        l.add(new LiveRequest(user,new Date()));
-        lw.setAdapter(new LiveRequestsAdapter(this,R.layout.nv_liverequests_requestitem,l));
-        //user=new Runner("kite321","pass","Kite","Del Kite",null,null,72,210,(short)2);*/
+        mf.setInboxRequestsListView(lw);
+        List<LiveRequest> lrs=new ArrayList<>();
+        mf.setInboxRequestsAdapter(new LiveRequestsAdapter(this,R.layout.nv_liverequests_requestitem,lrs));
+        user=new Runner("paolo2796","pass","Mauro","Vitale",getResources().getDrawable(R.mipmap.ic_launcher),new Date(),70,200,(short)1);
+        //List<LiveRequest> l=new ArrayList<>();
+        //l.add(new LiveRequest(user,new Date()));
+        //lw.setAdapter(new LiveRequestsAdapter(this,R.layout.nv_liverequests_requestitem,l));
+        //user=new Runner("kite321","pass","Kite","Del Kite",null,null,72,210,(short)2);
     }
 
     @Override

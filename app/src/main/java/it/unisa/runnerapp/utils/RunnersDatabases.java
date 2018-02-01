@@ -9,4 +9,6 @@ public interface RunnersDatabases
     final String LIVE_REQUEST_DB_URL="https://runners-liverequests.firebaseio.com";
     final String LIVE_REQUEST_DB_NAME="runners-liverequests";
     final String LIVE_REQUEST_DB_ROOT="runners";
+    final String LIVE_REQUEST_DB_ANSWER_NODE="answer";
+    final String LIVE_REQEUEST_DB_REQUEST_ACCEPTED="accepted";
 }

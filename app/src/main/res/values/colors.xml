@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="accept_request_color">#00838F</color>
-    <color name="refuse_request_color">#C2185B</color>
+    <color name="accept_request">#00838F</color>
+    <color name="refuse_request">#C2185B</color>
+
+    <color name="background_list">#EEEEEE</color>
 </resources>

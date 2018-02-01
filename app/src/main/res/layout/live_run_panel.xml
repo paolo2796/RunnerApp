@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         tools:listheader="@layout/nv_liverequests_header"
-        android:background="#eeeeee"
+        android:background="@color/background_list"
         android:layout_gravity="left">
     </ListView>
 

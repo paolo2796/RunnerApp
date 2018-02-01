@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -32,11 +33,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
+import it.unisa.runnerapp.Dao.Interf.RunnerDao;
+import it.unisa.runnerapp.adapters.LiveRequestsAdapter;
 import it.unisa.runnerapp.adapters.MarkerWindowAdapter;
 import it.unisa.runnerapp.beans.GeoUser;
+import it.unisa.runnerapp.beans.LiveRequest;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
@@ -56,6 +67,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private GoogleMap              gMap;
     private LatLng                 userPosition;
     private HashMap<String,Marker> nearbyRunners;
+
+    private ListView            inboxRequestsListView;
+    private LiveRequestsAdapter inboxRequestsAdapter;
 
     private FirebaseDatabase  locationsDB;
     private FirebaseDatabase  liveRequestsDB;
@@ -77,7 +91,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         super.onCreate(savedInstanceState);
         ctx = getContext();
+
         nearbyRunners=new HashMap<>();
+
         lManager = GeoUtils.getLocationManager(ctx);
         lProvider = GeoUtils.getBestProvider(lManager);
 
@@ -88,6 +104,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 RunnersDatabases.LIVE_REQUEST_DB_URL,
                 RunnersDatabases.LIVE_REQUEST_DB_NAME);
         liveRequestsDB=FirebaseUtils.connectToDatabase(liveRequestsApp);
+
+        //Inizializzazione Adapter
+        inboxRequestsAdapter.setDatabase(liveRequestsDB);
+        inboxRequestsAdapter.setUser(MainActivity.user.getNickname());
+
         registerRunnerForRequests();
     }
 
@@ -113,6 +134,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         View view=super.onCreateView(inflater,container,savedInstanceState);
         super.getMapAsync(this);
+
         return view;
     }
 
@@ -208,7 +230,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             @Override
             public void onKeyEntered(String key, GeoLocation location)
             {
-                if(!key.equals(gUser.getNickname()))
+                if(!key.equals(gUser.getNickname())&&nearbyRunners.get(key)==null)
                 {
                     Marker marker=gMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
                     nearbyRunners.put(key,marker);
@@ -311,9 +333,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Registrazione presso il db che consente di gestire le richieste
         DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
         consumerReference=consumerReference.child(MainActivity.user.getNickname());
-        consumerReference.setValue("");
         //Registrazione listener che gestirà le richieste in arrivo
-        consumerReference.addChildEventListener(getChildEventListener());
+        consumerReference.addChildEventListener(getReceivedRequestListener());
     }
 
     private void sendRequest(String runner)
@@ -321,10 +342,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Navigo verso il nodo a cui inviare la richiesta
         DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
         consumerReference=consumerReference.child(runner+"/"+MainActivity.user.getNickname());
-        consumerReference.setValue("");
+        consumerReference.setValue(new Date());
+        consumerReference=consumerReference.child(RunnersDatabases.LIVE_REQUEST_DB_ANSWER_NODE);
+        consumerReference.addValueEventListener(getOnRequestAnsweredListener());
     }
 
-    private ChildEventListener getChildEventListener()
+    private ChildEventListener getReceivedRequestListener()
     {
         return new ChildEventListener()
         {
@@ -332,6 +355,14 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 String key=dataSnapshot.getKey();
+                RunnerDao runnerDao=new RunnerDaoImpl();
+                Runner runner=runnerDao.getByNick(key);
+                //Date da sostituire
+                Log.i("SNAPSHOT",""+dataSnapshot.getValue());
+                LiveRequest request=new LiveRequest(runner,new Date());
+                inboxRequestsAdapter.add(request);
+                inboxRequestsAdapter.notifyDataSetChanged();
+
                 Toast.makeText(getContext(),"Richiesta ricevuta da "+key,Toast.LENGTH_LONG).show();
             }
 
@@ -347,5 +378,35 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
+    }
+
+    private ValueEventListener getOnRequestAnsweredListener()
+    {
+        return new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.getValue()!=null&&((String)dataSnapshot.getValue()).contains(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED))
+                    Toast.makeText(getContext(),"La richiesta è stata accettata",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        };
+    }
+
+    public void setInboxRequestsListView(ListView inboxRequestsListView)
+    {
+        this.inboxRequestsListView=inboxRequestsListView;
+    }
+
+    public void setInboxRequestsAdapter(LiveRequestsAdapter inboxRequestsAdapter)
+    {
+        this.inboxRequestsAdapter=inboxRequestsAdapter;
+        inboxRequestsListView.setAdapter(inboxRequestsAdapter);
     }
 }

@@ -78,8 +78,8 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_black_24dp"
-            android:tint="@android:color/white"
-            android:background="@color/refuse_request_color"/>
+            android:tint="@color/background_list"
+            android:background="@color/refuse_request"/>
 
         <ImageButton
             android:id="@+id/accept"
@@ -87,7 +87,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_black_24dp"
-            android:tint="@android:color/white"
-            android:background="@color/accept_request_color"/>
+            android:tint="@color/background_list"
+            android:background="@color/accept_request"/>
     </LinearLayout>
 </RelativeLayout>
