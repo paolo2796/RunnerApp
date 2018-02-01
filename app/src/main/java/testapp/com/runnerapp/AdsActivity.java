@@ -11,6 +11,7 @@ import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.fragments.AdActiveFragment;
 import it.unisa.runnerapp.fragments.AdFragment;
 
 /**
@@ -36,7 +37,7 @@ public class AdsActivity extends AppCompatActivity {
 
         for(int i=0;i<runsactive.size();i++) {
 
-            Fragment adfrag = new AdFragment();
+            Fragment adfrag = new AdActiveFragment();
             this.sendData(adfrag, runsactive.get(i));
             ft.add(R.id.fragcontainer, adfrag);
         }
