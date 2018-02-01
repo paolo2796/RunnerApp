@@ -23,6 +23,7 @@ public class Runner extends GeoUser
     public Runner(String nickname, String password, String name, String surname, Drawable img, Date birthDate, double weight, double traveledKm, short level)
     {
         super(nickname);
+
         this.password=password;
         this.name=name;
         this.surname=surname;

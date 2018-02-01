@@ -1,5 +1,7 @@
 package it.unisa.runnerapp.beans;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
@@ -18,6 +20,15 @@ public class ActiveRun extends Run
     public ActiveRun(int id, LatLng meetingPoint, Date start, Runner master, double estimatedKm, int estimatedHours, int estimatedMinutes)
     {
         super(id,meetingPoint,start,master);
+        this.estimatedKm=estimatedKm;
+        setEstimatedHours(estimatedHours);
+        setEstimatedMinutes(estimatedMinutes);
+    }
+
+
+    public ActiveRun(LatLng meetingPoint, Date start, Runner master, double estimatedKm, int estimatedHours, int estimatedMinutes)
+    {
+        super(meetingPoint,start,master);
         this.estimatedKm=estimatedKm;
         setEstimatedHours(estimatedHours);
         setEstimatedMinutes(estimatedMinutes);
