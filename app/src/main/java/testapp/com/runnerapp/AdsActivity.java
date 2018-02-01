@@ -29,7 +29,7 @@ public class AdsActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         setContentView(R.layout.adsactivity);
 
-        runsactive = new ActiveRunDaoImpl().getAllActiveRuns();
+        runsactive = new ActiveRunDaoImpl().getActiveRunsWithin24h("data_inizio");
 
         FragmentManager fm = getFragmentManager();
 

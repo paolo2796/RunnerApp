@@ -356,7 +356,7 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
     }
 
     @Override
-    public List<ActiveRun> getActiveRunsWithinDay() {
+    public List<ActiveRun> getActiveRunsWithin24h(final String orderby) {
 
         try {
 
@@ -370,7 +370,8 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id ");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 order by ?");
+                        ps.setString(1,orderby);
                         rs = ps.executeQuery();
 
                         while(rs.next()) {

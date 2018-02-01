@@ -18,6 +18,6 @@ public interface ActiveRunDao {
     public List<ActiveRun> getAllActiveRuns();
     public ActiveRun findByID(int idrun);
 
-    // Recupera tutte le gare non ancora iniziate che si terranno nella giornata odiera
-    public List<ActiveRun> getActiveRunsWithinDay();
+    // Recupera tutte le gare non ancora iniziate che si terranno entro 24 ore
+    public List<ActiveRun> getActiveRunsWithin24h(String orderby);
 }
