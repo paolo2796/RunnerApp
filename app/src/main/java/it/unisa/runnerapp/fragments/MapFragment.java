@@ -219,8 +219,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             public void onKeyExited(String key)
             {
                 Marker marker=nearbyRunners.get(key);
-                marker.remove();
-                nearbyRunners.remove(key);
+                if(marker!=null)
+                {
+                    marker.remove();
+                    nearbyRunners.remove(key);
+                }
             }
 
             @Override
