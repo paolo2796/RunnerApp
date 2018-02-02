@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -96,5 +97,33 @@ public class CheckUtils
         else
             x_str=""+x;
         return x_str;
+    }
+
+
+    public static String convertDateToStringFormat(Date data){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(data);
+        String month =  capitalizeFirstLetter(new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)]);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return String.valueOf( day + " " + month);
+    }
+
+
+
+    public static String convertHMToStringFormat(Date data){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(data);
+        int hours = CheckUtils.getHour(data);
+        int minutes = CheckUtils.getMinutes(data);
+        return String.valueOf( hours + " : " + minutes);
+    }
+
+
+
+    public static String capitalizeFirstLetter(String mystring){
+
+        return  mystring.substring(0,1).toUpperCase() + mystring.substring(1);
     }
 }

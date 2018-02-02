@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
     <color name="accept_request_color">#00838F</color>
     <color name="refuse_request_color">#C2185B</color>
+    <color name="delay_participation">#E10000</color>
 </resources>
