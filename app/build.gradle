@@ -33,6 +33,11 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.0.4'
     //API GeoFire
     compile 'com.firebase:geofire-android:2.2.0'
+    //Circular ImageView
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    //NavigationView for Sidenav
+    compile 'com.android.support:design:26.1.0'
+
     implementation files('libs/mysql-connector-java-5.1.45-bin.jar')
 }
 apply plugin: 'com.google.gms.google-services'
