@@ -16,9 +16,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button"
-            android:text="Partecipa"
+            android:text="@string/adactive_participation"
             android:textColor="#FFFFFF"/>
 
+        <Button
+            android:id="@+id/cancelbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:text="@string/adactive_cancel"
+            android:textColor="#FFFFFF"/>
 
 
 

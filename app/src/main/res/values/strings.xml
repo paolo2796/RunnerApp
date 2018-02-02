@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RunnerApp</string>
+    <string name="adactive_participation">Partecipa</string>
+    <string name="adactive_cancel">Rimuovi</string>
+    <string name="adactive_go">Vai</string>
+    <string name="adactive_start">Avviata</string>
 </resources>
