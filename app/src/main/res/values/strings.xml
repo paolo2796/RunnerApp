@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">RunnerApp</string>
+    <string name="adactive_participation">Partecipa</string>
+    <string name="adactive_cancel">Rimuovi</string>
+    <string name="adactive_go">Vai</string>
+    <string name="adactive_start">Avviata</string>
     <string name="live_run_request_tooltip">Correte insieme!</string>
     <string name="live_run_request_ad_message">Vuoi davvero inviare la richiesta per una corsa insieme?</string>
     <string name="live_run_request_ad_positive_button">Corri!</string>

@@ -17,4 +17,7 @@ public interface ActiveRunDao {
     public void deleteActiveRun(int idactiverun);
     public List<ActiveRun> getAllActiveRuns();
     public ActiveRun findByID(int idrun);
+
+    // Recupera tutte le gare non ancora iniziate che si terranno entro 24 ore
+    public List<ActiveRun> getActiveRunsWithin24h(String orderby);
 }

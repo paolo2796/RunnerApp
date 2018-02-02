@@ -1,5 +1,9 @@
 package testapp.com.runnerapp;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -34,6 +38,7 @@ import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
+import it.unisa.runnerapp.fragments.AdFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -116,4 +121,5 @@ public class MainActivity extends AppCompatActivity
             return true;
         return super.onOptionsItemSelected(item);
     }
+
 }
