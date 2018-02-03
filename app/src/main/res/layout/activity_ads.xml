@@ -4,10 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
- <ListView
-     android:id="@+id/listview"
+
+ <fragment
+     android:id="@+id/adscontainer"
+     android:name="it.unisa.runnerapp.fragments.AdsActiveFragment"
      android:layout_width="match_parent"
-     android:layout_height="wrap_content"></ListView>
+     android:layout_height="match_parent" />
+
+
 
 
 </LinearLayout>

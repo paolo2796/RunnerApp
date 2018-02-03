@@ -36,6 +36,7 @@ import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 import testapp.com.runnerapp.AdsActivity;
@@ -49,6 +50,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     private PActiveRunDao pactiverundao;
     private ActiveRunDao activerundao;
     private LayoutInflater inflater;
+    private List<ActiveRun> runsbyrun;
 
 
     public AdActiveAdapter(@NonNull Context context, int resource, List<ActiveRun> runs) {
@@ -58,45 +60,83 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
         pactiverundao = new PActiveRunDaoImpl();
         activerundao = new ActiveRunDaoImpl();
+
+        runsbyrun = pactiverundao.findRunByRunner("paolo2796");
     }
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        View v = convertView;
         AdActiveAdapter.ViewHolder holder = new AdActiveAdapter.ViewHolder();
-        final ActiveRun activeruncurrent =  getItem(position);
+        ActiveRun activeruncurrent =  getItem(position);
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.row_adactive, parent, false);
-        }
+        if (v == null) {
 
-        holder.initializeMap(activeruncurrent.getMeetingPoint(), convertView);
+            v = inflater.inflate(R.layout.row_adactive, parent, false);
 
-        TextView starthour = (TextView) convertView.findViewById(R.id.starthour);
-        TextView datestart = (TextView) convertView.findViewById(R.id.datestart);
-        Button delayparticipationbtn = (Button) convertView.findViewById(R.id.delayparticipation_btn);
-        TextView timertw = (TextView) convertView.findViewById(R.id.timer);
-        Button participationbtn = (Button) convertView.findViewById(R.id.participatebtn);
-        Button cancelrunbtn = (Button) convertView.findViewById(R.id.cancelbtn);
-        cancelrunbtn.setTag(position);
-        participationbtn.setTag(position);
+            holder.initializeMap(activeruncurrent.getMeetingPoint(), v);
 
-        starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
-        datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
+            TextView starthour = (TextView) v.findViewById(R.id.starthour);
+            TextView datestart = (TextView) v.findViewById(R.id.datestart);
+            Button delayparticipationbtn = (Button) v.findViewById(R.id.delayparticipation_btn);
+            TextView timertw = (TextView) v.findViewById(R.id.timer);
+            Button participationbtn = (Button) v.findViewById(R.id.participatebtn);
+            Button cancelrunbtn = (Button) v.findViewById(R.id.cancelbtn);
+            cancelrunbtn.setTag(position);
+            participationbtn.setTag(position);
 
+            starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
+            datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
+            timertw.setText(String.valueOf(position));
 
-        List<ActiveRun> runs = pactiverundao.findRunByRunner("paolo2796");
-        for (ActiveRun run : runs) {
+            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(),1000,timertw,participationbtn,cancelrunbtn,delayparticipationbtn);
+            timer.start();
 
-            if (run.getId() == activeruncurrent.getId()) {
-
-                participationbtn.setVisibility(View.GONE);
-                cancelrunbtn.setVisibility(View.VISIBLE);
-
+            for(Run run: runsbyrun){
+                if(run.getId() == activeruncurrent.getId()) {
+                    participationbtn.setVisibility(View.GONE);
+                    cancelrunbtn.setVisibility(View.VISIBLE);
+                }
             }
+
+
         }
 
-        return convertView;
+        return v;
+    }
+
+    public class CounterClass extends CountDownTimer {
+        TextView timertw;
+        Button participation;
+        Button delayparticipation;
+        Button cancelrun;
+        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw,Button participation, Button cancelrun,Button delayparticipation) {
+            super(millisInFuture, countDownInterval);
+            this.timertw = timertw;
+            this.participation=participation;
+            this.cancelrun=cancelrun;
+            this.delayparticipation=delayparticipation;
+        }
+        @Override
+        public void onFinish() {
+            timertw.setText(getContext().getResources().getText(R.string.timer_delay));
+            participation.setVisibility(View.GONE);
+            cancelrun.setVisibility(View.GONE);
+            delayparticipation.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            long millis = millisUntilFinished;
+            String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                    synchronized (this){
+                        timertw.setText(hms);;
+                    }
+        }
     }
 
 

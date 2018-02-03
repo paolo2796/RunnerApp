@@ -103,6 +103,7 @@
         android:background="@drawable/oval_button"
         android:text="@string/adactive_participation"
         android:onClick="requestParticipation"
+        android:visibility="visible"
         android:textColor="#FFFFFF" />
 
     <Button
@@ -120,8 +121,7 @@
         android:layout_height="wrap_content"
         android:background="@color/delay_participation"
         android:text="@string/adactive_start"
-        android:enabled="true"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
 

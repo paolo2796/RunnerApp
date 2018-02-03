@@ -1,5 +1,7 @@
 package testapp.com.runnerapp;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -43,6 +45,7 @@ import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
 import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
 
 /**
@@ -51,26 +54,17 @@ import it.unisa.runnerapp.utils.CheckUtils;
 
 public class AdsActivity extends AppCompatActivity{
 
-    List<ActiveRun> runsactive;
-    ListView listview;
-    AdActiveAdapter arrayadapter;
-    ActiveRunDao activerundao;
+    AdsActiveFragment adsactivefrag;
+    FragmentManager fm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         setContentView(R.layout.activity_ads);
+        fm = getFragmentManager();
 
-
-
-        listview = (ListView) this.findViewById(R.id.listview);
-
-        List<ActiveRun> runs = new ActiveRunDaoImpl().getActiveRunsWithin24h("data_inizio");
-
-        arrayadapter = new AdActiveAdapter(this,R.layout.row_adactive,runs);
-
-        listview.setAdapter(arrayadapter);
+        adsactivefrag = (AdsActiveFragment) fm.findFragmentById(R.id.adscontainer);
 
 
     }
@@ -80,10 +74,10 @@ public class AdsActivity extends AppCompatActivity{
     public void requestParticipation(View v){
 
         int tag = Integer.parseInt(v.getTag().toString());
-        ActiveRun activeruncurren = (ActiveRun) arrayadapter.getItem(tag);
+       ActiveRun activeruncurren = (ActiveRun) adsactivefrag.arrayadapter.getItem(tag);
         Button participation = v.findViewById(R.id.participatebtn);
 
-        View view = arrayadapter.getView(tag,(View) v.getParent(),null);
+        View view = adsactivefrag.arrayadapter.getView(tag,(View) v.getParent(),null);
         Button cancelrun = (Button) view.findViewById(R.id.cancelbtn);
         cancelrun.setVisibility(View.VISIBLE);
         participation.setVisibility(View.GONE);
@@ -96,11 +90,11 @@ public class AdsActivity extends AppCompatActivity{
 
         int tag = Integer.parseInt(v.getTag().toString());
         Button cancelrun = v.findViewById(R.id.cancelbtn);
-        View view = arrayadapter.getView(tag,(View) v.getParent(),null);
+        View view = adsactivefrag.arrayadapter.getView(tag,(View) v.getParent(),null);
         Button participation = (Button) view.findViewById(R.id.participatebtn);
         cancelrun.setVisibility(View.GONE);
         participation.setVisibility(View.VISIBLE);
-        ActiveRun activeruncurren = (ActiveRun) arrayadapter.getItem(tag);
+        ActiveRun activeruncurren = (ActiveRun) adsactivefrag.arrayadapter.getItem(tag);
         new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
 
     }
