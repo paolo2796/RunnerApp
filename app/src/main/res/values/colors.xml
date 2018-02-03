@@ -6,4 +6,7 @@
     <color name="accept_request_color">#00838F</color>
     <color name="refuse_request_color">#C2185B</color>
     <color name="delay_participation">#E10000</color>
+    <color name="tempv_celestial">#1bb4c6</color>
+    <color name="tempv_white">#FFFFFF</color>
+
 </resources>

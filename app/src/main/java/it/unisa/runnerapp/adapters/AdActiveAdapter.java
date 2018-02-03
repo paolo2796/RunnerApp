@@ -1,11 +1,8 @@
 package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,27 +16,17 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
-import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
-import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
+import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
-import it.unisa.runnerapp.utils.ConnectionUtil;
-import testapp.com.runnerapp.AdsActivity;
 import testapp.com.runnerapp.R;
 
 /**
@@ -47,21 +34,17 @@ import testapp.com.runnerapp.R;
  */
 
 public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
-    private PActiveRunDao pactiverundao;
-    private ActiveRunDao activerundao;
     private LayoutInflater inflater;
     private List<ActiveRun> runsbyrun;
+    AdsActiveFragment.Communicator communicator;
 
 
     public AdActiveAdapter(@NonNull Context context, int resource, List<ActiveRun> runs) {
-        super(context, resource,runs);
+        super(context, resource, runs);
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        pactiverundao = new PActiveRunDaoImpl();
-        activerundao = new ActiveRunDaoImpl();
-
-        runsbyrun = pactiverundao.findRunByRunner("paolo2796");
+        runsbyrun = new PActiveRunDaoImpl().findRunByRunner("paolo2796");
     }
 
 
@@ -69,13 +52,13 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
         View v = convertView;
         AdActiveAdapter.ViewHolder holder = new AdActiveAdapter.ViewHolder();
-        ActiveRun activeruncurrent =  getItem(position);
+        ActiveRun activeruncurrent = getItem(position);
 
         if (v == null) {
 
             v = inflater.inflate(R.layout.row_adactive, parent, false);
 
-            holder.initializeMap(activeruncurrent.getMeetingPoint(), v);
+            holder.initializeMap(activeruncurrent.getMeetingPoint(), v, position);
 
             TextView starthour = (TextView) v.findViewById(R.id.starthour);
             TextView datestart = (TextView) v.findViewById(R.id.datestart);
@@ -90,11 +73,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
             timertw.setText(String.valueOf(position));
 
-            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(),1000,timertw,participationbtn,cancelrunbtn,delayparticipationbtn);
+            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(), 1000, timertw, participationbtn, cancelrunbtn, delayparticipationbtn);
             timer.start();
 
-            for(Run run: runsbyrun){
-                if(run.getId() == activeruncurrent.getId()) {
+            for (Run run : runsbyrun) {
+                if (run.getId() == activeruncurrent.getId()) {
                     participationbtn.setVisibility(View.GONE);
                     cancelrunbtn.setVisibility(View.VISIBLE);
                 }
@@ -106,18 +89,28 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         return v;
     }
 
+
+
+    public void setCommunicator(AdsActiveFragment.Communicator communicator) {
+        this.communicator = communicator;
+
+    }
+
+
     public class CounterClass extends CountDownTimer {
         TextView timertw;
         Button participation;
         Button delayparticipation;
         Button cancelrun;
-        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw,Button participation, Button cancelrun,Button delayparticipation) {
+
+        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw, Button participation, Button cancelrun, Button delayparticipation) {
             super(millisInFuture, countDownInterval);
             this.timertw = timertw;
-            this.participation=participation;
-            this.cancelrun=cancelrun;
-            this.delayparticipation=delayparticipation;
+            this.participation = participation;
+            this.cancelrun = cancelrun;
+            this.delayparticipation = delayparticipation;
         }
+
         @Override
         public void onFinish() {
             timertw.setText(getContext().getResources().getText(R.string.timer_delay));
@@ -133,47 +126,93 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
                     TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
                     TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-                    synchronized (this){
-                        timertw.setText(hms);;
-                    }
+            synchronized (this) {
+                timertw.setText(hms);
+                ;
+            }
         }
     }
-
-
-
 
 
     class ViewHolder implements OnMapReadyCallback {
 
         MapView mapView;
         LatLng pointmeeting;
-
-        GoogleMap map;
+        GoogleMap googlemap;
+        int position;
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng pointmeet = new LatLng(pointmeeting.latitude,pointmeeting.longitude);
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(pointmeet)
-                    .zoom(20)                   // Imposta lo zoom
-                    .bearing(90)                // Imposta l'orientamento della camera verso est
-                    .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
-                    .build();                   // Crea una CameraPosition dal Builder
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            googleMap.addMarker(new MarkerOptions()
-                    .position(pointmeet)
-                    .title("Punto Incontro"));
+            this.googlemap = googleMap;
+            if(googlemap!=null) {
+                final LatLng pointmeet = new LatLng(pointmeeting.latitude, pointmeeting.longitude);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(pointmeet)
+                        .zoom(20)                   // Imposta lo zoom
+                        .bearing(90)                // Imposta l'orientamento della camera verso est
+                        .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
+                        .build();                   // Crea una CameraPosition dal Builder
+                googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                // Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(AdActiveAdapter.this.getContext(),R.drawable.ic_info_marker_54dp);
+                // marker.icon(BitmapDescriptorFactory.fromBitmap(bitmapicon));
+
+                Marker marker = googlemap.addMarker(new MarkerOptions()
+                        .position(pointmeet)
+                        .title("Title")
+                        .snippet("Snippet"));
+
+                marker.showInfoWindow();
+
+
+                googlemap.setInfoWindowAdapter(new MyInfoWindowAdapter());
+                googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        communicator.respond(position);
+                    }
+                });
+
+            }
         }
 
-        public void initializeMap(LatLng pointmeeting, View convertView){
 
+
+        public void initializeMap(LatLng pointmeeting, View convertView, int position){
+
+            this.position=position;
             this.pointmeeting = pointmeeting;
             mapView = (MapView) convertView.findViewById(R.id.pointmeetmap);
             mapView.onCreate(null);
             mapView.getMapAsync(this);
+
         }
 
     } // end class Holder
+
+
+
+
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+
+            myContentsView = inflater.inflate(R.layout.custom_info_direction, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+                return null;
+        }
+    } // end class MyInfoWindowAdapter
 
 
 }

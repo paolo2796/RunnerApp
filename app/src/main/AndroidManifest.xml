@@ -35,6 +35,10 @@
             </intent-filter>
 
         </activity>
+
+
+        <activity android:name=".AdActiveDetailActivity">
+        </activity>
     </application>
 
 </manifest>

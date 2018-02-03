@@ -27,6 +27,7 @@ public class AdsActiveFragment extends Fragment {
      ListView listview;
      public AdActiveAdapter arrayadapter;
      ActiveRunDao activerundao;
+     Communicator communicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +40,21 @@ public class AdsActiveFragment extends Fragment {
         return v;
     }
 
+
+    public void setCommunicator(Communicator communicator) {
+        this.communicator = communicator;
+        arrayadapter.setCommunicator(communicator);
+
+    }
+
+    public void onInfoWindowClick(int position){
+
+        communicator.respond(position);
+    }
+
+    public interface Communicator {
+        public void respond(int index);
+    }
 
 
 }
