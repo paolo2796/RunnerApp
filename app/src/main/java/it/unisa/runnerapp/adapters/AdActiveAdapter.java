@@ -3,6 +3,7 @@ package it.unisa.runnerapp.adapters;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             cancelrunbtn.setTag(position);
             participationbtn.setTag(position);
 
+            Log.i("Messaggio",String.valueOf(activeruncurrent.getStartDate()));
             starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
             timertw.setText(String.valueOf(position));

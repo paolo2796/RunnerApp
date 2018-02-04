@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.customwidgets.CustomMap;
+import it.unisa.runnerapp.utils.CheckUtils;
 import testapp.com.runnerapp.R;
 
 /**
@@ -27,13 +28,17 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     Communicator communicator;
     private ActiveRun run;
     public static final String ARG_POSITION = "activerun";
-
     private static final String MESSAGE_LOG = "Message";
 
     // Views Component
     private TextView nickmastertw;
     private ImageView masterprofileimg;
     private CustomMap mapview;
+    private TextView starthourtw;
+    private TextView datestarttw;
+    private TextView estimatedkmtw;
+    private TextView estimatedhmtw;
+
 
 
     @Override
@@ -52,10 +57,17 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         nickmastertw = (TextView) v.findViewById(R.id.masternickaname_tw);
         masterprofileimg = (ImageView) v.findViewById(R.id.masterprofile_img);
         mapview = (CustomMap) v.findViewById(R.id.mapview);
-
+        datestarttw = (TextView) v.findViewById(R.id.datestart);
+        starthourtw = (TextView) v.findViewById(R.id.starthour);
+        estimatedkmtw = (TextView) v.findViewById(R.id.estimatedkm_tw);
+        estimatedhmtw = (TextView) v.findViewById(R.id.estimatedhm_tw);
 
         masterprofileimg.setImageDrawable(run.getMaster().getProfileImage());
         nickmastertw.setText(run.getMaster().getNickname());
+        starthourtw.setText(CheckUtils.convertHMToStringFormat(run.getStartDate()));
+        datestarttw.setText(CheckUtils.convertDateToStringFormat(run.getStartDate()));
+        estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()));
+        estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + " h " + String.valueOf(run.getEstimatedMinutes()) + "m"));
         mapview.onCreate(savedInstanceState);
         mapview.getMapAsync(this);
 

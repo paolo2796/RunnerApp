@@ -43,7 +43,7 @@ public class CustomMap extends com.google.android.gms.maps.MapView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        rectf.set(0, 0, getSuggestedMinimumWidth(), getSuggestedMinimumHeight());
+        rectf.set(0, 0, getMinimumWidth(), getMinimumHeight());
     }
 
     @Override

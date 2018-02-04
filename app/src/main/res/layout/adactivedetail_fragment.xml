@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
 
+
+
+    <RelativeLayout
         android:id="@+id/infomaster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -15,7 +17,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             app:civ_border_width="2dp"
-            app:civ_border_color="@color/tempv_white"/>
+            app:civ_border_color="#FFFFFF"/>
 
         <TextView
             android:id="@+id/masternickaname_tw"
@@ -27,18 +29,153 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/infomaster">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infodetailrun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infomaster"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/infodatestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/infomaster"
+            android:orientation="horizontal">
+
+
+
+                <ImageView
+                    android:id="@+id/icondatestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:src="@drawable/ic_datestart_48dp"/>
+
+                <TextView
+                    android:id="@+id/datestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="30dp"
+                    android:text="data" />
+
+        </LinearLayout>
+
+
+
+
+
+        <LinearLayout
+
+            android:id="@+id/infostarthour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iconstart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_starthour_48dp"/>
+
+            <TextView
+                android:id="@+id/starthour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="20:30"/>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/infoestimatedkm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/estimatedkm_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:src="@drawable/ic_estimatedkm_48dp"/>
+
+                    <TextView
+                        android:id="@+id/estimatedkm_tw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:textSize="30dp"
+                        android:text="data" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+
+            android:id="@+id/infoestimatedhm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/estimatedhm_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_estimated_hour_and_minute_48dp"/>
+
+                <TextView
+                    android:id="@+id/estimatedhm_tw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:text="20 h e 10 s"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/infodetailrun">
+    </LinearLayout>
+
+
     <RelativeLayout
+        android:id="@+id/containermap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/infomaster">
+        android:layout_below="@id/infodetailrun">
 
         <it.unisa.runnerapp.customwidgets.CustomMap
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minWidth="330dp"
-            android:minHeight="400dp"/>
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
+
+
+
 
 </RelativeLayout>

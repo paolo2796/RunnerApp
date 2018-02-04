@@ -9,7 +9,8 @@
         android:id="@+id/infotext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp">
 
         <LinearLayout
             android:id="@+id/infotextsx"
@@ -120,6 +121,11 @@
         android:text="@string/adactive_start"
         android:visibility="gone" />
 
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
 
 
 </LinearLayout>
