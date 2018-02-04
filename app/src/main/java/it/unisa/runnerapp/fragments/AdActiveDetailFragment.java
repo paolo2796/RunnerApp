@@ -1,5 +1,6 @@
 package it.unisa.runnerapp.fragments;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -7,14 +8,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
+import java.util.List;
+
+import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
+import it.unisa.runnerapp.adapters.FollowersAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.customwidgets.CustomMap;
 import it.unisa.runnerapp.utils.CheckUtils;
 import testapp.com.runnerapp.R;
@@ -33,11 +44,14 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     // Views Component
     private TextView nickmastertw;
     private ImageView masterprofileimg;
-    private CustomMap mapview;
+    private MapView mapview;
     private TextView starthourtw;
     private TextView datestarttw;
     private TextView estimatedkmtw;
     private TextView estimatedhmtw;
+    private Button followersbtn;
+    private ListView listview;
+    private ArrayAdapter<Runner> arrayadapter;
 
 
 
@@ -56,18 +70,20 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         //initialize
         nickmastertw = (TextView) v.findViewById(R.id.masternickaname_tw);
         masterprofileimg = (ImageView) v.findViewById(R.id.masterprofile_img);
-        mapview = (CustomMap) v.findViewById(R.id.mapview);
+        mapview = (MapView) v.findViewById(R.id.mapview);
         datestarttw = (TextView) v.findViewById(R.id.datestart);
         starthourtw = (TextView) v.findViewById(R.id.starthour);
         estimatedkmtw = (TextView) v.findViewById(R.id.estimatedkm_tw);
         estimatedhmtw = (TextView) v.findViewById(R.id.estimatedhm_tw);
+        followersbtn = (Button) v.findViewById(R.id.followers_btn);
+        followersbtn.setOnClickListener(getClickListener());
 
         masterprofileimg.setImageDrawable(run.getMaster().getProfileImage());
         nickmastertw.setText(run.getMaster().getNickname());
         starthourtw.setText(CheckUtils.convertHMToStringFormat(run.getStartDate()));
         datestarttw.setText(CheckUtils.convertDateToStringFormat(run.getStartDate()));
-        estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()));
-        estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + " h " + String.valueOf(run.getEstimatedMinutes()) + "m"));
+        estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()) + " km previsti");
+        estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m stimati"));
         mapview.onCreate(savedInstanceState);
         mapview.getMapAsync(this);
 
@@ -88,8 +104,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         catch(Resources.NotFoundException e){
             Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
         }
-
-
     }
 
     public interface Communicator{
@@ -108,10 +122,34 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
 
 
+    public View.OnClickListener getClickListener(){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.custom_dialog_followers);
+                dialog.setTitle("Title...");
+
+
+                listview = (ListView) dialog.findViewById(R.id.listview);
+                arrayadapter = new FollowersAdapter(dialog.getContext(),R.layout.row_follower,new PActiveRunDaoImpl().findRunnerByRun(run.getId()));
+
+                listview.setAdapter(arrayadapter);
+                dialog.show();
+            }
+        };
+
+    }
+
+
+
     @Override
     public void onResume() {
-        mapview.onResume();
         super.onResume();
+        mapview.onResume();
+
     }
 
     @Override

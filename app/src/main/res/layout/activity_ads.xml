@@ -5,15 +5,11 @@
     android:layout_height="match_parent">
 
 
-
- <fragment
-     android:id="@+id/adscontainer"
-     android:name="it.unisa.runnerapp.fragments.AdsActiveFragment"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:layout_margin="10dp"/>
-
-
+  <fragment
+      android:id="@+id/adscontainer"
+      android:name="it.unisa.runnerapp.fragments.AdsActiveFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
 
 
 </LinearLayout>

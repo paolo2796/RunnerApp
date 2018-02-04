@@ -3,16 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
-
-    <FrameLayout
-        android:id="@+id/adactivedetail_container"
-        android:name="it.unisa.runnerapp.fragments.AdActiveDetailFragment"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"/>
+        android:scrollbars="vertical">
 
+                <FrameLayout
+                    android:id="@+id/adactivedetail_container"
+                    android:name="it.unisa.runnerapp.fragments.AdActiveDetailFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
+    </ScrollView>
 
 </LinearLayout>

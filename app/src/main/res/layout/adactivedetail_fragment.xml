@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:orientation="vertical">
 
 
     <RelativeLayout
@@ -14,8 +16,8 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/masterprofile_img"
             android:layout_centerHorizontal="true"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             app:civ_border_width="2dp"
             app:civ_border_color="#FFFFFF"/>
 
@@ -29,26 +31,30 @@
 
     </RelativeLayout>
 
+
+
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
         android:background="@android:color/darker_gray"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/infomaster">
+        android:layout_gravity="center_horizontal">
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/infodetailrun"
+
+
+    <it.unisa.runnerapp.customwidgets.CustomMap
+        android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/infomaster"
-        android:orientation="vertical">
+        android:layout_height="250dp"
+        android:minWidth="350dp"
+        android:minHeight="250dp"/>
+
 
         <LinearLayout
             android:id="@+id/infodatestart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/infomaster"
             android:orientation="horizontal">
 
 
@@ -65,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:textSize="30dp"
+                    android:textSize="20dp"
                     android:text="data" />
 
         </LinearLayout>
@@ -79,7 +85,6 @@
             android:id="@+id/infostarthour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
             <ImageView
@@ -92,7 +97,7 @@
                 android:id="@+id/starthour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:text="20:30"/>
 
 
@@ -104,7 +109,6 @@
             android:id="@+id/infoestimatedkm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
                     <ImageView
@@ -119,7 +123,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:textSize="30dp"
+                        android:textSize="20dp"
                         android:text="data" />
 
         </LinearLayout>
@@ -131,7 +135,6 @@
             android:id="@+id/infoestimatedhm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
 
@@ -145,37 +148,27 @@
                     android:id="@+id/estimatedhm_tw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="30dp"
-                    android:text="20 h e 10 s"/>
+                    android:textSize="20sp"
+                    android:text="20h e 1m"/>
 
         </LinearLayout>
-
-    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
         android:background="@android:color/darker_gray"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/infodetailrun">
+        android:layout_gravity="center_horizontal">
     </LinearLayout>
 
+    <Button
+                android:id="@+id/followers_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/oval_button"
+                android:text="Followers"/>
 
-    <RelativeLayout
-        android:id="@+id/containermap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/infodetailrun">
-
-        <it.unisa.runnerapp.customwidgets.CustomMap
-            android:id="@+id/mapview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-
-
-
-</RelativeLayout>
+</LinearLayout>
