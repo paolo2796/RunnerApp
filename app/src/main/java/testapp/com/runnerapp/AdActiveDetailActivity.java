@@ -26,11 +26,11 @@ public class AdActiveDetailActivity extends AppCompatActivity implements AdActiv
         int codrun = getIntent().getIntExtra("codrun",-1);
         ActiveRun runactive = new ActiveRunDaoImpl().findByID(codrun);
 
+
         fm = getFragmentManager();
         adactivedetailfg = AdActiveDetailFragment.newInstance(runactive);
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.adactivedetail_container,adactivedetailfg);
-        ft.addToBackStack("adactivedetailfg");
         ft.commit();
         adactivedetailfg.setCommunicator(this);
 
