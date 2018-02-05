@@ -70,7 +70,6 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             cancelrunbtn.setTag(position);
             participationbtn.setTag(position);
 
-            Log.i("Messaggio",String.valueOf(activeruncurrent.getStartDate()));
             starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
             timertw.setText(String.valueOf(position));
@@ -207,14 +206,14 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         @Override
         public View getInfoContents(Marker marker) {
 
-            return myContentsView;
+            return null;
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-                return null;
+
+            return myContentsView;
         }
     } // end class MyInfoWindowAdapter
-
 
 }

@@ -32,6 +32,7 @@ public class AdActiveDetailActivity extends AppCompatActivity implements AdActiv
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.adactivedetail_container,adactivedetailfg);
         ft.commit();
+
         adactivedetailfg.setCommunicator(this);
 
     }
