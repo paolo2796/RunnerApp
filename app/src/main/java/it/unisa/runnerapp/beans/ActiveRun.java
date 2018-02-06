@@ -4,9 +4,10 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ActiveRun extends Run
+public class ActiveRun extends Run implements Serializable
 {
     private double estimatedKm;
     private int    estimatedHours;

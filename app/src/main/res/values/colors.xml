@@ -10,4 +10,6 @@
     <color name="refuse_request">#C2185B</color>
 
     <color name="background_list">#EEEEEE</color>
+    <color name="delay_participation">#E10000</color>
+    <color name="tempv_celestial">#1bb4c6</color>
 </resources>

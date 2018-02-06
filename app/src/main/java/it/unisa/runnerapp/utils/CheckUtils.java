@@ -2,8 +2,16 @@ package it.unisa.runnerapp.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -97,4 +105,49 @@ public class CheckUtils
             x_str=""+x;
         return x_str;
     }
+
+
+    public static String convertDateToStringFormat(Date data){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(data);
+        String month =  capitalizeFirstLetter(new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)]);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return String.valueOf( day + " " + month);
+    }
+
+
+
+    public static String convertHMToStringFormat(Date data){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(data);
+        int hours = CheckUtils.getHour(data);
+        int minutes = CheckUtils.getMinutes(data);
+        return String.valueOf( hours + " : " + minutes);
+    }
+
+
+
+    public static String capitalizeFirstLetter(String mystring){
+
+        return  mystring.substring(0,1).toUpperCase() + mystring.substring(1);
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
+
 }

@@ -10,29 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import it.unisa.runnerapp.adapters.LiveRequestsAdapter;
-import it.unisa.runnerapp.beans.LiveRequest;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
-import it.unisa.runnerapp.beans.ActiveRun;
-import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
@@ -117,4 +95,5 @@ public class MainActivity extends AppCompatActivity
             return true;
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -21,8 +21,7 @@ public class ConnectionUtil {
             try {
 
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                connection = DriverManager.getConnection("jdbc:mysql://runnerinstance.cszqnohnholf.us-west-2.rds.amazonaws.com:3306/runnerDatabase", "root", "it.uniSA.app_1996_.");
-
+                connection = DriverManager.getConnection("jdbc:mysql://" + RunnersDatabases.END_POINT_DB_MYSQL + "/"+RunnersDatabases.NAME_DB_MYSQL, RunnersDatabases.USER_DB_MYSQL, RunnersDatabases.PASS_DB_MYSQL);
             }
 
             catch (SQLException e) {
