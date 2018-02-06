@@ -301,7 +301,7 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                         run.setId(rs.getInt("id"));
                         LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"),rs.getDouble("punto_ritrovo_lng"));
                         run.setMeetingPoint(latLng);
-                        run.setStartDate(rs.getDate("data_inizio"));
+                        run.setStartDate(rs.getTimestamp("data_inizio"));
 
                         String idmaster = rs.getString("master");
 
