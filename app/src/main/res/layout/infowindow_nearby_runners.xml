@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@layout/infowindow_cloud_shape"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="horizontal">
 
     <RelativeLayout
+        android:id="@+id/mainPanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:id="@+id/namesPanel"
@@ -27,7 +29,6 @@
                 android:src="@drawable/ic_face_black_24dp"/>
             <TextView
                 android:id="@+id/names"
-                android:layout_toRightOf="@id/iconNames"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
@@ -81,9 +82,12 @@
 
     <ImageButton
         android:id="@+id/requestButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:tint="@color/background_list"
-        android:background="@color/accept_request"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/mainPanel"
+        android:layout_alignTop="@id/mainPanel"
+        android:layout_alignBottom="@id/mainPanel"
+        android:tint="@color/infowindow_custom_cloud_background"
+        android:background="@color/refuse_request"
         android:src="@drawable/ic_directions_run_black_36dp"/>
-</LinearLayout>
+</RelativeLayout>

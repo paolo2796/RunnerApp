@@ -407,4 +407,13 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         this.inboxRequestsAdapter=inboxRequestsAdapter;
         inboxRequestsListView.setAdapter(inboxRequestsAdapter);
     }
+
+    public void onSavedInstanceState(Bundle savedInstanceState)
+    {
+        //gUser
+        //nearbyRunners
+        //liveRequestAdapter
+        //Firebases
+        //GFire
+    }
 }

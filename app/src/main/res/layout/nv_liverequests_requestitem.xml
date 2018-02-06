@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:textSize="13dp"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/personalInfoIcon"
             tools:text="23 anni, Livello Master"/>
 
         <RelativeLayout
