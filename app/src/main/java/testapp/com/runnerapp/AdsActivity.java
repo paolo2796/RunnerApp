@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
@@ -29,12 +30,12 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ads);
 
+        Log.i("message","CIAOO");
 
         fm = getFragmentManager();
 
         adsactivefrag = (AdsActiveFragment) fm.findFragmentById(R.id.adscontainer);
         adsactivefrag.setCommunicator(this);
-
 
     }
 

@@ -8,6 +8,7 @@
     android:layout_marginTop="5dp"
     android:orientation="vertical">
 
+
     <RelativeLayout
         android:id="@+id/info_how_reach"
         android:layout_width="match_parent"
@@ -21,8 +22,7 @@
             android:padding="8dp"
             android:text="@string/how_reach"
             android:textSize="25dp"
-            android:background="@drawable/oval_button"
-            android:textColor="@android:color/white" />
+            android:textStyle="bold"/>
 
         <RelativeLayout
             android:id="@+id/subinfo_how_reach"

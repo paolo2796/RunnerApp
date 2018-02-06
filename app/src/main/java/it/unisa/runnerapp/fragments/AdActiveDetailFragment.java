@@ -186,7 +186,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         destinationMarkers = new ArrayList<>();
 
         for (Route route : routes) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.endLocation, 15));
             durationtw = (TextView) v.findViewById(R.id.duration_tw);
             distancetw = (TextView) v.findViewById(R.id.distance_tw);
             durationtw.setText(route.duration.text);
@@ -202,7 +202,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_destination_35dp);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
             destinationMarkers.add(mMap.addMarker(destinationoptionmarker));
-            mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
+            mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(route.startLocation,route.endLocation));
 
 
             PolylineOptions polylineOptions = new PolylineOptions().
@@ -254,30 +254,41 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
-        private final View myContentsView;
+        private View myContentsView;
+        private LatLng origin;
+        private LatLng destination;
+        private LayoutInflater inflater;
 
-        MyInfoWindowAdapter(){
+        MyInfoWindowAdapter(LatLng origin, LatLng destination){
+            this.origin = origin;
+            this.destination=destination;
 
-            LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myContentsView = inflater.inflate(R.layout.custom_info_reach_master, null);
+            inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public View getInfoContents(Marker marker) {
 
-
-            nickmastertw = (TextView) myContentsView.findViewById(R.id.masternickaname_tw);
-            masterprofileimg = (ImageView) myContentsView.findViewById(R.id.masterprofile_img);
-            masterprofileimg.setImageDrawable(run.getMaster().getProfileImage());
-            nickmastertw.setText(run.getMaster().getNickname());
-
-            return myContentsView;
+            return null;
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
 
-            return null;
+            if(marker.getPosition().latitude == destination.latitude && marker.getPosition().longitude == destination.longitude){
+                myContentsView = inflater.inflate(R.layout.custom_info_reach_master, null);
+                nickmastertw = (TextView) myContentsView.findViewById(R.id.masternickaname_tw);
+                masterprofileimg = (ImageView) myContentsView.findViewById(R.id.masterprofile_img);
+                masterprofileimg.setImageDrawable(run.getMaster().getProfileImage());
+                TextView destaddress = myContentsView.findViewById(R.id.destaddress_tw);
+                destaddress.setText(marker.getTitle());
+                nickmastertw.setText(run.getMaster().getNickname());
+            }
+            else{
+                myContentsView = null;
+            }
+
+            return myContentsView;
         }
     } // end class MyInfoWindowAdapter
 

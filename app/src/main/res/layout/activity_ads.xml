@@ -6,9 +6,7 @@
     android:orientation="vertical">
 
 
-
-
-  <fragment
+   <fragment
       android:id="@+id/adscontainer"
       android:name="it.unisa.runnerapp.fragments.AdsActiveFragment"
       android:layout_width="match_parent"
