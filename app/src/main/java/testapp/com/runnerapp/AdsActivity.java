@@ -24,8 +24,6 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
 
     AdsActiveFragment adsactivefrag;
     FragmentManager fm;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
