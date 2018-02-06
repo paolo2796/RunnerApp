@@ -5,39 +5,55 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
     android:orientation="vertical">
 
-
     <RelativeLayout
-        android:id="@+id/infomaster"
+        android:id="@+id/info_how_reach"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-
-            android:layout_width="wrap_content"
+            android:id="@+id/how_reach_tw"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:layout_above="@id/masterprofile_img"
-            android:text="Master"/>
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/how_reach"
+            android:textSize="25dp"
+            android:background="@drawable/oval_button"
+            android:textColor="@android:color/white" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/masterprofile_img"
-            android:layout_centerHorizontal="true"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FFFFFF"/>
-
-        <TextView
-            android:id="@+id/masternickaname_tw"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/subinfo_how_reach"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:layout_below="@id/masterprofile_img"/>
+            android:gravity="center_horizontal"
+            android:layout_below="@id/how_reach_tw">
+
+            <ImageView
+                android:id="@+id/distance_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_distance_30dp"/>
+
+            <TextView
+                android:id="@+id/duration_tw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/distance_img"
+                android:layout_centerVertical="true"
+                android:text="duration"/>
+
+            <TextView
+                android:id="@+id/distance_tw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/duration_tw"
+                android:layout_centerVertical="true"
+                android:text="/distance"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -46,20 +62,20 @@
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
         android:background="@android:color/darker_gray"
         android:layout_gravity="center_horizontal">
     </LinearLayout>
 
 
-
-    <com.google.android.gms.maps.MapView
+    <it.unisa.runnerapp.customwidgets.CustomMap
         android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="317dp"
         android:minWidth="350dp"
-        android:minHeight="250dp"
-        android:apiKey="com.google.android.geo.API_KEY"/>
+        android:minHeight="317dp" />
+
 
 
         <LinearLayout
@@ -86,9 +102,6 @@
                     android:text="data" />
 
         </LinearLayout>
-
-
-
 
 
         <LinearLayout
@@ -168,7 +181,7 @@
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="1dp"
         android:background="@android:color/darker_gray"
         android:layout_gravity="center_horizontal">
     </LinearLayout>
@@ -182,15 +195,5 @@
                 android:background="@drawable/oval_button"
                 android:text="Followers"/>
 
-
-    <TextView
-        android:id="@+id/tvDuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tvDistance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

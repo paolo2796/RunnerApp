@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 
 /**
@@ -34,6 +36,7 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
 
         adsactivefrag = (AdsActiveFragment) fm.findFragmentById(R.id.adscontainer);
         adsactivefrag.setCommunicator(this);
+
 
     }
 
