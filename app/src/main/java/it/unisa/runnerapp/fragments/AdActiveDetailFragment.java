@@ -1,14 +1,20 @@
 package it.unisa.runnerapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -62,11 +68,14 @@ import testapp.com.runnerapp.R;
 public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallback, DirectionFinderListener {
 
     private View v;
-    Communicator communicator;
     private ActiveRun run;
     public static final String ARG_POSITION = "activerun";
     private static final String MESSAGE_LOG = "MessageAdDetail";
-    private static final int COLOR_POLYLINE = Color.YELLOW;
+    private LocationManager locationmanager;
+    private LocationListener locationlistener;
+    private String providerid;
+    private static int MIN_PERIOD = 5000;
+    private static int MIN_DIST = 20;
 
     // Views Component
     private TextView nickmastertw;
@@ -88,6 +97,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
+    private static final int COLOR_POLYLINE = Color.YELLOW;
+
 
 
     @Override
@@ -96,14 +107,15 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         if (getArguments() != null) {
             run = (ActiveRun) getArguments().getSerializable(ARG_POSITION);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
-
         //initialize
-
         mapview = (CustomMap) v.findViewById(R.id.mapview);
         datestarttw = (TextView) v.findViewById(R.id.datestart);
         starthourtw = (TextView) v.findViewById(R.id.starthour);
@@ -118,15 +130,12 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()) + " km previsti");
         estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m stimati"));
         mapview.onCreate(savedInstanceState);
+
         mapview.getMapAsync(this);
 
         return v;
     }
 
-    public void setCommunicator(Communicator communicator) {
-
-        this.communicator = communicator;
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -135,25 +144,12 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
         try{
             boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapview_direction_style_json));;
-            sendRequest();
         }
-
 
         catch(Resources.NotFoundException e){
             Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
         }
     }
-
-
-    private void sendRequest(){
-
-        try {
-            new DirectionFinder(this,new LatLng(40.673944,14.770186), run.getMeetingPoint()).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     // Implementazione metodi DirectionFinderListener
 
@@ -186,7 +182,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         destinationMarkers = new ArrayList<>();
 
         for (Route route : routes) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.endLocation, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 13));
             durationtw = (TextView) v.findViewById(R.id.duration_tw);
             distancetw = (TextView) v.findViewById(R.id.distance_tw);
             durationtw.setText(route.duration.text);
@@ -198,12 +194,10 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
                         .position(route.startLocation)));
 
 
-
             Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_destination_35dp);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
             destinationMarkers.add(mMap.addMarker(destinationoptionmarker));
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(route.startLocation,route.endLocation));
-
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
@@ -218,19 +212,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
     }
 
-    public interface Communicator{
-
-        public void respond(int index);
-    }
-
-    public static AdActiveDetailFragment newInstance(ActiveRun run) {
-        AdActiveDetailFragment myFragment = new AdActiveDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_POSITION, run);
-        myFragment.setArguments(args);
-        return myFragment;
-
-    }
 
 
 
@@ -251,6 +232,58 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
     }
 
+    public LocationListener getLocationListener(){
+
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                sendRequest(new LatLng(location.getLatitude(),location.getLongitude()));
+                locationmanager.removeUpdates(locationlistener);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                Log.i("onstatuschanged",String.valueOf(status));
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+                Log.i("onProviderEnabled",provider);
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Log.i("onProviderDisabled",provider);
+
+            }
+        };
+
+
+    }
+
+
+
+    private void sendRequest(LatLng origin){
+
+        try {
+            new DirectionFinder(this,origin, run.getMeetingPoint()).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static AdActiveDetailFragment newInstance(ActiveRun run) {
+        AdActiveDetailFragment myFragment = new AdActiveDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_POSITION, run);
+        myFragment.setArguments(args);
+        return myFragment;
+
+    }
 
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -298,7 +331,32 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         super.onResume();
         mapview.onResume();
 
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+
+        }
+
+        locationmanager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+        providerid = null;
+
+        if (locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            providerid = LocationManager.GPS_PROVIDER;
+        }
+
+        else {
+                    Intent gpsOptionsIntent = new Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(gpsOptionsIntent);
+        }
+
+        locationlistener = getLocationListener();
+        locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
+
     }
+
 
     @Override
     public void onStart() {
@@ -310,6 +368,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     public void onPause() {
         super.onPause();
         mapview.onPause();
+        locationmanager.removeUpdates(locationlistener);
+
     }
 
     @Override

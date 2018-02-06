@@ -13,7 +13,7 @@ import it.unisa.runnerapp.fragments.AdActiveDetailFragment;
  * Created by Paolo on 02/02/2018.
  */
 
-public class AdActiveDetailActivity extends AppCompatActivity implements AdActiveDetailFragment.Communicator {
+public class AdActiveDetailActivity extends AppCompatActivity {
 
     private android.app.FragmentManager fm;
     private AdActiveDetailFragment adactivedetailfg;
@@ -26,19 +26,12 @@ public class AdActiveDetailActivity extends AppCompatActivity implements AdActiv
         int codrun = getIntent().getIntExtra("codrun",-1);
         ActiveRun runactive = new ActiveRunDaoImpl().findByID(codrun);
 
-
         fm = getFragmentManager();
         adactivedetailfg = AdActiveDetailFragment.newInstance(runactive);
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.adactivedetail_container,adactivedetailfg);
         ft.commit();
 
-        adactivedetailfg.setCommunicator(this);
-
     }
 
-    @Override
-    public void respond(int index) {
-
-    }
 }

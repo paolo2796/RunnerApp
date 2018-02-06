@@ -30,7 +30,6 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ads);
 
-        Log.i("message","CIAOO");
 
         fm = getFragmentManager();
 
