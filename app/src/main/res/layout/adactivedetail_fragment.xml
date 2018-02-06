@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/info_how_reach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/how_reach_tw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/how_reach"
+            android:textSize="25dp"
+            android:background="@drawable/oval_button"
+            android:textColor="@android:color/white" />
+
+        <RelativeLayout
+            android:id="@+id/subinfo_how_reach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/how_reach_tw">
+
+            <ImageView
+                android:id="@+id/distance_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_distance_30dp"/>
+
+            <TextView
+                android:id="@+id/duration_tw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/distance_img"
+                android:layout_centerVertical="true"
+                android:text="duration"/>
+
+            <TextView
+                android:id="@+id/distance_tw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/duration_tw"
+                android:layout_centerVertical="true"
+                android:text="/distance"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/darker_gray"
+        android:layout_gravity="center_horizontal">
+    </LinearLayout>
+
+
+    <it.unisa.runnerapp.customwidgets.CustomMap
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="317dp"
+        android:minWidth="350dp"
+        android:minHeight="317dp" />
+
+
+
+        <LinearLayout
+            android:id="@+id/infodatestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+                <ImageView
+                    android:id="@+id/icondatestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:src="@drawable/ic_datestart_48dp"/>
+
+                <TextView
+                    android:id="@+id/datestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="20dp"
+                    android:text="data" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/infostarthour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iconstart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_starthour_48dp"/>
+
+            <TextView
+                android:id="@+id/starthour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="20:30"/>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/infoestimatedkm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/estimatedkm_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:src="@drawable/ic_estimatedkm_48dp"/>
+
+                    <TextView
+                        android:id="@+id/estimatedkm_tw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:textSize="20dp"
+                        android:text="data" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+
+            android:id="@+id/infoestimatedhm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/estimatedhm_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_estimated_hour_and_minute_48dp"/>
+
+                <TextView
+                    android:id="@+id/estimatedhm_tw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="20h e 1m"/>
+
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_gravity="center_horizontal">
+    </LinearLayout>
+
+            <Button
+                android:id="@+id/followers_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/oval_button"
+                android:text="Followers"/>
+
+
+</LinearLayout>

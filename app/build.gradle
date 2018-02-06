@@ -38,6 +38,7 @@ dependencies {
     //NavigationView for Sidenav
     compile 'com.android.support:design:26.1.0'
 
+
     implementation files('libs/mysql-connector-java-5.1.45-bin.jar')
 }
 apply plugin: 'com.google.gms.google-services'
