@@ -20,4 +20,8 @@ public interface ActiveRunDao {
 
     // Recupera tutte le gare non ancora iniziate che si terranno entro 24 ore
     public List<ActiveRun> getActiveRunsWithin24h(String orderby);
+
+
+    // Recupera tutte le gare inserite da un determinato utente
+    public List<ActiveRun> findByRunner(String nickname);
 }

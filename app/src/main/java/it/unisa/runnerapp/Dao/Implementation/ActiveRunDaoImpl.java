@@ -442,6 +442,95 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
 
         return null;
 
+    }
+
+    @Override
+    public List<ActiveRun> findByRunner(final String nickname) {
+
+        try {
+
+            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
+                @Override
+                protected List<ActiveRun> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+                    ResultSet rsmaster =null;
+
+                    PreparedStatement ps = null;
+                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  WHERE Corse.master = ?");
+                        ps.setString(1,nickname);
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+
+                            ActiveRun run = new ActiveRun();
+
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+
+
+                            String idmaster = rs.getString("master");
+
+                            rsmaster = ConnectionUtil.getConnection().prepareStatement("select * from Utenti where Utenti.nickname = '" + idmaster + "'").executeQuery();
+                            Runner runner = new Runner();
+                            rsmaster.next();
+                            runner.setNickname(rsmaster.getString("nickname"));
+                            runner.setPassword(rsmaster.getString("password"));
+                            runner.setName(rsmaster.getString("nome"));
+                            runner.setSurname(rsmaster.getString("cognome"));
+                            runner.setBirthDate(rsmaster.getDate("data_nascita"));
+                            runner.setWeight(rsmaster.getDouble("peso"));
+                            runner.setLevel(rsmaster.getShort("livello"));
+                            runner.setTraveledKilometers(rsmaster.getDouble("km_percorsi"));
+
+
+
+                            byte[] bytes_imgprofilo = rsmaster.getBytes("img_profilo");
+
+                            if (bytes_imgprofilo != null) {
+
+                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
+
+                            }
+
+                            run.setMaster(runner);
+
+
+
+                            run.setEstimatedKm(rs.getDouble("km_previsti"));
+                            run.setEstimatedHours(rs.getInt("ore_previste"));
+                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+
+                            activeruns.add(run);
+
+                        }
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return activeruns;
+                }
+
+                @Override
+                protected void onPostExecute( List<ActiveRun> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
+
 
 
     }

@@ -8,8 +8,7 @@
     </solid>
 
     <stroke
-        android:width="2dp"
-        android:color="@color/tempv_celestial" >
+        android:width="2dp">
     </stroke>
 
     <padding

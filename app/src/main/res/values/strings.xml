@@ -13,5 +13,7 @@
     <string name="drawer_close">Chiudi</string>
     <string name="level_runner">Liv.</string>
     <string name="how_reach">Raggiungimi</string>
+    <string name="myads_removerun">Rimuovi</string>
+    <string name="myads_editrun">Edit</string>
 
 </resources>

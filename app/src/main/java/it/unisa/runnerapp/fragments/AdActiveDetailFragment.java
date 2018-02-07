@@ -127,8 +127,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
         starthourtw.setText(CheckUtils.convertHMToStringFormat(run.getStartDate()));
         datestarttw.setText(CheckUtils.convertDateToStringFormat(run.getStartDate()));
-        estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()) + " km previsti");
-        estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m stimati"));
+        estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()));
+        estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m"));
         mapview.onCreate(savedInstanceState);
 
         mapview.getMapAsync(this);
@@ -189,8 +189,9 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             distancetw.setText(" / " + route.distance.text);
 
 
+
             originMarkers.add(mMap.addMarker(new MarkerOptions()
-                        .title(route.startAddress)
+                        .title("Ti trovi qui")
                         .position(route.startLocation)));
 
 
@@ -337,7 +338,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
 
         }
-
         locationmanager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         providerid = null;
@@ -345,7 +345,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         if (locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             providerid = LocationManager.GPS_PROVIDER;
         }
-
         else {
                     Intent gpsOptionsIntent = new Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
