@@ -37,7 +37,7 @@ public class AdsActiveFragment extends Fragment {
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
-        List<ActiveRun> runs = new ActiveRunDaoImpl().getActiveRunsWithin24hWithoutMaster("data_inizio");
+        List<ActiveRun> runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
 
         Log.i("messaggio",String.valueOf(runs.size()));
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
@@ -45,7 +45,6 @@ public class AdsActiveFragment extends Fragment {
         listview.setAdapter(arrayadapter);
         return v;
     }
-
 
     public void setCommunicator(Communicator communicator) {
         this.communicator = communicator;

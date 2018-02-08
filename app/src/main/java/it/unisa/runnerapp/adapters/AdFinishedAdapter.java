@@ -96,19 +96,18 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
                 Marker marker = googlemap.addMarker(new MarkerOptions()
                         .position(pointmeet)
-                        .title("Title")
-                        .snippet("Snippet"));
+                        .title("Dove ti sei incontrato"));
 
                 marker.showInfoWindow();
 
 
-                googlemap.setInfoWindowAdapter(new AdFinishedAdapter.MyInfoWindowAdapter());
+              /*  googlemap.setInfoWindowAdapter(new AdFinishedAdapter.MyInfoWindowAdapter());
                 googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
                         communicator.respond(position);
                     }
-                });
+                }); PER ORA NON SERVE */
 
             }
         }
@@ -129,6 +128,7 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
 
 
+    /* PER ORA NON SERVE
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private final View myContentsView;
@@ -149,7 +149,7 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
             return myContentsView;
         }
-    } // end class MyInfoWindowAdapter
+    } // end class MyInfoWindowAdapter */
 
 
 

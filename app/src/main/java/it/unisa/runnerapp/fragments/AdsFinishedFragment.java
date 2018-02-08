@@ -39,7 +39,6 @@ public class AdsFinishedFragment extends Fragment implements AdFinishedAdapter.C
         listview.setAdapter(arrayadapter);
         arrayadapter.setCommunicator(this);
 
-
         return v;
     }
 

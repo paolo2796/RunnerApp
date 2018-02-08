@@ -120,14 +120,15 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         public void onFinish() {
             timertw.setText(getContext().getResources().getText(R.string.timer_delay));
             boolean isparticipate =false;
-            for(Run runbyrun: runsbyrun) {
+
+          /*  PER ORA NON SERVE
+          for(Run runbyrun: runsbyrun) {
                 if (runbyrun.getId() == activerun.getId()) {
                     isparticipate = true;
                 }
             }
 
             if(isparticipate){
-                Log.i("Message","SONO QUA ISPARTICIPATE");
                 delayparticipation.setVisibility(View.GONE);
                 startlivebtn.setVisibility(View.VISIBLE);
             }
@@ -135,8 +136,9 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             else{
                 delayparticipation.setVisibility(View.VISIBLE);
                 startlivebtn.setVisibility(View.GONE);
-            }
+            }  PER ORA NON SERVE */
 
+            delayparticipation.setVisibility(View.VISIBLE);
             participation.setVisibility(View.GONE);
             cancelrun.setVisibility(View.GONE);
         }

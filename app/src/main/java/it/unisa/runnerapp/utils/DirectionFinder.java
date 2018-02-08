@@ -104,6 +104,7 @@ public class DirectionFinder {
         JSONObject jsonData = new JSONObject(data);
         JSONArray jsonRoutes = jsonData.getJSONArray("routes");
         for (int i = 0; i < jsonRoutes.length(); i++) {
+
             JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
             Route route = new Route();
 

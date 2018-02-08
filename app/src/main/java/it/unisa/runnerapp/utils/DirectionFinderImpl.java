@@ -45,6 +45,13 @@ public class DirectionFinderImpl implements DirectionFinderListener {
 
     }
 
+    public DirectionFinderImpl(Context cx, GoogleMap googleMap, boolean iswaypoint){
+        this.mMap = googleMap;
+        this.cx = cx;
+        this.iswaypoint = iswaypoint;
+
+    }
+
     public void execute(LatLng origin, LatLng destination){
 
         try {

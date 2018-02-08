@@ -26,6 +26,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_starthour_24dp"/>
+
+            <ImageView
+                android:id="@+id/iconburnedcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_calories_24dp"/>
+
+            <ImageView
+                android:id="@+id/icontraveledkm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_traveled_km"/>
+
         </TableRow>
 
         <TableRow>
@@ -47,28 +60,6 @@
                 android:textSize="20sp"
                 android:text="Ora"
                 android:textStyle="bold"/>
-        </TableRow>
-
-
-        <TableRow>
-            <ImageView
-                android:id="@+id/iconburnedcal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_calories_24dp"/>
-
-            <ImageView
-                android:id="@+id/icontraveledkm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_traveled_km"/>
-
-
-        </TableRow>
-
-
-
-        <TableRow>
 
             <TextView
                 android:id="@+id/burnedkal"
@@ -88,8 +79,6 @@
                 android:textSize="20sp"
                 android:text="Km percorsi"
                 android:textStyle="bold"/>
-
-
         </TableRow>
 
     </TableLayout>
@@ -99,8 +88,5 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         map:liteMode="true" />
-
-
-
-
+    
 </LinearLayout>

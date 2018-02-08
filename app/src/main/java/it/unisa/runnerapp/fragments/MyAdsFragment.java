@@ -2,26 +2,19 @@ package it.unisa.runnerapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
-import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
-import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
-import testapp.com.runnerapp.AdActiveDetailActivity;
-import testapp.com.runnerapp.MyAdsActivity;
 import testapp.com.runnerapp.R;
 
 /**

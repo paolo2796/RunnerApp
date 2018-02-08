@@ -25,7 +25,7 @@ import it.unisa.runnerapp.fragments.MyAdsFragment;
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends AppCompatActivity implements AdsFinishedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity, AdsActiveFragment.Communicator {
+public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, AdsActiveFragment.Communicator {
 
     AdsFinishedFragment adsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -41,40 +41,12 @@ public class MainActivityPV extends AppCompatActivity implements AdsFinishedFrag
 
 
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-            bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                if (tabId == R.id.myads_tab) {
-
-                    myadsfragment = new MyAdsFragment();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.containerfragment_frame,myadsfragment);
-                    ft.commit();
-                    myadsfragment.setCommunicator(MainActivityPV.this);
-
-                }
-                else if (tabId == R.id.participate_tab) {
-
-                    adsactivefragment = AdsActiveFragment.newInstance(MainActivityPV.this);
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.containerfragment_frame,adsactivefragment);
-                    ft.commit();
-
-                }
-                else if (tabId == R.id.myadsfinished_tab) {
-
-                    adsfinishedfragment = new AdsFinishedFragment();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.containerfragment_frame,adsfinishedfragment);
-                    ft.commit();
-                    adsfinishedfragment.setCommunicator(MainActivityPV.this);
-                }
-            }
-        });
+            bottomBar.setOnTabSelectListener(getTabSelectListener());
     }
 
 
 
+   /* PER ORA NON SERVE
     @Override
     public void respondAdsFinished(int position) {
 
@@ -82,7 +54,7 @@ public class MainActivityPV extends AppCompatActivity implements AdsFinishedFrag
         intent.putExtra("codrun",adsfinishedfragment.arrayadapter.getItem(position).getId());
         startActivity(intent);
 
-    }
+    } */
 
     @Override
     public void respondAdsActive(int position) {
@@ -127,5 +99,46 @@ public class MainActivityPV extends AppCompatActivity implements AdsFinishedFrag
         ActiveRun activeruncurren = (ActiveRun) adsactivefragment.arrayadapter.getItem(tag);
         new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
 
+    }
+
+
+    public OnTabSelectListener getTabSelectListener() {
+
+       return new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.myads_tab) {
+
+                    myadsfragment = new MyAdsFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.containerfragment_frame, myadsfragment);
+                    ft.commit();
+                    myadsfragment.setCommunicator(MainActivityPV.this);
+
+                } else if (tabId == R.id.participate_tab) {
+
+                    adsactivefragment = AdsActiveFragment.newInstance(MainActivityPV.this);
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.containerfragment_frame, adsactivefragment);
+                    ft.commit();
+
+                } else if (tabId == R.id.myadsfinished_tab) {
+
+                    adsfinishedfragment = new AdsFinishedFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.containerfragment_frame, adsfinishedfragment);
+                    ft.commit();
+                 // Per ora non serve   adsfinishedfragment.setCommunicator(MainActivityPV.this);
+                }
+                else{
+                    adsfinishedfragment = new AdsFinishedFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.containerfragment_frame, adsfinishedfragment);
+                    ft.commit();
+                    // Per ora non serve  adsfinishedfragment.setCommunicator(MainActivityPV.this);
+
+                }
+            }
+        };
     }
 }

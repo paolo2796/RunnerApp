@@ -21,10 +21,7 @@
             android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8" />
 
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".AdsActivity"></activity>
-        <activity android:name=".MyAdsActivity"></activity>
         <activity android:name=".AdActiveDetailActivity"></activity>
-        <activity android:name=".AdsFinishedActivity"></activity>
         <activity android:name=".FirebaseTestActivity"></activity>
 
 
