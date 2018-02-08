@@ -119,6 +119,13 @@
         android:visibility="gone" />
 
 
+    <Button
+        android:id="@+id/startlive_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="@string/adsactive_startlive"
+        android:visibility="gone" />
 
 </LinearLayout>
 

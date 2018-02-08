@@ -104,10 +104,10 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             run = (ActiveRun) getArguments().getSerializable(ARG_POSITION);
         }
-
 
     }
 
@@ -188,12 +188,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             durationtw.setText(route.duration.text);
             distancetw.setText(" / " + route.distance.text);
 
-
-
-            originMarkers.add(mMap.addMarker(new MarkerOptions()
-                        .title("Ti trovi qui")
-                        .position(route.startLocation)));
-
+            originMarkers.add(mMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(route.startLocation)));
 
             Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_destination_35dp);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
@@ -222,12 +217,15 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.custom_dialog_followers);
-                dialog.setTitle("Title...");
 
                 listview = (ListView) dialog.findViewById(R.id.listview);
+                dialog.show();
+
+                // Vengono recuperati i followers di una determinata gara
                 arrayadapter = new FollowersAdapter(dialog.getContext(),R.layout.row_follower,new PActiveRunDaoImpl().findRunnerByRun(run.getId()));
                 listview.setAdapter(arrayadapter);
-                dialog.show();
+
+
             }
         };
 
@@ -335,17 +333,15 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
-
         }
         locationmanager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
         providerid = null;
 
         if (locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             providerid = LocationManager.GPS_PROVIDER;
         }
         else {
+
                     Intent gpsOptionsIntent = new Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(gpsOptionsIntent);

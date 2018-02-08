@@ -9,7 +9,7 @@ import it.unisa.runnerapp.beans.FinishedRun;
  * Created by Paolo on 27/01/2018.
  */
 
-public interface FinishedRanDao {
+public interface FinishedRunDao {
 
 
 
@@ -17,4 +17,7 @@ public interface FinishedRanDao {
     public void deleteFinishedRun(int idfinishedrun);
     public List<FinishedRun> getAllFinishedRuns();
     public FinishedRun findByID(int idfinishedrun);
+
+    // Recupera tutte le gare terminate inserite da un determinato utente senza caricare le sue informazioni personali
+    public List<FinishedRun> findByRunnerWithoutMaster(String nickname, String order);
 }

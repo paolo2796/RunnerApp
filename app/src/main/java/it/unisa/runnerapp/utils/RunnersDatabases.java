@@ -11,6 +11,13 @@ public interface RunnersDatabases
     final String LIVE_REQUEST_DB_ROOT="runners";
 
 
+
+    // CREDENTIAL FIREBASE RUNNERS PARTICIPATION
+    final String PARTICIPATION_DB_URL="https://runners-participation.firebaseio.com";
+    final String PARTICIPATION_DB_NAME="runners-participation";
+    final String PARTICIPATION_DB_ROOT="runs";
+
+
     // CREDENTIAL DATABASE SERVER MYSQL
     final String END_POINT_DB_MYSQL="runnerdb.cavvdye4ioch.us-east-1.rds.amazonaws.com";
     final String NAME_DB_MYSQL="runnerdb";

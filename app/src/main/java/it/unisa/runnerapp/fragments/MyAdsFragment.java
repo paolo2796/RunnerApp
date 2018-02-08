@@ -36,10 +36,11 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     public MyAdsAdapater arrayadapter;
     ActiveRunDao activerundao;
     Dialog dialog;
+    MyAdsFragment.CommunicatorActivity communicatoractivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.adsactive_fragment, container, false);
+        View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
         listview = (ListView) v.findViewById(R.id.listview);
         List<ActiveRun> runs = new ActiveRunDaoImpl().findByRunner("paolo2796");
         arrayadapter = new MyAdsAdapater(this.getActivity(),R.layout.row_myads,runs);
@@ -54,10 +55,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     @Override
     public void respond(int position) {
 
-        Intent intent = new Intent(getActivity(),AdActiveDetailActivity.class);
-        intent.putExtra("codrun",this.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
+        communicatoractivity.respond(position);
     }
 
 
@@ -114,6 +112,18 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
             }
 
         }
+    }
+
+
+    public void setCommunicator(MyAdsFragment.CommunicatorActivity communicatoractivity){
+        this.communicatoractivity = communicatoractivity;
+    }
+
+
+
+    public interface CommunicatorActivity{
+
+        public void respond(int index);
     }
 
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 
@@ -154,64 +155,27 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
     }
 
     @Override
-    public List<ActiveRun> findRunByRunner(final String nickuser) {
+    public List<Run> findRunByRunnerFetchID(final String nickuser) {
 
 
         try {
 
-            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
+            return  new AsyncTask<Void, Void, List<Run>>() {
                 @Override
-                protected List<ActiveRun> doInBackground( final Void ... params ) {
+                protected List<Run> doInBackground( final Void ... params ) {
                     ResultSet rs =null;
 
                     PreparedStatement ps = null;
-                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    List<Run> activeruns = new ArrayList<Run>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "'");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "'");
                         rs = ps.executeQuery();
 
                         while(rs.next()) {
 
-
-                            ActiveRun run = new ActiveRun();
-
+                            Run run = new Run();
                             run.setId(rs.getInt("id"));
-                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
-                            run.setMeetingPoint(latLng);
-                            run.setStartDate(rs.getDate("data_inizio"));
-
-
-                            String idmaster = rs.getString("master");
-
-                            Runner runner = new Runner();
-                            runner.setNickname(rs.getString("nickname"));
-                            runner.setPassword(rs.getString("password"));
-                            runner.setName(rs.getString("nome"));
-                            runner.setSurname(rs.getString("cognome"));
-                            runner.setBirthDate(rs.getDate("data_nascita"));
-                            runner.setWeight(rs.getDouble("peso"));
-                            runner.setLevel(rs.getShort("livello"));
-                            runner.setTraveledKilometers(rs.getDouble("km_percorsi"));
-
-
-
-                            byte[] bytes_imgprofilo = rs.getBytes("img_profilo");
-
-                            if (bytes_imgprofilo != null) {
-
-                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
-
-                            }
-
-                            run.setMaster(runner);
-
-
-
-                            run.setEstimatedKm(rs.getDouble("km_previsti"));
-                            run.setEstimatedHours(rs.getInt("ore_previste"));
-                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
-
                             activeruns.add(run);
 
                         }
@@ -225,7 +189,7 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                 }
 
                 @Override
-                protected void onPostExecute( List<ActiveRun> result ) {
+                protected void onPostExecute( List<Run> result ) {
                     super.onPostExecute(result);
                 }
             }.execute().get();

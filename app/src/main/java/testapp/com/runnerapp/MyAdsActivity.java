@@ -25,7 +25,7 @@ import it.unisa.runnerapp.fragments.MyAdsFragment;
  * Created by Paolo on 07/02/2018.
  */
 
-public class MyAdsActivity extends AppCompatActivity {
+public class MyAdsActivity extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity {
 
 
     MyAdsFragment myadsfragment;
@@ -40,10 +40,18 @@ public class MyAdsActivity extends AppCompatActivity {
         fm = getFragmentManager();
 
         myadsfragment = (MyAdsFragment) fm.findFragmentById(R.id.myadscontainer);
+        myadsfragment.setCommunicator(this);
 
     }
 
+    @Override
+    public void respond(int position) {
 
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(position).getId());
+        startActivity(intent);
+
+    }
 
 
 

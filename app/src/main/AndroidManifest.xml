@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="testapp.com.runnerapp">
 
-    <!-- Internet Permission-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Internet Permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Geolocation Permissions -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,29 +18,24 @@
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8"/>
+            android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AdsActivity"></activity>
+        <activity android:name=".MyAdsActivity"></activity>
+        <activity android:name=".AdActiveDetailActivity"></activity>
+        <activity android:name=".AdsFinishedActivity">
 
-
-        </activity>
-
-        <activity android:name=".AdsActivity">
-
-        </activity>
-
-
-        <activity android:name=".MyAdsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AdActiveDetailActivity">
+        <activity android:name=".FirebaseTestActivity">
 
 
         </activity>
-
     </application>
 
 </manifest>

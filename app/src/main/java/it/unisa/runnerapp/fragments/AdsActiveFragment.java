@@ -27,15 +27,14 @@ public class AdsActiveFragment extends Fragment {
      List<ActiveRun> runsactive;
      ListView listview;
      public AdActiveAdapter arrayadapter;
-     ActiveRunDao activerundao;
      Communicator communicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.adsactive_fragment, container, false);
+        View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
-        List<ActiveRun> runs = new ActiveRunDaoImpl().getActiveRunsWithin24h("data_inizio");
+        List<ActiveRun> runs = new ActiveRunDaoImpl().getActiveRunsWithin24hWithoutMaster("data_inizio");
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
         listview.setAdapter(arrayadapter);
         return v;
@@ -49,7 +48,6 @@ public class AdsActiveFragment extends Fragment {
     }
 
     public void onInfoWindowClick(int position){
-
         communicator.respond(position);
     }
 

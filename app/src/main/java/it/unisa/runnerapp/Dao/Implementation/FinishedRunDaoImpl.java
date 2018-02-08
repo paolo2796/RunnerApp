@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unisa.runnerapp.Dao.Interf.FinishedRanDao;
-import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.Dao.Interf.FinishedRunDao;
 import it.unisa.runnerapp.beans.FinishedRun;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.ConnectionUtil;
@@ -23,7 +22,7 @@ import it.unisa.runnerapp.utils.ConnectionUtil;
  * Created by Paolo on 27/01/2018.
  */
 
-public class FinishedRanDaoImpl implements FinishedRanDao{
+public class FinishedRunDaoImpl implements FinishedRunDao {
 
 
     @Override
@@ -77,41 +76,6 @@ public class FinishedRanDaoImpl implements FinishedRanDao{
 
     }
 
-
-    @Override
-    public void deleteFinishedRun(final int idfinishedrun) {
-
-        try {
-
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground( final Void ... params ) {
-                    PreparedStatement ps = null;
-                    String sql = "DELETE FROM Corse_Terminate WHERE Corse_Terminate.corsa =" + idfinishedrun;
-
-                    try {
-
-                        ps = ConnectionUtil.getConnection().prepareStatement(sql);
-                        int result = ps.executeUpdate();
-
-                    }
-
-                    catch (SQLException e) {
-                        Log.e("Exception",Log.getStackTraceString(e));
-                    }
-                    return null;
-                }
-
-
-
-            }.execute().get();
-
-        }
-
-        catch (Exception e) {
-            Log.e("Exception",Log.getStackTraceString(e));
-        }
-    }
 
     @Override
     public List<FinishedRun> getAllFinishedRuns() {
@@ -273,5 +237,124 @@ public class FinishedRanDaoImpl implements FinishedRanDao{
 
         return null;
 
+    }
+
+
+    @Override
+    public void deleteFinishedRun(final int idfinishedrun) {
+
+        try {
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground( final Void ... params ) {
+                    PreparedStatement ps = null;
+                    String sql = "DELETE FROM Corse_Terminate WHERE Corse_Terminate.corsa =" + idfinishedrun;
+
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        int result = ps.executeUpdate();
+
+                    }
+
+                    catch (SQLException e) {
+                        Log.e("Exception",Log.getStackTraceString(e));
+                    }
+                    return null;
+                }
+
+
+
+            }.execute().get();
+
+        }
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+    }
+
+    @Override
+    public List<FinishedRun> findByRunnerWithoutMaster(final String nickname, final String order) {
+
+        try {
+            return  new AsyncTask<Void, Void, List<FinishedRun>>() {
+                @Override
+                protected List<FinishedRun> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+                    PreparedStatement ps = null;
+                    List<FinishedRun> finishedruns = new ArrayList<FinishedRun>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Terminate join Corse on Corse_Terminate.corsa = Corse.id join Utenti on Utenti.nickname = Corse_Terminate.partecipante where Corse.master=? ORDER BY ?");
+                        ps.setString(1,nickname);
+                        ps.setString(2,order);
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+
+
+                            FinishedRun run = new FinishedRun();
+
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+
+                 /*           String idmaster = rs.getString("master");
+
+                            Runner runner = new Runner();
+                            runner.setNickname(rs.getString("nickname"));
+                            runner.setPassword(rs.getString("password"));
+                            runner.setName(rs.getString("nome"));
+                            runner.setSurname(rs.getString("cognome"));
+                            runner.setBirthDate(rs.getDate("data_nascita"));
+                            runner.setWeight(rs.getDouble("peso"));
+                            runner.setLevel(rs.getShort("livello"));
+                            runner.setTraveledKilometers(rs.getDouble("km_percorsi"));
+
+
+
+                            byte[] bytes_imgprofilo = rs.getBytes("img_profilo");
+
+                            if (bytes_imgprofilo != null) {
+
+                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
+
+                            }
+
+                            run.setRunner(runner); */
+
+
+                            run.setTraveledKm(rs.getDouble("km_percorsi"));
+                            run.setBurnedCal(rs.getInt("calorie_bruciate"));
+                            run.setAverageSpeed(rs.getInt("velocita_media"));
+
+                            finishedruns.add(run);
+
+                        }
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return finishedruns;
+                }
+
+                @Override
+                protected void onPostExecute( List<FinishedRun> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
     }
 }

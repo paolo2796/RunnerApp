@@ -50,7 +50,6 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
         super(context, resource, runs);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
     }
 
 
@@ -68,8 +67,8 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             TextView datestart = (TextView) v.findViewById(R.id.datestart);
             Button delayparticipationbtn = (Button) v.findViewById(R.id.delayparticipation_btn);
             TextView timertw = (TextView) v.findViewById(R.id.timer);
-            final Button deleterunbtn = (Button) v.findViewById(R.id.deleterun_btn);
-            final Button editrunbtn = (Button) v.findViewById(R.id.editrun_btn);
+            Button deleterunbtn = (Button) v.findViewById(R.id.deleterun_btn);
+            Button editrunbtn = (Button) v.findViewById(R.id.editrun_btn);
             editrunbtn.setTag(position);
             deleterunbtn.setTag(position);
             deleterunbtn.setOnTouchListener(getOnTouchListenerDelete(editrunbtn));
@@ -247,7 +246,6 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
 
 
     public interface Communicator{
-
         public void respond(int position);
         public void respondEdit(int position);
         public void respondConfirmDelete(ActiveRun runtag);

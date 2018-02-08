@@ -34,18 +34,17 @@ import testapp.com.runnerapp.R;
  * Created by Paolo on 02/02/2018.
  */
 
+
 public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     private LayoutInflater inflater;
-    private List<ActiveRun> runsbyrun;
+    private List<Run> runsbyrun;
     AdsActiveFragment.Communicator communicator;
-
 
     public AdActiveAdapter(@NonNull Context context, int resource, List<ActiveRun> runs) {
         super(context, resource, runs);
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        runsbyrun = new PActiveRunDaoImpl().findRunByRunner("paolo2796");
+        runsbyrun = new PActiveRunDaoImpl().findRunByRunnerFetchID("paolo2796");
     }
 
 
@@ -67,14 +66,16 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             TextView timertw = (TextView) v.findViewById(R.id.timer);
             Button participationbtn = (Button) v.findViewById(R.id.participatebtn);
             Button cancelrunbtn = (Button) v.findViewById(R.id.cancelbtn);
+            Button startlivebtn = (Button) v.findViewById(R.id.startlive_btn);
             cancelrunbtn.setTag(position);
             participationbtn.setTag(position);
+            startlivebtn.setTag(position);
 
             starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
             timertw.setText(String.valueOf(position));
 
-            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(), 1000, timertw, participationbtn, cancelrunbtn, delayparticipationbtn);
+            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(), 1000, timertw, participationbtn, cancelrunbtn, delayparticipationbtn, startlivebtn,activeruncurrent);
             timer.start();
 
             for (Run run : runsbyrun) {
@@ -94,7 +95,6 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
     public void setCommunicator(AdsActiveFragment.Communicator communicator) {
         this.communicator = communicator;
-
     }
 
 
@@ -103,22 +103,42 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         Button participation;
         Button delayparticipation;
         Button cancelrun;
+        Button startlivebtn;
+        ActiveRun activerun;
 
-        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw, Button participation, Button cancelrun, Button delayparticipation) {
+        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw, Button participation, Button cancelrun, Button delayparticipation,Button startlivebtn, ActiveRun activerun) {
             super(millisInFuture, countDownInterval);
+            this.activerun = activerun;
             this.timertw = timertw;
             this.participation = participation;
             this.cancelrun = cancelrun;
             this.delayparticipation = delayparticipation;
+            this.startlivebtn = startlivebtn;
         }
 
         @Override
         public void onFinish() {
             timertw.setText(getContext().getResources().getText(R.string.timer_delay));
+            boolean isparticipate =false;
+            for(Run runbyrun: runsbyrun) {
+                if (runbyrun.getId() == activerun.getId()) {
+                    isparticipate = true;
+                }
+            }
+
+            if(isparticipate){
+                Log.i("Message","SONO QUA ISPARTICIPATE");
+                delayparticipation.setVisibility(View.GONE);
+                startlivebtn.setVisibility(View.VISIBLE);
+            }
+
+            else{
+                delayparticipation.setVisibility(View.VISIBLE);
+                startlivebtn.setVisibility(View.GONE);
+            }
+
             participation.setVisibility(View.GONE);
             cancelrun.setVisibility(View.GONE);
-            delayparticipation.setVisibility(View.VISIBLE);
-
         }
 
         @Override

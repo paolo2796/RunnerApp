@@ -21,6 +21,8 @@ import it.unisa.runnerapp.fragments.AdsActiveFragment;
  * Created by Paolo on 01/02/2018.
  */
 
+
+
 public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.Communicator{
 
     AdsActiveFragment adsactivefrag;
@@ -29,7 +31,6 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ads);
-
 
         fm = getFragmentManager();
 
@@ -45,7 +46,6 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
         intent.putExtra("codrun",adsactivefrag.arrayadapter.getItem(position).getId());
         startActivity(intent);
-
     }
 
 
@@ -77,10 +77,6 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
         new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
 
     }
-
-
-
-
 
 }
 
