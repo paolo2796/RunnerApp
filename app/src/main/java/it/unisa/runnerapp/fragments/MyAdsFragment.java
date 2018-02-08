@@ -55,7 +55,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     @Override
     public void respond(int position) {
 
-        communicatoractivity.respond(position);
+        communicatoractivity.respondMyAdsActive(position);
     }
 
 
@@ -123,8 +123,10 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
     public interface CommunicatorActivity{
 
-        public void respond(int index);
+        public void respondMyAdsActive(int index);
     }
+
+
 
 
 

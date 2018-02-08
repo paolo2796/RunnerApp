@@ -16,6 +16,8 @@ public interface ActiveRunDao {
     public void updateActiveRun(ActiveRun activerun);
     public void deleteActiveRun(int idactiverun);
     public List<ActiveRun> getAllActiveRuns();
+
+    // Recupera una determinata corsa senza recuperare l'immagine del profilo del master
     public ActiveRun findByID(int idrun);
 
     // Recupera tutte le gare non ancora iniziate che si terranno entro 24 ore

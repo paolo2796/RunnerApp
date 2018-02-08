@@ -36,9 +36,9 @@ public class AdsFinishedActivity extends AppCompatActivity implements AdsFinishe
 
     }
 
-    @Override
-    public void respond(int position) {
 
+    @Override
+    public void respondAdsFinished(int position) {
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
         intent.putExtra("codrun",adsfinishedfragment.arrayadapter.getItem(position).getId());
         startActivity(intent);

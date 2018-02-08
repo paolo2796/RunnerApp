@@ -190,7 +190,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        communicator.respond(position);
+                        communicator.respondAdsActive(position);
                     }
                 });
 

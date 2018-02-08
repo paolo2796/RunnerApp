@@ -1,5 +1,6 @@
 package it.unisa.runnerapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +30,18 @@ public class AdsActiveFragment extends Fragment {
      public AdActiveAdapter arrayadapter;
      Communicator communicator;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
         List<ActiveRun> runs = new ActiveRunDaoImpl().getActiveRunsWithin24hWithoutMaster("data_inizio");
+
+        Log.i("messaggio",String.valueOf(runs.size()));
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
+        arrayadapter.setCommunicator(communicator);
         listview.setAdapter(arrayadapter);
         return v;
     }
@@ -43,19 +49,24 @@ public class AdsActiveFragment extends Fragment {
 
     public void setCommunicator(Communicator communicator) {
         this.communicator = communicator;
-        arrayadapter.setCommunicator(communicator);
-
     }
 
     public void onInfoWindowClick(int position){
-        communicator.respond(position);
+
+        communicator.respondAdsActive(position);
     }
 
     public interface Communicator {
-        public void respond(int index);
+        public void respondAdsActive(int index);
     }
 
+    public static AdsActiveFragment newInstance(Communicator communicator){
 
+        AdsActiveFragment adsActiveFragment = new AdsActiveFragment();
+        adsActiveFragment.setCommunicator(communicator);
+        return adsActiveFragment;
+
+    }
 
 
 }

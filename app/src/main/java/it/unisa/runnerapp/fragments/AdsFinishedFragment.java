@@ -46,7 +46,7 @@ public class AdsFinishedFragment extends Fragment implements AdFinishedAdapter.C
 
     @Override
     public void respond(int position) {
-        communicatoractivity.respond(position);
+        communicatoractivity.respondAdsFinished(position);
 
     }
 
@@ -58,7 +58,7 @@ public class AdsFinishedFragment extends Fragment implements AdFinishedAdapter.C
 
     public interface CommunicatorActivity{
 
-        public void respond(int index);
+        public void respondAdsFinished(int index);
     }
 
     public static AdsFinishedFragment newInstance(){

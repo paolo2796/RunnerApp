@@ -40,20 +40,12 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
     }
 
 
-    @Override
-    public void respond(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",adsactivefrag.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-    }
-
 
 
     public void requestParticipation(View v){
 
         int tag = Integer.parseInt(v.getTag().toString());
-       ActiveRun activeruncurren = (ActiveRun) adsactivefrag.arrayadapter.getItem(tag);
+        ActiveRun activeruncurren = (ActiveRun) adsactivefrag.arrayadapter.getItem(tag);
         Button participation = v.findViewById(R.id.participatebtn);
 
         View view = adsactivefrag.arrayadapter.getView(tag,(View) v.getParent(),null);
@@ -78,6 +70,13 @@ public class AdsActivity extends AppCompatActivity implements AdsActiveFragment.
 
     }
 
+
+    @Override
+    public void respondAdsActive(int position) {
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",adsactivefrag.arrayadapter.getItem(position).getId());
+        startActivity(intent);
+    }
 }
 
 

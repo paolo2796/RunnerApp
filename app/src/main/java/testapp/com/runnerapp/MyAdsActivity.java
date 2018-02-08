@@ -36,25 +36,19 @@ public class MyAdsActivity extends AppCompatActivity implements MyAdsFragment.Co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myads);
 
-
         fm = getFragmentManager();
-
         myadsfragment = (MyAdsFragment) fm.findFragmentById(R.id.myadscontainer);
         myadsfragment.setCommunicator(this);
 
     }
 
+
     @Override
-    public void respond(int position) {
+    public void respondMyAdsActive(int position) {
 
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
         intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(position).getId());
         startActivity(intent);
 
     }
-
-
-
-
-
 }
