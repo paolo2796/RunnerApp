@@ -42,7 +42,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
         listview = (ListView) v.findViewById(R.id.listview);
-        List<ActiveRun> runs = new ActiveRunDaoImpl().findByRunner("paolo2796");
+        List<ActiveRun> runs = new ActiveRunDaoImpl().findByRunnerWithin24hWithoutMaster("paolo2796","data_inizio");
         arrayadapter = new MyAdsAdapater(this.getActivity(),R.layout.row_myads,runs);
         listview.setAdapter(arrayadapter);
         arrayadapter.setCommunicator(this);

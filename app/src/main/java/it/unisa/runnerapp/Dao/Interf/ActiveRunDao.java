@@ -29,4 +29,7 @@ public interface ActiveRunDao {
 
     // Recupera tutte le gare non ancora iniziate che si terranno entro 24 ore (senza master)
     public List<ActiveRun> getActiveRunsWithin24hWithoutMaster(String orderby);
+
+    public List<ActiveRun> findByRunnerWithin24hWithoutMaster(String nickname, String order);
+
 }
