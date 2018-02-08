@@ -30,15 +30,14 @@ public class MainActivityPV extends AppCompatActivity implements AdsFinishedFrag
     AdsFinishedFragment adsfinishedfragment;
     MyAdsFragment myadsfragment;
     AdsActiveFragment adsactivefragment;
-    private FragmentManager fm;
-    private BottomBar bottomBar;
+    FragmentManager fm;
+    BottomBar bottomBar;
     @Override
     protected  void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
             fm = getFragmentManager();
-
 
 
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -72,7 +71,6 @@ public class MainActivityPV extends AppCompatActivity implements AdsFinishedFrag
                 }
             }
         });
-
     }
 
 

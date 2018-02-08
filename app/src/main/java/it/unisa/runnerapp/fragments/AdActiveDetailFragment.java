@@ -56,6 +56,7 @@ import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.customwidgets.CustomMap;
 import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.DirectionFinder;
+import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
 import testapp.com.runnerapp.Manifest;
@@ -98,8 +99,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private static final int COLOR_POLYLINE = Color.YELLOW;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,11 +187,11 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             durationtw.setText(route.duration.text);
             distancetw.setText(" / " + route.distance.text);
 
-            originMarkers.add(mMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(route.startLocation)));
+            mMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(route.startLocation));
 
             Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_destination_35dp);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
-            destinationMarkers.add(mMap.addMarker(destinationoptionmarker));
+            mMap.addMarker(destinationoptionmarker);
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(route.startLocation,route.endLocation));
 
             PolylineOptions polylineOptions = new PolylineOptions().
@@ -202,8 +201,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
             for (int i = 0; i < route.points.size(); i++)
                 polylineOptions.add(route.points.get(i));
-
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
         }
 
     }
@@ -237,6 +236,14 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onLocationChanged(Location location) {
                 sendRequest(new LatLng(location.getLatitude(),location.getLongitude()));
+                LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
+                DirectionFinderImpl directionFinder = new DirectionFinderImpl(
+                        getActivity(),
+                        mMap,
+                        R.drawable.ic_datestart_24dp,
+                        R.drawable.ic_destination_35dp,
+                        false);
+                directionFinder.execute(origin,run.getMeetingPoint());
                 locationmanager.removeUpdates(locationlistener);
             }
 
@@ -389,9 +396,5 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         super.onCreate(getArguments());
         mapview.onCreate(getArguments());
     }
-
-
-
-
 
 }
