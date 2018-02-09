@@ -18,6 +18,6 @@ public interface FinishedRunDao {
     public List<FinishedRun> getAllFinishedRuns();
     public FinishedRun findByID(int idfinishedrun);
 
-    // Recupera tutte le gare terminate inserite da un determinato utente senza caricare le sue informazioni personali
+    // Recupera tutte le gare terminate inserite da un determinato utente senza caricare le sue informazioni personali  e senza carica le informazioni relative al master
     public List<FinishedRun> findByRunnerWithoutMaster(String nickname, String order);
 }

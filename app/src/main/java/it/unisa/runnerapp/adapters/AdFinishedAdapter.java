@@ -34,7 +34,6 @@ import testapp.com.runnerapp.R;
 public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
     private LayoutInflater inflater;
-    Communicator communicator;
 
     public AdFinishedAdapter(@NonNull Context context, int resource, List<FinishedRun> runs) {
         super(context, resource, runs);
@@ -46,14 +45,15 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;
-        AdFinishedAdapter.ViewHolder holder = new AdFinishedAdapter.ViewHolder();
         FinishedRun runcurrent = getItem(position);
 
         if (v == null) {
-
             v = inflater.inflate(R.layout.row_myadsfinished, parent, false);
-
+            AdFinishedAdapter.ViewHolder holder = new AdFinishedAdapter.ViewHolder();
             holder.initializeMap(runcurrent.getMeetingPoint(), v, position);
+
+        }
+
 
             TextView starthour = (TextView) v.findViewById(R.id.starthour);
             TextView datestart = (TextView) v.findViewById(R.id.datestart);
@@ -65,7 +65,6 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             burnedkl.setText(String.valueOf(runcurrent.getBurnedCal()));
             traveledkm.setText(String.valueOf(runcurrent.getTraveledKm()));
 
-        }
 
         return v;
     }
@@ -91,12 +90,7 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
                         .build();                   // Crea una CameraPosition dal Builder
                 googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                // Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(AdActiveAdapter.this.getContext(),R.drawable.ic_info_marker_54dp);
-                // marker.icon(BitmapDescriptorFactory.fromBitmap(bitmapicon));
-
-                Marker marker = googlemap.addMarker(new MarkerOptions()
-                        .position(pointmeet)
-                        .title("Dove ti sei incontrato"));
+                Marker marker = googlemap.addMarker(new MarkerOptions().position(pointmeet).title("Dove ti sei incontrato"));
 
                 marker.showInfoWindow();
 
@@ -155,14 +149,6 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
     // Definizione Communicator con AdsFinishedFragment e relativi metodi
 
-    public interface Communicator{
-        public void respond(int position);;
-    }
-
-
-    public void setCommunicator(AdFinishedAdapter.Communicator communicator) {
-        this.communicator = communicator;
-    }
 
 
 

@@ -20,8 +20,6 @@ import testapp.com.runnerapp.R;
 /**
  * Created by Paolo on 03/02/2018.
  */
-
-
 public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicator  {
 
     List<ActiveRun> runsactive;
@@ -43,23 +41,19 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
         return v;
     }
 
-
-
     @Override
-    public void respond(int position) {
+    public void respondDetailRun(int position) {
+        communicatoractivity.respondMyAdsDetailRun(position);
 
-        communicatoractivity.respondMyAdsActive(position);
     }
-
 
     @Override
     public void respondEdit(int position) {
 
-
     }
 
     @Override
-    public void respondConfirmDelete(final ActiveRun runtag) {
+    public void respondConfirmDelete(ActiveRun runtag) {
 
         dialog = new Dialog(getActivity());
         dialog.setCancelable(false);
@@ -69,11 +63,12 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
         yesbtn.setTag(0);
         Button nobtn = (Button) dialog.findViewById(R.id.no_btn);
         nobtn.setTag(1);
-        yesbtn.setOnClickListener(new ClickConfirmedRunDialog(runtag));
-        nobtn.setOnClickListener(new  ClickConfirmedRunDialog(runtag));
+        yesbtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
+        nobtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
         dialog.show();
 
     }
+
 
 
 
@@ -116,7 +111,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
     public interface CommunicatorActivity{
 
-        public void respondMyAdsActive(int index);
+        public void respondMyAdsDetailRun(int index);
     }
 
 

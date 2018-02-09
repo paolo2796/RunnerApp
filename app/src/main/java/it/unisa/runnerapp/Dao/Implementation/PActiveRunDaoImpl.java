@@ -25,7 +25,6 @@ import it.unisa.runnerapp.utils.ConnectionUtil;
 
 public class PActiveRunDaoImpl implements PActiveRunDao {
 
-
     @Override
     public void createParticipationRun(final int idrun, final String nickrunner) {
 
@@ -68,11 +67,6 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         catch (Exception e) {
             Log.e("Exception",Log.getStackTraceString(e));
         }
-
-
-
-
-
     }
 
     @Override
@@ -145,13 +139,63 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
             Log.e("Exception",Log.getStackTraceString(e));
         }
 
+    }
+
+    @Override
+    public List<ActiveRun> findRunByRunner(final String nickuser, final String order) {
+
+        try {
+
+            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
+                @Override
+                protected List<ActiveRun> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+
+                    PreparedStatement ps = null;
+                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where pca.partecipante = ? ORDER BY ?");
+                        ps.setString(1,nickuser);
+                        ps.setString(2,order);
+                        rs = ps.executeQuery();
 
 
+                        while(rs.next()) {
+
+                            ActiveRun run = new ActiveRun();
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+                            run.setEstimatedKm(rs.getDouble("km_previsti"));
+                            run.setEstimatedHours(rs.getInt("ore_previste"));
+                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+
+                            activeruns.add(run);
+
+                        }
+                    }
 
 
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return activeruns;
+                }
 
+                @Override
+                protected void onPostExecute( List<ActiveRun> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
 
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
 
+        return null;
     }
 
     @Override
@@ -201,11 +245,6 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         }
 
         return null;
-
-
-
-
-
     }
 
     @Override

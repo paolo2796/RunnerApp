@@ -29,4 +29,5 @@ public interface ActiveRunDao {
 
     public List<ActiveRun> findByRunnerWithin24hWithoutMaster(String nickname, String order);
 
+
 }

@@ -16,11 +16,13 @@ public interface PActiveRunDao {
     public void deleteParticipationRun(int idrun, String nickrunner);
     public void updateParticipationRun(int idrun, String nickrunner);
 
+    // Ricerca tutte le corse attive di un runner (senza master)
+    public List<ActiveRun> findRunByRunner(String nickuser, String order);
+
     // Ricerca tutte le corse attive di un runner (solo id).
     public List<Run> findRunByRunnerFetchID(String nickuser);
 
     // Ricerca i runner che partecipano ad una corsa attiva.
     public List<Runner> findRunnerByRun(int idactiverun);
-
 
 }

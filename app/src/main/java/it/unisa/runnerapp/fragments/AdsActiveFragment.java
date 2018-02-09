@@ -16,6 +16,7 @@ import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -23,12 +24,12 @@ import testapp.com.runnerapp.R;
  */
 
 
-public class AdsActiveFragment extends Fragment {
+public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Communicator {
 
      List<ActiveRun> runsactive;
      ListView listview;
      public AdActiveAdapter arrayadapter;
-     Communicator communicator;
+        AdsActiveFragment.CommunicatorActivity communicatoractivity;
 
 
 
@@ -39,28 +40,27 @@ public class AdsActiveFragment extends Fragment {
         listview = (ListView) v.findViewById(R.id.listview);
         List<ActiveRun> runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
 
-        Log.i("messaggio",String.valueOf(runs.size()));
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
-        arrayadapter.setCommunicator(communicator);
+        arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
         return v;
     }
 
-    public void setCommunicator(Communicator communicator) {
-        this.communicator = communicator;
+
+    public void setCommunicator(AdsActiveFragment.CommunicatorActivity communicatoractivity){
+        this.communicatoractivity = communicatoractivity;
     }
 
-    public void onInfoWindowClick(int position){
-
-        communicator.respondAdsActive(position);
+    @Override
+    public void respondDetailRun(int index) {
+        communicatoractivity.responAdsActiveDetailRun(index);
     }
 
-    public interface Communicator {
-        public void respondAdsActive(int index);
+    public interface CommunicatorActivity {
+        public void responAdsActiveDetailRun(int index);
     }
 
-    public static AdsActiveFragment newInstance(Communicator communicator){
-
+    public static AdsActiveFragment newInstance(AdsActiveFragment.CommunicatorActivity communicator){
         AdsActiveFragment adsActiveFragment = new AdsActiveFragment();
         adsActiveFragment.setCommunicator(communicator);
         return adsActiveFragment;

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,20 +17,24 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
+import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
-import it.unisa.runnerapp.fragments.AdsFinishedFragment;
+import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
+import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
+import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
 
 /**
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, AdsActiveFragment.Communicator {
+public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity {
 
-    AdsFinishedFragment adsfinishedfragment;
+    MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
     AdsActiveFragment adsactivefragment;
+    MyAdsPlannedFragment myadsplannedfragment;
     FragmentManager fm;
     BottomBar bottomBar;
     @Override
@@ -54,7 +59,7 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
         intent.putExtra("codrun",adsfinishedfragment.arrayadapter.getItem(position).getId());
         startActivity(intent);
 
-    } */
+    }
 
     @Override
     public void respondAdsActive(int position) {
@@ -66,7 +71,7 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
     }
 
     @Override
-    public void respondMyAdsActive(int position) {
+    public void responMyAdsActiveDetailRun(int position) {
 
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
         intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(position).getId());
@@ -74,32 +79,15 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
 
     }
 
-    public void requestParticipation(View v){
-
-        int tag = Integer.parseInt(v.getTag().toString());
-        ActiveRun activeruncurren = (ActiveRun) adsactivefragment.arrayadapter.getItem(tag);
-        Button participation = v.findViewById(R.id.participatebtn);
-        View view = adsactivefragment.arrayadapter.getView(tag,(View) v.getParent(),null);
-        Button cancelrun = (Button) view.findViewById(R.id.cancelbtn);
-        cancelrun.setVisibility(View.VISIBLE);
-        participation.setVisibility(View.GONE);
-        new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
-
-    }
+    @Override
+    public void responMyAdtiveDetailRun(int position) {
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadplannedfragment.arrayadapter.getItem(position).getId());
+        startActivity(intent);
+    } */
 
 
-    public void cancelParticipation(View v){
 
-        int tag = Integer.parseInt(v.getTag().toString());
-        Button cancelrun = v.findViewById(R.id.cancelbtn);
-        View view = adsactivefragment.arrayadapter.getView(tag,(View) v.getParent(),null);
-        Button participation = (Button) view.findViewById(R.id.participatebtn);
-        cancelrun.setVisibility(View.GONE);
-        participation.setVisibility(View.VISIBLE);
-        ActiveRun activeruncurren = (ActiveRun) adsactivefragment.arrayadapter.getItem(tag);
-        new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
-
-    }
 
 
     public OnTabSelectListener getTabSelectListener() {
@@ -107,6 +95,7 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
        return new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
+
                 if (tabId == R.id.myads_tab) {
 
                     myadsfragment = new MyAdsFragment();
@@ -115,30 +104,74 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
                     ft.commit();
                     myadsfragment.setCommunicator(MainActivityPV.this);
 
-                } else if (tabId == R.id.participate_tab) {
+                }
+                else if (tabId == R.id.participate_tab) {
 
                     adsactivefragment = AdsActiveFragment.newInstance(MainActivityPV.this);
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, adsactivefragment);
                     ft.commit();
 
-                } else if (tabId == R.id.myadsfinished_tab) {
+                }
+                else if (tabId == R.id.myadsfinished_tab) {
 
-                    adsfinishedfragment = new AdsFinishedFragment();
+                    myadsfinishedfragment = new MyAdsFinishedFragment();
                     FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.containerfragment_frame, adsfinishedfragment);
+                    ft.replace(R.id.containerfragment_frame, myadsfinishedfragment);
                     ft.commit();
                  // Per ora non serve   adsfinishedfragment.setCommunicator(MainActivityPV.this);
                 }
-                else{
-                    adsfinishedfragment = new AdsFinishedFragment();
+                else if(tabId == R.id.myplanned_tab){
+                    myadsplannedfragment = new MyAdsPlannedFragment();
                     FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.containerfragment_frame, adsfinishedfragment);
+                    ft.replace(R.id.containerfragment_frame, myadsplannedfragment);
                     ft.commit();
-                    // Per ora non serve  adsfinishedfragment.setCommunicator(MainActivityPV.this);
+                    myadsplannedfragment.setCommunicator(MainActivityPV.this);
 
                 }
             }
         };
+    }
+
+
+    // Communicator MyAdsFragment
+
+    @Override
+    public void respondMyAdsDetailRun(int index) {
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+    }
+
+
+
+
+
+
+    /* Communicator MyAdsPlannedFragment */
+    @Override
+    public void responMyAdsPlannedDetailRun(int index) {
+
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsplannedfragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void respondStartLiveActivity(int codrun) {
+        Log.i("Messaggio",String.valueOf(codrun));
+        Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
+    }
+
+
+
+    /* Communicator AdsActiveFragment */
+    @Override
+    public void responAdsActiveDetailRun(int index) {
+
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",adsactivefragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+
     }
 }

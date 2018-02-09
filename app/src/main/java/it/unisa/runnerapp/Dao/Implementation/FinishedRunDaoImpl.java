@@ -287,7 +287,7 @@ public class FinishedRunDaoImpl implements FinishedRunDao {
                     List<FinishedRun> finishedruns = new ArrayList<FinishedRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Terminate join Corse on Corse_Terminate.corsa = Corse.id join Utenti on Utenti.nickname = Corse_Terminate.partecipante where Corse.master=? ORDER BY ?");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Terminate join Corse on Corse_Terminate.corsa = Corse.id where Corse_Terminate.partecipante = ? ORDER BY ?");
                         ps.setString(1,nickname);
                         ps.setString(2,order);
                         rs = ps.executeQuery();

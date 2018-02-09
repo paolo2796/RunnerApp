@@ -20,13 +20,12 @@ import testapp.com.runnerapp.R;
  * Created by Paolo on 07/02/2018.
  */
 
-public class AdsFinishedFragment extends Fragment implements AdFinishedAdapter.Communicator {
+public class MyAdsFinishedFragment extends Fragment {
 
 
     List<ActiveRun> runsactive;
     ListView listview;
     public AdFinishedAdapter arrayadapter;
-    AdsFinishedFragment.CommunicatorActivity communicatoractivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,31 +36,14 @@ public class AdsFinishedFragment extends Fragment implements AdFinishedAdapter.C
         List<FinishedRun> runs = new FinishedRunDaoImpl().findByRunnerWithoutMaster("paolo2796","data_inizio");
         arrayadapter = new AdFinishedAdapter(this.getActivity(),R.layout.row_myadsfinished,runs);
         listview.setAdapter(arrayadapter);
-        arrayadapter.setCommunicator(this);
 
         return v;
     }
 
 
-    @Override
-    public void respond(int position) {
-        communicatoractivity.respondAdsFinished(position);
 
-    }
-
-
-    public void setCommunicator(AdsFinishedFragment.CommunicatorActivity communicatoractivity){
-        this.communicatoractivity = communicatoractivity;
-    }
-
-
-    public interface CommunicatorActivity{
-
-        public void respondAdsFinished(int index);
-    }
-
-    public static AdsFinishedFragment newInstance(){
-        return new AdsFinishedFragment();
+    public static MyAdsFinishedFragment newInstance(){
+        return new MyAdsFinishedFragment();
     }
 
 }

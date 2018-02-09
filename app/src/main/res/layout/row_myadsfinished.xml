@@ -12,7 +12,6 @@
         android:stretchColumns="*"
         android:shrinkColumns="*">
 
-
         <TableRow
             android:gravity="center">
             <ImageView

@@ -2,6 +2,7 @@ package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,7 +22,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
@@ -37,132 +42,136 @@ import testapp.com.runnerapp.R;
 
 public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     private LayoutInflater inflater;
-    private List<Run> runsbyrun;
-    AdsActiveFragment.Communicator communicator;
+    AdActiveAdapter.Communicator communicator;
+    private List<AdActiveAdapter.ViewHolder> lstHolders;
+    private Handler mHandler = new Handler();
+
+    private Runnable updateRemainingTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (lstHolders) {
+                long currentTime = System.currentTimeMillis();
+                for (AdActiveAdapter.ViewHolder holder : lstHolders) {
+                    holder.updateTimeRemaining(currentTime);
+                }
+            }
+        }
+    };
 
     public AdActiveAdapter(@NonNull Context context, int resource, List<ActiveRun> runs) {
         super(context, resource, runs);
-
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        runsbyrun = new PActiveRunDaoImpl().findRunByRunnerFetchID("paolo2796");
+        lstHolders = new ArrayList<AdActiveAdapter.ViewHolder>();
+        startUpdateTimer();
     }
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View v = convertView;
-        AdActiveAdapter.ViewHolder holder = new AdActiveAdapter.ViewHolder();
         ActiveRun activeruncurrent = getItem(position);
+        AdActiveAdapter.ViewHolder holder = null;
 
-        if (v == null) {
-
-            v = inflater.inflate(R.layout.row_adactive, parent, false);
-
-            holder.initializeMap(activeruncurrent.getMeetingPoint(), v, position);
-
-            TextView starthour = (TextView) v.findViewById(R.id.starthour);
-            TextView datestart = (TextView) v.findViewById(R.id.datestart);
-            Button delayparticipationbtn = (Button) v.findViewById(R.id.delayparticipation_btn);
-            TextView timertw = (TextView) v.findViewById(R.id.timer);
-            Button participationbtn = (Button) v.findViewById(R.id.participatebtn);
-            Button cancelrunbtn = (Button) v.findViewById(R.id.cancelbtn);
-            Button startlivebtn = (Button) v.findViewById(R.id.startlive_btn);
-            cancelrunbtn.setTag(position);
-            participationbtn.setTag(position);
-            startlivebtn.setTag(position);
-
-            starthour.setText(CheckUtils.convertHMToStringFormat(activeruncurrent.getStartDate()));
-            datestart.setText(CheckUtils.convertDateToStringFormat(activeruncurrent.getStartDate()));
-            timertw.setText(String.valueOf(position));
-
-            CounterClass timer = new CounterClass(activeruncurrent.getStartDate().getTime() - System.currentTimeMillis(), 1000, timertw, participationbtn, cancelrunbtn, delayparticipationbtn, startlivebtn,activeruncurrent);
-            timer.start();
-
-            for (Run run : runsbyrun) {
-                if (run.getId() == activeruncurrent.getId()) {
-                    participationbtn.setVisibility(View.GONE);
-                    cancelrunbtn.setVisibility(View.VISIBLE);
-                }
+        if (convertView == null) {
+            holder = new AdActiveAdapter.ViewHolder();
+            convertView = inflater.inflate(R.layout.row_adactive, parent, false);
+            holder.starthour = (TextView) convertView.findViewById(R.id.starthour);
+            holder.datestart = (TextView) convertView.findViewById(R.id.datestart);
+            holder.timertw = (TextView) convertView.findViewById(R.id.timer);
+            holder.participationbtn = (Button) convertView.findViewById(R.id.participationbtn);
+            holder.delayparticipation = (Button) convertView.findViewById(R.id.delayparticipation_btn);
+            holder.mapview = (MapView) convertView.findViewById(R.id.pointmeetmap);
+            convertView.setTag(holder);
+            synchronized (lstHolders) {
+                lstHolders.add(holder);
             }
-
-
         }
+        else {
+            holder = (AdActiveAdapter.ViewHolder) convertView.getTag();
+        }
+        holder.setData(getItem(position), position);
 
-        return v;
+        return convertView;
+
+    }
+
+    private void startUpdateTimer() {
+        Timer tmr = new Timer();
+        tmr.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.post(updateRemainingTimeRunnable);
+            }
+        }, 1000, 1000);
     }
 
 
+    public View.OnClickListener getRequestParicipation(){
 
-    public void setCommunicator(AdsActiveFragment.Communicator communicator) {
-        this.communicator = communicator;
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag = Integer.parseInt(v.getTag().toString());
+
+                Toast.makeText(getContext(),"CIAO",Toast.LENGTH_LONG).show();
+            /*    ActiveRun activeruncurren = (ActiveRun) getItem(tag);
+                Button participation = v.findViewById(R.id.participatebtn);
+                View view = adsactivefragment.arrayadapter.getView(tag,(View) v.getParent(),null);
+                Button cancelrun = (Button) view.findViewById(R.id.cancelbtn);
+                cancelrun.setVisibility(View.VISIBLE);
+                participation.setVisibility(View.GONE);
+                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796"); */
+            }
+        };
     }
 
 
-    public class CounterClass extends CountDownTimer {
+    private class ViewHolder implements OnMapReadyCallback {
+
+        TextView datestart;
+        TextView starthour;
         TextView timertw;
-        Button participation;
+        Button participationbtn;
         Button delayparticipation;
-        Button cancelrun;
-        Button startlivebtn;
         ActiveRun activerun;
-
-        public CounterClass(long millisInFuture, long countDownInterval, TextView timertw, Button participation, Button cancelrun, Button delayparticipation,Button startlivebtn, ActiveRun activerun) {
-            super(millisInFuture, countDownInterval);
-            this.activerun = activerun;
-            this.timertw = timertw;
-            this.participation = participation;
-            this.cancelrun = cancelrun;
-            this.delayparticipation = delayparticipation;
-            this.startlivebtn = startlivebtn;
-        }
-
-        @Override
-        public void onFinish() {
-            timertw.setText(getContext().getResources().getText(R.string.timer_delay));
-            boolean isparticipate =false;
-
-          /*  PER ORA NON SERVE
-          for(Run runbyrun: runsbyrun) {
-                if (runbyrun.getId() == activerun.getId()) {
-                    isparticipate = true;
-                }
-            }
-
-            if(isparticipate){
-                delayparticipation.setVisibility(View.GONE);
-                startlivebtn.setVisibility(View.VISIBLE);
-            }
-
-            else{
-                delayparticipation.setVisibility(View.VISIBLE);
-                startlivebtn.setVisibility(View.GONE);
-            }  PER ORA NON SERVE */
-
-            delayparticipation.setVisibility(View.VISIBLE);
-            participation.setVisibility(View.GONE);
-            cancelrun.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            long millis = millisUntilFinished;
-            String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-            synchronized (this) {
-                timertw.setText(hms);
-                ;
-            }
-        }
-    }
-
-
-    class ViewHolder implements OnMapReadyCallback {
-
-        MapView mapView;
+        MapView mapview;
         LatLng pointmeeting;
         GoogleMap googlemap;
         int position;
+
+        public void setData(ActiveRun item, int position) {
+
+            activerun = item;
+            this.position = position;
+            participationbtn.setTag(position);
+            delayparticipation.setTag(position);
+            participationbtn.setOnClickListener(getRequestParicipation());
+            starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
+            datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
+            pointmeeting = activerun.getMeetingPoint();
+            mapview.onCreate(null);
+            mapview.getMapAsync(this);
+            updateTimeRemaining(System.currentTimeMillis());
+        }
+
+        public void updateTimeRemaining(long currentTime) {
+            long timeDiff = activerun.getStartDate().getTime() - currentTime;
+            if (timeDiff > 0) {
+                delayparticipation.setVisibility(View.GONE);
+                participationbtn.setVisibility(View.VISIBLE);
+                int seconds = (int) (timeDiff / 1000) % 60;
+                int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
+            } else {
+                timertw.setText("Tempo Scaduto!");
+                participationbtn.setVisibility(View.GONE);
+                delayparticipation.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+
+
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -177,8 +186,6 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                         .build();                   // Crea una CameraPosition dal Builder
                 googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                // Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(AdActiveAdapter.this.getContext(),R.drawable.ic_info_marker_54dp);
-                // marker.icon(BitmapDescriptorFactory.fromBitmap(bitmapicon));
 
                 Marker marker = googlemap.addMarker(new MarkerOptions()
                         .position(pointmeet)
@@ -188,54 +195,45 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 marker.showInfoWindow();
 
 
-                googlemap.setInfoWindowAdapter(new MyInfoWindowAdapter());
+                googlemap.setInfoWindowAdapter(new AdActiveAdapter.MyInfoWindowAdapter());
                 googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        communicator.respondAdsActive(position);
+                        communicator.respondDetailRun(position);
                     }
                 });
-
             }
         }
-
-
-
-        public void initializeMap(LatLng pointmeeting, View convertView, int position){
-
-            this.position=position;
-            this.pointmeeting = pointmeeting;
-            mapView = (MapView) convertView.findViewById(R.id.pointmeetmap);
-            mapView.onCreate(null);
-            mapView.getMapAsync(this);
-
-        }
-
-    } // end class Holder
-
-
-
+    } // End Class View Holder
 
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private final View myContentsView;
-
         MyInfoWindowAdapter(){
-
             myContentsView = inflater.inflate(R.layout.custom_info_direction, null);
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-
             return null;
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-
             return myContentsView;
         }
     } // end class MyInfoWindowAdapter
+
+
+
+
+    public void setCommunicator(AdActiveAdapter.Communicator communicator) {
+        this.communicator = communicator;
+    }
+
+    public interface Communicator{
+
+        public void respondDetailRun(int index);
+    }
 
 }
