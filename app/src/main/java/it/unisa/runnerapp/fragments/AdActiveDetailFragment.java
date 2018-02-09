@@ -197,12 +197,13 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
                     geodesic(true).
                     color(getResources().getColor(R.color.tempv_celestial)).
                     width(10);
-
             for (int i = 0; i < route.points.size(); i++)
                 polylineOptions.add(route.points.get(i));
             polylinePaths.add(mMap.addPolyline(polylineOptions));
 
         }
+
+
     }
 
 
@@ -232,15 +233,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                sendRequest(new LatLng(location.getLatitude(),location.getLongitude()));
-               /* LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
-                DirectionFinderImpl directionFinder = new DirectionFinderImpl(
-                        getActivity(),
-                        mMap,
-                        R.drawable.ic_datestart_24dp,
-                        R.drawable.ic_destination_35dp,
-                        false);
-                directionFinder.execute(origin,run.getMeetingPoint()); */
+                LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
+                sendRequest(origin);
                 locationmanager.removeUpdates(locationlistener);
             }
 
@@ -263,7 +257,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
     private void sendRequest(LatLng origin){
         try {
-            new DirectionFinder(this,origin, run.getMeetingPoint()).execute();
+
+            new DirectionFinder(this,origin, run.getMeetingPoint()).executeDraw();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -291,6 +286,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             this.origin = origin;
             this.destination=destination;
 
+            Log.i("Messaggio Destinazione", String.valueOf(origin.longitude + "- " + origin.latitude));
             inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 

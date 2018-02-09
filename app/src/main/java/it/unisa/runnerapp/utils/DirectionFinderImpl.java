@@ -2,16 +2,13 @@ package it.unisa.runnerapp.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -20,7 +17,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unisa.runnerapp.fragments.AdActiveDetailFragment;
 import testapp.com.runnerapp.R;
 
 /**
@@ -34,42 +30,56 @@ public class DirectionFinderImpl implements DirectionFinderListener {
     Context cx;
     int iconorigin;
     int icondestination;
-    boolean iswaypoint;
+    private LatLng waypoint;
 
-    public DirectionFinderImpl(Context cx, GoogleMap googleMap, int iconorigin, int icondestination, boolean iswaypoint){
+
+    public DirectionFinderImpl(Context cx, GoogleMap googleMap, int iconorigin, int icondestination){
         this.mMap = googleMap;
         this.cx = cx;
         this.iconorigin = iconorigin;
         this.icondestination = icondestination;
-        this.iswaypoint = iswaypoint;
 
     }
 
-    public DirectionFinderImpl(Context cx, GoogleMap googleMap, boolean iswaypoint){
-        this.mMap = googleMap;
-        this.cx = cx;
-        this.iswaypoint = iswaypoint;
+
+    public DirectionFinderImpl(){};
+
+    public LatLng execute(LatLng origin, LatLng destination, boolean iswaypoint){
+        LatLng puntocentrale = null;
+
+            if(iswaypoint) {
+                List<Route> routes = null;
+                try {
+                    routes = new DirectionFinder(origin, destination).execute();
+                    int med = routes.get(0).points.size()/2;
+                    return puntocentrale = new LatLng(routes.get(0).points.get(med).latitude,routes.get(0).points.get(med).longitude);
+
+                }
+                catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                int med = routes.get(0).points.size() / 2;
+                return puntocentrale = new LatLng(routes.get(0).points.get(med).latitude, routes.get(0).points.get(med).longitude);
+            }
+
+            else{
+                try {
+                    new DirectionFinder(this,origin,destination).executeDraw();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        return null;
 
     }
 
-    public void execute(LatLng origin, LatLng destination){
 
-        try {
-
-            new DirectionFinder(this,origin,destination).execute();
-
-        } catch (UnsupportedEncodingException e) {
-
-            e.printStackTrace();
-        }
-
-    }
 
     // Implementazione metodi DirectionFinderListener
 
     @Override
     public void onDirectionFinderStart() {
-
 
         if (polylinePaths != null) {
             for (Polyline polyline:polylinePaths ) {
@@ -100,17 +110,9 @@ public class DirectionFinderImpl implements DirectionFinderListener {
             for (int i = 0; i < route.points.size(); i++)
                 polylineOptions.add(route.points.get(i));
 
-            if(iswaypoint){
-                int med = route.points.size()/2;
-                //Log.i("Messaggio size",String.valueOf(route.points.size()));
-                //Log.i("Messaggio ic",String.valueOf(med));
-                LatLng puntocentrale = new LatLng(route.points.get(med).latitude,route.points.get(med).longitude);
-                //Log.i("Messaggio punto central",String.valueOf("Latitudine: " + route.points.get(med).latitude + "- Longitudine:" + route.points.get(med).longitude));
-                mMap.addMarker(new MarkerOptions().title("Punto Incontro").position(puntocentrale));
-            }
-
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
     }
+
 
 }

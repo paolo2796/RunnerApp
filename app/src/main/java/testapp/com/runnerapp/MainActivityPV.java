@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -24,12 +28,14 @@ import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.DirectionFinder;
+import it.unisa.runnerapp.utils.DirectionFinderImpl;
 
 /**
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity {
+public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity{
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -42,12 +48,20 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
-            fm = getFragmentManager();
+           fm = getFragmentManager();
 
 
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
+
+
+
+
     }
+
+
+
+
 
 
 
@@ -174,4 +188,5 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
         startActivity(intent);
 
     }
+
 }
