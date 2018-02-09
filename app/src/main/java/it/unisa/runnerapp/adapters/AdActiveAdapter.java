@@ -111,15 +111,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             @Override
             public void onClick(View v) {
                 int tag = Integer.parseInt(v.getTag().toString());
-
-                Toast.makeText(getContext(),"CIAO",Toast.LENGTH_LONG).show();
-            /*    ActiveRun activeruncurren = (ActiveRun) getItem(tag);
-                Button participation = v.findViewById(R.id.participatebtn);
-                View view = adsactivefragment.arrayadapter.getView(tag,(View) v.getParent(),null);
-                Button cancelrun = (Button) view.findViewById(R.id.cancelbtn);
-                cancelrun.setVisibility(View.VISIBLE);
-                participation.setVisibility(View.GONE);
-                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796"); */
+                ActiveRun activeruncurren = (ActiveRun) getItem(tag);
+                Toast.makeText(getContext(),"Parteciperai a questa gara! Vai in sezione 'Programmate'",Toast.LENGTH_LONG).show();
+                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
+                AdActiveAdapter.this.remove(activeruncurren);
+                AdActiveAdapter.this.notifyDataSetChanged();
             }
         };
     }

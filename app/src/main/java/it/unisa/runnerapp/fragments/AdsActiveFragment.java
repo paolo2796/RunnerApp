@@ -39,6 +39,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
         listview = (ListView) v.findViewById(R.id.listview);
         List<ActiveRun> runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
+        Log.i("Messaggio",String.valueOf(runs.size()));
 
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
         arrayadapter.setCommunicator(this);
