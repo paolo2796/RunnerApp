@@ -11,9 +11,9 @@
         android:layout_height="64dp"
         android:layout_alignBottom="@id/senderInfoPanel"
         android:layout_alignTop="@id/senderInfoPanel"
+        android:foregroundGravity="center"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_marginLeft="5dp"/>
 
     <RelativeLayout
         android:id="@+id/senderInfoPanel"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="13dp"
                 android:layout_marginLeft="5dp"
-                android:text="Inviata il 20/10/2018"/>
+                tools:text="Inviata il 20/10/2018"/>
             <TextView
                 android:id="@+id/hourInfo"
                 android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                 android:textSize="13dp"
                 android:layout_marginLeft="5dp"
                 android:layout_below="@id/dateInfo"
-                android:text="Alle 20:03"/>
+                tools:text="Alle 20:03"/>
         </RelativeLayout>
     </RelativeLayout>
     <LinearLayout

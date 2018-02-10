@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -25,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.FirebaseApp;
@@ -33,18 +38,24 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimeZone;
 
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.RunnerDao;
+import it.unisa.runnerapp.adapters.AcceptedRequestsAdapter;
 import it.unisa.runnerapp.adapters.LiveRequestsAdapter;
 import it.unisa.runnerapp.adapters.MarkerWindowAdapter;
 import it.unisa.runnerapp.beans.GeoUser;
 import it.unisa.runnerapp.beans.LiveRequest;
 import it.unisa.runnerapp.beans.Runner;
+import it.unisa.runnerapp.services.LocationUpdater;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
@@ -53,20 +64,25 @@ import testapp.com.runnerapp.R;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
+    private TextView         notificationsBadge;
+    private Integer          notificationsCounter;
     private Context          ctx;
 
     private GeoUser          gUser;
 
-    private LocationManager  lManager;
-    private LocationProvider lProvider;
-    private Location         bestLocation;
+    private static LocationManager         lManager;
+    private LocationProvider        lProvider;
+    private Location                bestLocation;
+    private static LocationListener locationListener;
+
+    private Long lastLocationUpdateTime;
 
     private GoogleMap              gMap;
     private LatLng                 userPosition;
     private HashMap<String,Marker> nearbyRunners;
 
-    private ListView            inboxRequestsListView;
-    private LiveRequestsAdapter inboxRequestsAdapter;
+    private LiveRequestsAdapter     inboxRequestsAdapter;
+    private AcceptedRequestsAdapter acceptedRequestsAdapter;
 
     private FirebaseDatabase  locationsDB;
     private FirebaseDatabase  liveRequestsDB;
@@ -75,13 +91,17 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private GeoFire               gFire;
     private GeoQueryEventListener nearbyRunnersListener;
 
+    private Intent                  locationUpdaterService;
+
     private static final double RUNNERS_RESEARCH_RADIUS=0.8;
 
     private static final int   TIME_UPDATES=650;
     private static final int   DISTANCE_UPDATES=1;
     private static final float ZOOM_CAMERA=19.0f;
 
+    private static final String ACCEPTED_REQUESTS_KEY="AcceptedUser";
     private static final String LOCATION_DEBUG_KEY="Location Update";
+    private static final String SP_ACCEPTED_REQUESTS_NAME="accepted_requests";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -107,23 +127,62 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         inboxRequestsAdapter.setUser(MainActivity.user.getNickname());
 
         registerRunnerForRequests();
+
+        lastLocationUpdateTime= System.currentTimeMillis();
+
+        retrieveAcceptedRequests();
     }
 
     @Override
     public void onResume()
     {
-        super.onResume();
-
         try
         {
-            LocationListener locationListener = getLocationListener();
+            if(locationListener==null)
+                locationListener = getLocationListener();
             GeoUtils.startLocationUpdates(lManager, LocationManager.GPS_PROVIDER, TIME_UPDATES,DISTANCE_UPDATES, locationListener);
+
+            if(locationUpdaterService!=null)
+            {
+                //Il service viene arrestato
+                ctx.stopService(locationUpdaterService);
+                locationUpdaterService=null;
+                Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.i("LATN",""+location);
+                if(location!=null)
+                {
+                    Log.i("LASTN",""+location.getLatitude());
+                    Log.i("LASTN",""+location.getLongitude());
+                }
+            }
         }
         catch (SecurityException ex)
         {
             //Permessi non approvati dall'utente
             //reagire di conseguenza
         }
+        finally
+        {
+            super.onResume();
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        //Stop agli aggiornamenti in foreground
+        GeoUtils.stopLocationUpdates(lManager,locationListener);
+        //Creazione intent da lanciare
+        locationUpdaterService=new Intent(ctx, LocationUpdater.class);
+        //Aggiunta informazioni necessarie quali nickname dell'utente
+        //e gli intervalli di tempo e distanza con cui richiedere gli
+        //aggiornamenti
+        locationUpdaterService.putExtra(LocationUpdater.USER_ID_KEY,MainActivity.user.getNickname());
+        locationUpdaterService.putExtra(LocationUpdater.TIME_INTERVAL_KEY,TIME_UPDATES);
+        locationUpdaterService.putExtra(LocationUpdater.DISTANCE_INTERVAL_KEY,DISTANCE_UPDATES);
+        //Avvio del service
+        ctx.startService(locationUpdaterService);
+        super.onPause();
     }
 
     @Override
@@ -131,7 +190,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         View view=super.onCreateView(inflater,container,savedInstanceState);
         super.getMapAsync(this);
-
         return view;
     }
 
@@ -141,6 +199,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         try
         {
             gMap=googleMap;
+            gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(ctx,R.raw.map_style));
             gMap.setMyLocationEnabled(true);
             gMap.setInfoWindowAdapter(new MarkerWindowAdapter(getContext()));
             gMap.setOnInfoWindowLongClickListener(getInfoWindowClickListener());
@@ -164,6 +223,28 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             {
                 if(GeoUtils.isBetterLocation(location,bestLocation))
                 {
+                    if(bestLocation!=null)
+                    {
+                        //Calcolo delle calorie bruciate,della velocità e della distanza percorsa
+
+                        //Distanza percorsa in metri
+                        float distance=bestLocation.distanceTo(location);
+                        long currentTime=System.currentTimeMillis();
+                        //Tempo impiegato per raggiungere la nuova locazione
+                        long spentTime=currentTime-lastLocationUpdateTime;
+                        //Tempo impegato in secondi
+                        spentTime=spentTime/1000;
+                        //Velocità in metri al secondo
+                        double velocity= (double)distance/spentTime;
+                        Log.i("DISTANCE",""+distance+" metri");
+                        Log.i("TIME",""+spentTime+" sec");
+                        Log.i("VELOCITY",""+velocity+" m/s");
+                    }
+                    else
+                        lastLocationUpdateTime=System.currentTimeMillis();
+
+                    lastLocationUpdateTime=System.currentTimeMillis();
+
                     bestLocation=location;
                     //Se la mappa non è stata inizializzata vengono creati i dati per farlo
                     //e viene ottenuto il riferimento al nodo figlio che rappresenta l'utente
@@ -193,7 +274,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
                     //Aggiornamento dati mostrati sulla mappa
                     userPosition=new LatLng(location.getLatitude(),location.getLongitude());
-                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userPosition,ZOOM_CAMERA));
                 }
                 else
                     Log.d(LOCATION_DEBUG_KEY,"Ricevuto fix peggiore della locazione corrente");
@@ -255,6 +335,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     marker.remove();
                     nearbyRunners.remove(key);
                     marker=gMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
+                    marker.setTag(key);
                     nearbyRunners.put(key,marker);
                 }
             }
@@ -340,7 +421,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Navigo verso il nodo a cui inviare la richiesta
         DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
         consumerReference=consumerReference.child(runner+"/"+MainActivity.user.getNickname());
-        consumerReference.setValue(new Date());
+        consumerReference.setValue(ServerValue.TIMESTAMP);
         consumerReference=consumerReference.child(RunnersDatabases.LIVE_REQUEST_DB_ANSWER_NODE);
         consumerReference.addValueEventListener(getOnRequestAnsweredListener());
     }
@@ -353,15 +434,39 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 String key=dataSnapshot.getKey();
+                //Recupero dati del sender
                 RunnerDao runnerDao=new RunnerDaoImpl();
                 Runner runner=runnerDao.getByNick(key);
-                //Date da sostituire
-                Log.i("SNAPSHOT",""+dataSnapshot.getValue());
-                LiveRequest request=new LiveRequest(runner,new Date());
-                inboxRequestsAdapter.add(request);
-                inboxRequestsAdapter.notifyDataSetChanged();
 
-                Toast.makeText(getContext(),"Richiesta ricevuta da "+key,Toast.LENGTH_LONG).show();
+                //Arrivo di una nuova richiesta
+                try
+                {
+                    //Timestamp in cui è stata effettuata la richiesta
+                    long timeInMills=(Long)dataSnapshot.getValue();
+                    //Impostazione del fusorario locale
+                    Calendar calendar=Calendar.getInstance(TimeZone.getDefault());
+                    calendar.setTimeInMillis(timeInMills);
+                    //Creazione della richiesta live sopraggiunta
+                    //specificando sender e data/ora richiesta
+                    LiveRequest request=new LiveRequest(runner,calendar.getTime());
+                    //aggiunta alla lista delle richieste
+                    inboxRequestsAdapter.add(request);
+                    inboxRequestsAdapter.notifyDataSetChanged();
+
+                    //Aggiornamento numero notifica
+                    //notificationsCounter++;
+                    //notificationsBadge.setText(""+notificationsCounter);
+                    //notificationsBadge.invalidate();
+                    Toast.makeText(getContext(),"Richiesta ricevuta da "+key,Toast.LENGTH_LONG).show();
+                }
+                //Richiesta che è stata precedentemente accettata
+                catch (ClassCastException ex)
+                {
+                    HashMap map=(HashMap)dataSnapshot.getValue();
+                    Log.i("ACCETTATA",""+map);
+                    DatabaseReference destRef=dataSnapshot.getRef();
+                    Log.i("SNAPX",destRef.getKey());
+                }
             }
 
             @Override
@@ -385,27 +490,51 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                //In questo caso la richiesta è stata accettata
                 if(dataSnapshot.getValue()!=null&&((String)dataSnapshot.getValue()).contains(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED))
+                {
                     Toast.makeText(getContext(),"La richiesta è stata accettata",Toast.LENGTH_LONG).show();
+                    DatabaseReference destRef=dataSnapshot.getRef();
+                    //Recupero dati dell'accettante
+                    RunnerDao runnerDao=new RunnerDaoImpl();
+                    Runner runner=runnerDao.getByNick(destRef.getParent().getParent().getKey());
+                    Log.d("Chiave",destRef.getParent().getParent().getKey());
+                    //Aggiunta richiesta accettata alla lista delle richieste accettate
+                    acceptedRequestsAdapter.add(runner);
+                    acceptedRequestsAdapter.notifyDataSetChanged();
+                    //Memorizzazione dell'accettante
+                    SharedPreferences sharedPreferences=ctx.getSharedPreferences(SP_ACCEPTED_REQUESTS_NAME,Context.MODE_PRIVATE);
+                    Set<String> users=sharedPreferences.getStringSet(ACCEPTED_REQUESTS_KEY,new HashSet<String>());
+                    users.add(runner.getNickname());
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.clear();
+                    editor.putStringSet(ACCEPTED_REQUESTS_KEY,users);
+                    editor.commit();
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
-
             }
         };
-    }
-
-    public void setInboxRequestsListView(ListView inboxRequestsListView)
-    {
-        this.inboxRequestsListView=inboxRequestsListView;
     }
 
     public void setInboxRequestsAdapter(LiveRequestsAdapter inboxRequestsAdapter)
     {
         this.inboxRequestsAdapter=inboxRequestsAdapter;
-        inboxRequestsListView.setAdapter(inboxRequestsAdapter);
+    }
+
+    public void setAcceptedRequestsAdapter(AcceptedRequestsAdapter acceptedRequestsAdapter)
+    {
+        this.acceptedRequestsAdapter=acceptedRequestsAdapter;
+    }
+
+    public void setNotificationBadge(TextView notificationBadge)
+    {
+        this.notificationsBadge=notificationBadge;
+        notificationsCounter=0;
+        notificationBadge.setText(""+notificationsCounter);
     }
 
     public void onSavedInstanceState(Bundle savedInstanceState)
@@ -415,5 +544,91 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //liveRequestAdapter
         //Firebases
         //GFire
+    }
+
+    public static void receiveLocation(Location location)
+    {
+        if(location!=null&&locationListener!=null)
+        {
+            locationListener.onLocationChanged(location);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+
+            try
+            {
+                lManager.requestSingleUpdate(criteria,locationListener,null);
+            }
+            catch (SecurityException ex)
+            {
+
+            }
+        }
+    }
+
+    public void retrieveAcceptedRequests()
+    {
+        //Posizionamento sul nodo associato all'utente
+        DatabaseReference dr=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT+"/"+MainActivity.user.getNickname());
+        //Recupero dei figli
+        ValueEventListener eventListener=new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                //Scorrimento dei figli
+                for(DataSnapshot ds:dataSnapshot.getChildren())
+                {
+                    final DatabaseReference childRef=ds.getRef().child("answer");
+                    if(childRef!=null)
+                    {
+                        Log.i("CHIAVE",childRef.getKey());
+                        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot)
+                            {
+                                Log.i("VALORE",""+dataSnapshot.getValue());
+                                String value=(String)dataSnapshot.getValue();
+                                if (value!=null&&value.equals(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED))
+                                {
+                                    Log.i("PADRE",childRef.getParent().getKey());
+                                    RunnerDao runnerDao=new RunnerDaoImpl();
+                                    Runner runner=runnerDao.getByNick(childRef.getParent().getKey());
+                                    acceptedRequestsAdapter.add(runner);
+                                    acceptedRequestsAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
+                    }
+                    else
+                        Log.i("NIENTE","niente");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+            }
+        };
+
+        dr.addListenerForSingleValueEvent(eventListener);
+
+        //Recupero richieste inviate che sono state accettate
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(SP_ACCEPTED_REQUESTS_NAME,Context.MODE_PRIVATE);
+        //Recupero degli utenti accettanti nella corsa (o sessione) corrente
+        Set<String> users=sharedPreferences.getStringSet(ACCEPTED_REQUESTS_KEY,null);
+        if(users!=null)
+        {
+            RunnerDao runnerDao=new RunnerDaoImpl();
+
+            for(String user:users)
+            {
+                Runner runner=runnerDao.getByNick(user);
+                acceptedRequestsAdapter.add(runner);
+            }
+
+            acceptedRequestsAdapter.notifyDataSetChanged();
+        }
     }
 }

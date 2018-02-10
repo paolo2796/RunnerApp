@@ -21,13 +21,13 @@
             android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8"/>
 
         <activity android:name=".MainActivity">
-
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-
         <activity android:name=".AdActiveDetailActivity"></activity>
-
+        <service android:name="it.unisa.runnerapp.services.LocationUpdater" android:process=":location_updater_runnerapp" />
     </application>
 
 </manifest>

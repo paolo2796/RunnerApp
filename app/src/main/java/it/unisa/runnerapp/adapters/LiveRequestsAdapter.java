@@ -19,6 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import it.unisa.runnerapp.beans.LiveRequest;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.CheckUtils;
+import it.unisa.runnerapp.utils.LevelMapper;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.R;
 
@@ -28,6 +29,8 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
     private LayoutInflater   inflater;
     private FirebaseDatabase database;
     private String           user;
+
+    private AcceptedRequestsAdapter acceptedRequestsAdapter;
 
     public LiveRequestsAdapter(Context ctx, int resId, List<LiveRequest> list)
     {
@@ -44,6 +47,11 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
     public void setUser(String user)
     {
         this.user=user;
+    }
+
+    public void setAcceptedRequestsAdapter(AcceptedRequestsAdapter acceptedRequestsAdapter)
+    {
+        this.acceptedRequestsAdapter=acceptedRequestsAdapter;
     }
 
     @Override
@@ -63,20 +71,21 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
         ImageButton acceptButton=(ImageButton)view.findViewById(R.id.accept);
 
         Runner sender=request.getSender();
-        Date dob=sender.getBirthDare();
+        Date sendingDate=request.getSendingDate();
         profileImage.setImageDrawable(sender.getProfileImage());
         tvNames.setText(sender.getName()+" "+sender.getSurname()+","+sender.getNickname());
-        tvPersonalInfo.setText(CheckUtils.getAge(dob)+" anni,Livello ");
-        tvDate.setText("Inviata il "+CheckUtils.parseDate("dd-MM-yyyy",dob));
-        //Tag per poter accettare o rifiutare la richiesta
+        tvPersonalInfo.setText(CheckUtils.getAge(sender.getBirthDare())+" anni,Livello "+ LevelMapper.getLevelName(sender.getLevel()));
+        tvDate.setText("Inviata il "+CheckUtils.parseDate("dd-MM-yyyy",sendingDate));
+        //Setto nickname come tag per poter accettare o rifiutare la richiesta
+        //con maggiore semplicità
         refuseButton.setTag(sender.getNickname());
         acceptButton.setTag(sender.getNickname());
 
         refuseButton.setOnClickListener(getRefuseRequestListener());
         acceptButton.setOnClickListener(getAcceptRequestListener());
 
-        String hours=CheckUtils.parseHourOrMinutes(CheckUtils.getHour(dob));
-        String minutes=CheckUtils.parseHourOrMinutes(CheckUtils.getMinutes(dob));
+        String hours=CheckUtils.parseHourOrMinutes(CheckUtils.getHour(sendingDate));
+        String minutes=CheckUtils.parseHourOrMinutes(CheckUtils.getMinutes(sendingDate));
         tvHour.setText("Alle "+hours+":"+minutes);
 
         return view;
@@ -112,16 +121,26 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                 //successivamente sul nodo che sarà associato alla risposta
                 dbReference=dbReference.child(sender+"/"+RunnersDatabases.LIVE_REQUEST_DB_ANSWER_NODE);
                 dbReference.setValue(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED);
-                removeValue(sender);
+                //Rimozione elemento dal listview ed aggiunta dello stesso alla
+                //lista delle richieste accettate
+                LiveRequest lr=removeValue(sender);
+                Runner runner=lr.getSender();
+                if(acceptedRequestsAdapter!=null)
+                {
+                    acceptedRequestsAdapter.add(runner);
+                    acceptedRequestsAdapter.notifyDataSetChanged();
+                }
             }
         };
     }
 
-    private void removeValue(String sender)
+    private LiveRequest removeValue(String sender)
     {
+        LiveRequest lr=null;
+
         for(int i=0;i<getCount();i++)
         {
-            LiveRequest lr=getItem(i);
+            lr=getItem(i);
             if(lr.getSender().getNickname().equals(sender))
             {
                 remove(lr);
@@ -129,5 +148,7 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                 break;
             }
         }
+
+        return lr;
     }
 }

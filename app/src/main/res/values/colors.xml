@@ -8,6 +8,7 @@
 
     <color name="accept_request">#00838F</color>
     <color name="refuse_request">#C2185B</color>
+    <color name="navigation_button">#FFA000</color>
 
     <color name="background_list">#EEEEEE</color>
     <color name="delay_participation">#E10000</color>

@@ -1,6 +1,7 @@
 package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -33,9 +34,11 @@ public class MarkerWindowAdapter implements GoogleMap.InfoWindowAdapter
         View v=inflater.inflate(R.layout.infowindow_nearby_runners,null);
 
         String key=(String)marker.getTag();
+
+        Log.i("RUNNER",key);
         RunnerDao runnerDao=new RunnerDaoImpl();
         Runner runner=runnerDao.getByNick(key);
-
+        Log.i("RUNNER",runner.getName());
         TextView tvNames=(TextView)v.findViewById(R.id.names);
         TextView tvPersonalInfo=(TextView)v.findViewById(R.id.personalInfo);
         TextView tvRunInfo=(TextView)v.findViewById(R.id.runInfo);

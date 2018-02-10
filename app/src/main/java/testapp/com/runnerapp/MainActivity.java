@@ -1,20 +1,29 @@
 package testapp.com.runnerapp;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import it.unisa.runnerapp.adapters.AcceptedRequestsAdapter;
+import it.unisa.runnerapp.adapters.LiveRequestsAdapter;
+import it.unisa.runnerapp.adapters.LiveRunListsAdapter;
+import it.unisa.runnerapp.beans.LiveRequest;
 import it.unisa.runnerapp.beans.Runner;
-import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
-import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
+import it.unisa.runnerapp.fragments.AcceptedRequestsListFragment;
 import it.unisa.runnerapp.fragments.MapFragment;
+import it.unisa.runnerapp.fragments.ReceivedRequestsListFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -22,16 +31,27 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle aBarToggle;
 
-    public static Runner user=new Runner("paolo2796","pass","Mauro","Vitale",null,null,70,200,(short)1);;
+    public static Runner user=new Runner("mavit","pass","Mauro","Vitale",null,null,70,200,(short)1);;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        /*
         setContentView(R.layout.live_run_panel);
+
+        //tabs
+
+        TabLayout tabLayout=(TabLayout)findViewById(R.id.tabs);
+        ViewPager viewPager=(ViewPager)findViewById(R.id.pager);
+        LiveRunListsAdapter liveRunListsAdapter=new LiveRunListsAdapter(getSupportFragmentManager());
+        ReceivedRequestsListFragment receivedRequestFragment=liveRunListsAdapter.getReceivedRequestsFragment();
+        AcceptedRequestsListFragment acceptedRequestsFragment=liveRunListsAdapter.getAcceptedRequestsFragment();
+
+        viewPager.setAdapter(liveRunListsAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
 
         ListView lw=(ListView)findViewById(R.id.receivedRequestsList);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
@@ -61,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft=fm.beginTransaction();
         MapFragment mf=new MapFragment();
         ft.add(R.id.container,mf);
-        ft.commit();*/
+        ft.commit();
 
 
          /* Date datainizio = new Date();
@@ -73,11 +93,24 @@ public class MainActivity extends AppCompatActivity
         new ActiveRunDaoImpl().createActiveRun(activerun);
         */
 
-        /*
-        lw.addHeaderView(getLayoutInflater().inflate(R.layout.nv_liverequests_header,lw,false));
-        mf.setInboxRequestsListView(lw);
-        List<LiveRequest> lrs=new ArrayList<>();
-        mf.setInboxRequestsAdapter(new LiveRequestsAdapter(this,R.layout.nv_liverequests_requestitem,lrs));*/
+
+        //View listHeader=getLayoutInflater().inflate(R.layout.nv_liverequests_header,lw,false);
+        //TextView notificationBadge=(TextView)listHeader.findViewById(R.id.badge_request_number);
+        //lw.addHeaderView(listHeader);
+        //mf.setInboxRequestsListView(lw);
+        //List<LiveRequest> lrs=new ArrayList<>();AcceptedRequestsAdapter acceptedRequestsAdapter=new AcceptedRequestsAdapter(this,R.layout.nv_acceptedrequests_requestitem,new ArrayList<Runner>());
+
+        AcceptedRequestsAdapter acceptedRequestsAdapter=new AcceptedRequestsAdapter(this,R.layout.nv_acceptedrequests_requestitem,new ArrayList<Runner>());
+        LiveRequestsAdapter liveRequestsAdapter=new LiveRequestsAdapter(this,R.layout.nv_receivedrequests_requestitem,new ArrayList<LiveRequest>());
+
+        liveRequestsAdapter.setAcceptedRequestsAdapter(acceptedRequestsAdapter);
+        receivedRequestFragment.setRequestsAdapter(liveRequestsAdapter);
+        acceptedRequestsFragment.setAcceptedRequestsAdapter(acceptedRequestsAdapter);
+
+        mf.setInboxRequestsAdapter(liveRequestsAdapter);
+        mf.setAcceptedRequestsAdapter(acceptedRequestsAdapter);
+        //mf.setNotificationBadge(notificationBadge);
+
     }
 
     @Override
