@@ -56,6 +56,7 @@ public class RunnerDaoImpl implements RunnerDao {
                             byteArray = stream.toByteArray();
                         }
 
+
                             ps.setString(1,runner.getNickname());
                             ps.setString(2,runner.getPassword());
                             ps.setString(3,runner.getName());

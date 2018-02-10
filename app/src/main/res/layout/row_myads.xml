@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/row_adsuper"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/deleterun_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:text="@string/myads_removerun"
+            android:onClick="deleterRun"
+            android:visibility="visible"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/editrun_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/tempv_celestial"
+            android:text="@string/myads_editrun"
+            android:onClick="editRun"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/delayparticipation_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/delay_participation"
+            android:text="@string/adactive_start"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

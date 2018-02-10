@@ -15,6 +15,7 @@ import java.util.List;
 
 import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 
@@ -23,7 +24,6 @@ import it.unisa.runnerapp.utils.ConnectionUtil;
  */
 
 public class PActiveRunDaoImpl implements PActiveRunDao {
-
 
     @Override
     public void createParticipationRun(final int idrun, final String nickrunner) {
@@ -67,11 +67,6 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         catch (Exception e) {
             Log.e("Exception",Log.getStackTraceString(e));
         }
-
-
-
-
-
     }
 
     @Override
@@ -144,18 +139,10 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
             Log.e("Exception",Log.getStackTraceString(e));
         }
 
-
-
-
-
-
-
-
     }
 
     @Override
-    public List<ActiveRun> findRunByRunner(final String nickuser) {
-
+    public List<ActiveRun> findRunByRunner(final String nickuser, final String order) {
 
         try {
 
@@ -168,46 +155,19 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "'");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where pca.partecipante = ? ORDER BY ?");
+                        ps.setString(1,nickuser);
+                        ps.setString(2,order);
                         rs = ps.executeQuery();
+
 
                         while(rs.next()) {
 
-
                             ActiveRun run = new ActiveRun();
-
                             run.setId(rs.getInt("id"));
                             LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
                             run.setMeetingPoint(latLng);
-                            run.setStartDate(rs.getDate("data_inizio"));
-
-
-                            String idmaster = rs.getString("master");
-
-                            Runner runner = new Runner();
-                            runner.setNickname(rs.getString("nickname"));
-                            runner.setPassword(rs.getString("password"));
-                            runner.setName(rs.getString("nome"));
-                            runner.setSurname(rs.getString("cognome"));
-                            runner.setBirthDate(rs.getDate("data_nascita"));
-                            runner.setWeight(rs.getDouble("peso"));
-                            runner.setLevel(rs.getShort("livello"));
-                            runner.setTraveledKilometers(rs.getDouble("km_percorsi"));
-
-
-
-                            byte[] bytes_imgprofilo = rs.getBytes("img_profilo");
-
-                            if (bytes_imgprofilo != null) {
-
-                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
-
-                            }
-
-                            run.setMaster(runner);
-
-
-
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
                             run.setEstimatedKm(rs.getDouble("km_previsti"));
                             run.setEstimatedHours(rs.getInt("ore_previste"));
                             run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
@@ -231,17 +191,60 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
             }.execute().get();
         }
 
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Run> findRunByRunnerFetchID(final String nickuser) {
+
+
+        try {
+
+            return  new AsyncTask<Void, Void, List<Run>>() {
+                @Override
+                protected List<Run> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+
+                    PreparedStatement ps = null;
+                    List<Run> activeruns = new ArrayList<Run>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "'");
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+
+                            Run run = new Run();
+                            run.setId(rs.getInt("id"));
+                            activeruns.add(run);
+
+                        }
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return activeruns;
+                }
+
+                @Override
+                protected void onPostExecute( List<Run> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+
 
         catch (Exception e) {
             Log.e("Exception",Log.getStackTraceString(e));
         }
 
         return null;
-
-
-
-
-
     }
 
     @Override

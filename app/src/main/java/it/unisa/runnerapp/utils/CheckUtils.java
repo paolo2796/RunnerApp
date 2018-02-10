@@ -124,7 +124,7 @@ public class CheckUtils
         calendar.setTime(data);
         int hours = CheckUtils.getHour(data);
         int minutes = CheckUtils.getMinutes(data);
-        return String.valueOf( hours + " : " + minutes);
+        return String.valueOf( CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes));
     }
 
 
