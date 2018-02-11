@@ -128,7 +128,7 @@ public class Request_LiveDaoImpl implements Request_LiveDao {
                     PreparedStatement ps = null;
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Request_Live rl join Runner rapplicant on rapplicant.nickname = rl.user_applicant join Runner rrecipient on rrecipient.nickname = rl.user_recipient where rapplicant = ?  ");
+                        ps = ConnectionUtil.getConnection().prepareStatement("SELECT * FROM Request_Live AS rl JOIN Utenti AS rapplicant ON rapplicant.nickname = rl.user_applicant JOIN Utenti AS rrecipient ON rrecipient.nickname = rl.user_recipient WHERE rl.user_recipient = ?  ");
                         ps.setString(1,nickrecipient);
                         rs = ps.executeQuery();
 

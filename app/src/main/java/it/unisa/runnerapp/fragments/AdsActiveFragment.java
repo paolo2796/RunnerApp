@@ -29,8 +29,16 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
      List<ActiveRun> runsactive;
      ListView listview;
      public AdActiveAdapter arrayadapter;
-        AdsActiveFragment.CommunicatorActivity communicatoractivity;
+     AdsActiveFragment.CommunicatorActivity communicatoractivity;
+     List<ActiveRun> runs;
 
+     @Override
+     public void onCreate(Bundle savedInstanceState){
+
+         super.onCreate(savedInstanceState);
+         runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
+
+     }
 
 
     @Override
@@ -38,9 +46,6 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
-        List<ActiveRun> runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
-        Log.i("Messaggio",String.valueOf(runs.size()));
-
         arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
         arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
@@ -65,7 +70,6 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         AdsActiveFragment adsActiveFragment = new AdsActiveFragment();
         adsActiveFragment.setCommunicator(communicator);
         return adsActiveFragment;
-
     }
 
 

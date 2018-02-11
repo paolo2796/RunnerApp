@@ -23,7 +23,8 @@
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".AdActiveDetailActivity"></activity>
         <activity android:name=".FirebaseTestActivity"></activity>
-
+        <activity android:name=".ErrorConnectionActivity"></activity>
+        <activity android:name=".CheckPermissionActivity"></activity>
 
         <activity android:name=".MainActivityPV" android:theme="@style/AppTheme.TransNav">
 

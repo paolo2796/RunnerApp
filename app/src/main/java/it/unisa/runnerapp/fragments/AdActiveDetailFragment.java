@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -60,6 +61,7 @@ import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
+import testapp.com.runnerapp.AdActiveDetailActivity;
 import testapp.com.runnerapp.Manifest;
 import testapp.com.runnerapp.R;
 
@@ -73,9 +75,9 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private ActiveRun run;
     public static final String ARG_POSITION = "activerun";
     private static final String MESSAGE_LOG = "MessageAdDetail";
-    private LocationManager locationmanager;
     private LocationListener locationlistener;
     private String providerid;
+    private LocationManager locationmanager;
     private static int MIN_PERIOD = 5000;
     private static int MIN_DIST = 20;
 
@@ -91,7 +93,9 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private TextView durationtw;
     private TextView distancetw;
     private ListView listview;
-    private ArrayAdapter<Runner> arrayadapter;
+    private ArrayAdapter<Runner> arrayfollowersadapter;
+    private Dialog dialog;
+    private List<Runner> followers;
 
 
     // component direction
@@ -114,6 +118,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        locationmanager = ((AdActiveDetailActivity) getActivity()).getLocationmanager();
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
         //initialize
         mapview = (CustomMap) v.findViewById(R.id.mapview);
@@ -124,14 +129,15 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         followersbtn = (Button) v.findViewById(R.id.followers_btn);
         followersbtn.setOnClickListener(getFollowersClickListener());
 
-
         starthourtw.setText(CheckUtils.convertHMToStringFormat(run.getStartDate()));
         datestarttw.setText(CheckUtils.convertDateToStringFormat(run.getStartDate()));
         estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()));
         estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m"));
         mapview.onCreate(savedInstanceState);
-
         mapview.getMapAsync(this);
+
+
+
 
         return v;
     }
@@ -182,6 +188,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         destinationMarkers = new ArrayList<>();
 
         for (Route route : routes) {
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 13));
             durationtw = (TextView) v.findViewById(R.id.duration_tw);
             distancetw = (TextView) v.findViewById(R.id.distance_tw);
@@ -213,17 +220,19 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(getActivity());
+
+                if(followers==null){
+
+                    return;
+                }
+
+
+                dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.custom_dialog_followers);
-
                 listview = (ListView) dialog.findViewById(R.id.listview);
+                arrayfollowersadapter = new FollowersAdapter(dialog.getContext(),R.layout.row_follower,followers);
+                listview.setAdapter(arrayfollowersadapter);
                 dialog.show();
-
-                // Vengono recuperati i followers di una determinata gara
-                arrayadapter = new FollowersAdapter(dialog.getContext(),R.layout.row_follower,new PActiveRunDaoImpl().findRunnerByRun(run.getId()));
-                listview.setAdapter(arrayadapter);
-
-
             }
         };
 
@@ -285,8 +294,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         MyInfoWindowAdapter(LatLng origin, LatLng destination){
             this.origin = origin;
             this.destination=destination;
-
-            Log.i("Messaggio Destinazione", String.valueOf(origin.longitude + "- " + origin.latitude));
             inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -295,15 +302,17 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
         @Override
         public View getInfoWindow(Marker marker) {
-
             if(marker.getPosition().latitude == destination.latitude && marker.getPosition().longitude == destination.longitude){
+
+                Runner runnermaster = new RunnerDaoImpl().getByNick(run.getMaster().getNickname());
+
                 myContentsView = inflater.inflate(R.layout.custom_info_reach_master, null);
                 nickmastertw = (TextView) myContentsView.findViewById(R.id.masternickaname_tw);
                 masterprofileimg = (ImageView) myContentsView.findViewById(R.id.masterprofile_img);
-                masterprofileimg.setImageDrawable(run.getMaster().getProfileImage());
+                masterprofileimg.setImageDrawable(runnermaster.getProfileImage());
                 TextView destaddress = myContentsView.findViewById(R.id.destaddress_tw);
                 destaddress.setText(marker.getTitle());
-                nickmastertw.setText(run.getMaster().getNickname());
+                nickmastertw.setText(runnermaster.getNickname());
             }
             else{
                 myContentsView = null;
@@ -312,31 +321,49 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         }
     } // end class MyInfoWindowAdapter
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapview.onResume();
+    private void checkPermission(){
 
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        locationmanager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
         providerid = null;
 
-        if (locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))){
             providerid = LocationManager.GPS_PROVIDER;
             locationlistener = getLocationListener();
             locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
         }
         else{
-
-                Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(gpsoptionintent);
+            Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(gpsoptionintent);
         }
 
+    }
+
+
+    // Carica su un thread diverso dal thread principale i followers di questo determinato annuncio
+    private void loadFollowers(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                followers = new PActiveRunDaoImpl().findRunnerByRun(run.getId());
+
+            }
+        }).start();
+
+    }
+
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapview.onResume();
+        checkPermission();
+        loadFollowers();
 
     }
 
@@ -345,6 +372,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     public void onStart() {
         super.onStart();
         mapview.onStart();
+
     }
 
     @Override

@@ -17,7 +17,7 @@ public interface ActiveRunDao {
     public void deleteActiveRun(int idactiverun);
     public List<ActiveRun> getAllActiveRuns();
 
-    // Recupera una determinata corsa senza recuperare l'immagine del profilo del master
+    // Recupera una determinata corsa senza recuperando solamente l'id del master
     public ActiveRun findByID(int idrun);
 
 

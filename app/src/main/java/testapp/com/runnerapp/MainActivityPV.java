@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -20,22 +21,32 @@ import com.google.android.gms.maps.model.LatLng;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.RequestLive;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.ConnectionUtil;
 import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity{
+public class MainActivityPV extends CheckPermissionActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity{
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -43,18 +54,15 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
     MyAdsPlannedFragment myadsplannedfragment;
     FragmentManager fm;
     BottomBar bottomBar;
+
     @Override
     protected  void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
-           fm = getFragmentManager();
-
-
+            fm = getFragmentManager();
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
-
-
 
 
     }
@@ -188,5 +196,6 @@ public class MainActivityPV extends AppCompatActivity implements MyAdsFragment.C
         startActivity(intent);
 
     }
+
 
 }

@@ -6,9 +6,10 @@
 
     <Button
         android:id="@+id/godetailad_btn"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/oval_button"
-        android:text="@string/adactive_go"/>
+        android:text="@string/adactive_go"
+        android:gravity="bottom|center_horizontal" />
 
 </LinearLayout>

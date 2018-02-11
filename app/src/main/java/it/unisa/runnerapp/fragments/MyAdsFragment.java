@@ -3,6 +3,7 @@ package it.unisa.runnerapp.fragments;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.utils.ConnectionUtil;
 import testapp.com.runnerapp.R;
 
 /**
@@ -28,16 +30,23 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     ActiveRunDao activerundao;
     Dialog dialog;
     MyAdsFragment.CommunicatorActivity communicatoractivity;
+    List<ActiveRun> runs;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        runs = new ActiveRunDaoImpl().findByRunnerWithin24hWithoutMaster("paolo2796","data_inizio");
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
         listview = (ListView) v.findViewById(R.id.listview);
-        List<ActiveRun> runs = new ActiveRunDaoImpl().findByRunnerWithin24hWithoutMaster("paolo2796","data_inizio");
         arrayadapter = new MyAdsAdapater(this.getActivity(),R.layout.row_myads,runs);
         listview.setAdapter(arrayadapter);
         arrayadapter.setCommunicator(this);
-
         return v;
     }
 
