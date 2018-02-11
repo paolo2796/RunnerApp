@@ -61,6 +61,7 @@ import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
+import testapp.com.runnerapp.AdActiveDetailActivity;
 import testapp.com.runnerapp.Manifest;
 import testapp.com.runnerapp.R;
 
@@ -74,9 +75,9 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private ActiveRun run;
     public static final String ARG_POSITION = "activerun";
     private static final String MESSAGE_LOG = "MessageAdDetail";
-    private LocationManager locationmanager;
     private LocationListener locationlistener;
     private String providerid;
+    private LocationManager locationmanager;
     private static int MIN_PERIOD = 5000;
     private static int MIN_DIST = 20;
 
@@ -117,6 +118,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        locationmanager = ((AdActiveDetailActivity) getActivity()).getLocationmanager();
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
         //initialize
         mapview = (CustomMap) v.findViewById(R.id.mapview);
@@ -325,17 +327,14 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        locationmanager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
         providerid = null;
 
-        if (locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))){
             providerid = LocationManager.GPS_PROVIDER;
             locationlistener = getLocationListener();
             locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
         }
         else{
-
             Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(gpsoptionintent);
         }

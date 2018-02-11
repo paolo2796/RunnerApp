@@ -40,10 +40,9 @@ public class CheckPermissionActivity extends AppCompatActivity {
         super.onResume();
         netCheckIn();
         checkGPS();
-        Log.i("Messaggio","CIAOO");
     }
 
-    // Ulteriore controllo se ad esempio l'utente apre la barra delle notifiche
+    // Ulteriore controllo quando l'utente apre la barra delle notifiche
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -54,15 +53,16 @@ public class CheckPermissionActivity extends AppCompatActivity {
     }
 
 
-    public void netCheckIn(){
+    public boolean netCheckIn(){
                 ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 if(cm.getActiveNetworkInfo()==null){
                     startActivity(new Intent(this,ErrorConnectionActivity.class));
                 }
+
+                return true;
     }
 
-    public void checkGPS(){
-
+    public boolean checkGPS(){
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
@@ -74,7 +74,11 @@ public class CheckPermissionActivity extends AppCompatActivity {
 
         }
 
+        return true;
+
     }
+
+    public LocationManager getLocationmanager(){return locationmanager;}
 
 
 }
