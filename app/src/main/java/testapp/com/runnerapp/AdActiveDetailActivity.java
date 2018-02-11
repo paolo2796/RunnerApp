@@ -14,7 +14,7 @@ import it.unisa.runnerapp.fragments.AdActiveDetailFragment;
  * Created by Paolo on 02/02/2018.
  */
 
-public class AdActiveDetailActivity extends AppCompatActivity {
+public class AdActiveDetailActivity extends CheckPermissionActivity {
 
     private android.app.FragmentManager fm;
     private AdActiveDetailFragment adactivedetailfg;
@@ -24,7 +24,6 @@ public class AdActiveDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adactivedetail);
 
-
         // Viene recuperato l'annuncio
         ActiveRun activerun = new ActiveRunDaoImpl().findByID(getIntent().getIntExtra("codrun",-1));
         fm = getFragmentManager();
@@ -32,7 +31,6 @@ public class AdActiveDetailActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.adactivedetail_container,adactivedetailfg);
         ft.commit();
-
     }
 
 }

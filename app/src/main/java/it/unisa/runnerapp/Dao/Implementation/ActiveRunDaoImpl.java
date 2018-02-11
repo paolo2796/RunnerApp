@@ -289,46 +289,20 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                         ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id WHERE Corse_Attive.corsa = ?");
                         ps.setInt(1,idrun);
                         rs = ps.executeQuery();
-
-
                         rs.next();
 
 
                         run = new ActiveRun();
-
                         run.setId(rs.getInt("id"));
                         LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"),rs.getDouble("punto_ritrovo_lng"));
                         run.setMeetingPoint(latLng);
                         run.setStartDate(rs.getTimestamp("data_inizio"));
-
-                        String idmaster = rs.getString("master");
-
-                        rsmaster = ConnectionUtil.getConnection().prepareStatement("select * from Utenti where Utenti.nickname = '" + idmaster + "'").executeQuery();
-                        Runner runner = new Runner();
-                        rsmaster.next();
-                        runner.setNickname(rsmaster.getString("nickname"));
-                        runner.setPassword(rsmaster.getString("password"));
-                        runner.setName(rsmaster.getString("nome"));
-                        runner.setSurname(rsmaster.getString("cognome"));
-                        runner.setBirthDate(rsmaster.getDate("data_nascita"));
-                        runner.setWeight(rsmaster.getDouble("peso"));
-                        runner.setLevel(rsmaster.getShort("livello"));
-                        runner.setTraveledKilometers(rsmaster.getDouble("km_percorsi"));
-
-                        byte[] bytes_imgprofilo =  rsmaster.getBytes("img_profilo");
-
-                        if(bytes_imgprofilo!=null){
-
-                            runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
-
-                        }
-
-
-                        run.setMaster(runner);
-
                         run.setEstimatedKm(rs.getDouble("km_previsti"));
                         run.setEstimatedHours(rs.getInt("ore_previste"));
                         run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+                        Runner runner = new Runner();
+                        runner.setNickname(rs.getString("Corse.master"));
+                        run.setMaster(runner);
 
 
                     }
@@ -369,12 +343,15 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
 
                     PreparedStatement ps = null;
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    String query1 = "select * from Corse_Attive as ca join Corse on Corse.id = ca.corsa join Partecipazioni_Corse_Attive as pca on pca.corsa = ca.corsa where " +
+                            "(timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 and" +
+                            " pca.corsa NOT IN";
+
+                    String query2 = " (select ca.corsa from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = ?)";
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id join Partecipazioni_Corse_Attive pca on pca.corsa = Corse_Attive.corsa where pca.partecipante != ?  and Corse.master!= ?  and (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 GROUP BY pca.partecipante order by ?");
+                        ps = ConnectionUtil.getConnection().prepareStatement(query1 + query2);
                         ps.setString(1,nickname);
-                        ps.setString(2,nickname);
-                        ps.setString(3,orderby);
                         rs = ps.executeQuery();
 
                         while(rs.next()) {
@@ -426,15 +403,13 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                 @Override
                 protected List<ActiveRun> doInBackground( final Void ... params ) {
                     ResultSet rs =null;
-                    ResultSet rsmaster =null;
 
                     PreparedStatement ps = null;
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 and Corse.master=? order by ?");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 and Corse.master= ? ORDER BY " + order + "");
                         ps.setString(1,nickname);
-                        ps.setString(2,order);
                         rs = ps.executeQuery();
 
                         while(rs.next()) {
@@ -445,36 +420,6 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                             LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
                             run.setMeetingPoint(latLng);
                             run.setStartDate(rs.getTimestamp("data_inizio"));
-
-
-                            String idmaster = rs.getString("master");
-
-                            rsmaster = ConnectionUtil.getConnection().prepareStatement("select * from Utenti where Utenti.nickname = '" + idmaster + "'").executeQuery();
-                            Runner runner = new Runner();
-                            rsmaster.next();
-                            runner.setNickname(rsmaster.getString("nickname"));
-                            runner.setPassword(rsmaster.getString("password"));
-                            runner.setName(rsmaster.getString("nome"));
-                            runner.setSurname(rsmaster.getString("cognome"));
-                            runner.setBirthDate(rsmaster.getDate("data_nascita"));
-                            runner.setWeight(rsmaster.getDouble("peso"));
-                            runner.setLevel(rsmaster.getShort("livello"));
-                            runner.setTraveledKilometers(rsmaster.getDouble("km_percorsi"));
-
-
-
-                            byte[] bytes_imgprofilo = rsmaster.getBytes("img_profilo");
-
-                            if (bytes_imgprofilo != null) {
-
-                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
-
-                            }
-
-                            run.setMaster(runner);
-
-
-
                             run.setEstimatedKm(rs.getDouble("km_previsti"));
                             run.setEstimatedHours(rs.getInt("ore_previste"));
                             run.setEstimatedMinutes(rs.getInt("minuti_previsti"));

@@ -2,6 +2,8 @@ package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,7 +66,6 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         lstHolders = new ArrayList<ViewHolder>();
         startUpdateTimer();
-
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -158,7 +161,9 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     } // end class MyInfoWindowAdapter
 
 
-    private class ViewHolder implements OnMapReadyCallback {
+
+
+    private class ViewHolder implements OnMapReadyCallback{
 
         TextView datestart;
         TextView starthour;
@@ -173,7 +178,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
 
         public void setData(ActiveRun item, int position) {
 
-            activerun = item;
+            this.activerun = item;
             this.position = position;
             cancelrunbtn.setTag(position);
             startlivebtn.setTag(position);
@@ -184,6 +189,8 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
             pointmeeting = activerun.getMeetingPoint();
             mapview.onCreate(null);
             mapview.getMapAsync(this);
+
+
             updateTimeRemaining(System.currentTimeMillis());
         }
 
@@ -204,13 +211,17 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         }
 
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(final GoogleMap googleMap) {
+
             this.googlemap = googleMap;
+            googlemap.getUiSettings().setMapToolbarEnabled(false);
+            googlemap.getUiSettings().setAllGesturesEnabled(false);
+            googleMap.getUiSettings().setCompassEnabled(false);
             if(googlemap!=null) {
                 final LatLng pointmeet = new LatLng(pointmeeting.latitude, pointmeeting.longitude);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(pointmeet)
-                        .zoom(20)                   // Imposta lo zoom
+                        .zoom(17)                   // Imposta lo zoom
                         .bearing(90)                // Imposta l'orientamento della camera verso est
                         .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
                         .build();                   // Crea una CameraPosition dal Builder
@@ -231,11 +242,15 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
                 googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
+
                         communicator.respondDetailRun(position);
                     }
                 });
+
+
             }
         }
+
     } // End Class View Holder
 
 
@@ -249,6 +264,5 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     public void setCommunicator(Communicator communicator) {
         this.communicator = communicator;
     }
-
 
 }

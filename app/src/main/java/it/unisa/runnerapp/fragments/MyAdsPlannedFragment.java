@@ -2,6 +2,7 @@ package it.unisa.runnerapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
@@ -17,6 +24,7 @@ import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.utils.ConnectionUtil;
 import testapp.com.runnerapp.R;
 
 /**
@@ -26,20 +34,26 @@ import testapp.com.runnerapp.R;
     public class MyAdsPlannedFragment extends Fragment implements MyAdPlannedAdapter.Communicator  {
 
         List<ActiveRun> runsactive;
-        ListView listview;
+        public ListView listview;
         public MyAdPlannedAdapter arrayadapter;
         ActiveRunDao activerundao;
         Dialog dialog;
         CommunicatorActivity communicatoractivity;
+        List<ActiveRun> runs;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState){
+            super.onCreate(savedInstanceState);
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
             listview = (ListView) v.findViewById(R.id.listview);
-            List<ActiveRun> runs = new PActiveRunDaoImpl().findRunByRunner("paolo2796","data_inizio");
-            arrayadapter = new MyAdPlannedAdapter(this.getActivity(),R.layout.row_myadsplanned,runs);
+            runs = new PActiveRunDaoImpl().findRunByRunner("paolo2796", "data_inizio");
+            arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
+            arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);
-            arrayadapter.setCommunicator(this);
 
             return v;
         }
@@ -65,7 +79,6 @@ import testapp.com.runnerapp.R;
             @Override
             public void onClick(View v) {
 
-
                 if(Integer.parseInt(v.getTag().toString())==0){
                     new ActiveRunDaoImpl().deleteActiveRun(run.getId());
                     it.unisa.runnerapp.fragments.MyAdsPlannedFragment.this.arrayadapter.remove(run);
@@ -89,6 +102,7 @@ import testapp.com.runnerapp.R;
             public void responMyAdsPlannedDetailRun(int index);
             public void respondStartLiveActivity(int codrun);
         }
+
 
 
 

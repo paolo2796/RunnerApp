@@ -52,6 +52,10 @@
                 android:layout_toRightOf="@id/duration_tw"
                 android:layout_centerVertical="true" />
 
+
+
+
+
         </RelativeLayout>
 
     </RelativeLayout>
@@ -96,6 +100,17 @@
         android:stretchColumns="*"
         android:shrinkColumns="*">
 
+        <TableRow
+            android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Priorità del master"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+        </TableRow>
+
 
         <TableRow
             android:gravity="center">
@@ -104,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/tempv_celestial"
                 android:textStyle="italic"
                 android:text="data" />
@@ -114,7 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/tempv_celestial"
                 android:textStyle="italic"
                 android:text="20:30"/>
@@ -126,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="Giorno"
                 android:textStyle="bold"/>
 
@@ -134,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="Ora"
                 android:textStyle="bold"/>
         </TableRow>
@@ -146,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/tempv_celestial"
                 android:textStyle="italic"
                 android:text="km previsti" />
@@ -156,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/tempv_celestial"
                 android:textStyle="italic"
                 android:text="20h e 1m"/>
@@ -172,7 +187,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="KM Previsti"
                 android:textStyle="bold"/>
 
@@ -181,8 +196,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="Tempo Previsto"
+                android:textSize="15sp"
+                android:text="Tempo Completamento"
                 android:textStyle="bold"/>
 
 
