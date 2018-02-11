@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
@@ -35,8 +37,10 @@ import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.ConnectionUtil;
 import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
  * Created by Paolo on 08/02/2018.
@@ -57,11 +61,8 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
             setContentView(R.layout.activity_mainpv);
 
             fm = getFragmentManager();
-
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
-
-
 
 
     }

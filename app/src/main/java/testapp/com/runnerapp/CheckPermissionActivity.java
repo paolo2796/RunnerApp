@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import it.unisa.runnerapp.utils.ConnectionUtil;
+
 /**
  * Created by Paolo on 10/02/2018.
  */
@@ -29,10 +31,8 @@ public class CheckPermissionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
     }
 
     @Override
@@ -52,13 +52,12 @@ public class CheckPermissionActivity extends AppCompatActivity {
         }
     }
 
-
     public boolean netCheckIn(){
                 ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 if(cm.getActiveNetworkInfo()==null){
                     startActivity(new Intent(this,ErrorConnectionActivity.class));
+                    return false;
                 }
-
                 return true;
     }
 
@@ -72,6 +71,7 @@ public class CheckPermissionActivity extends AppCompatActivity {
             Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(gpsoptionintent);
 
+            return false;
         }
 
         return true;

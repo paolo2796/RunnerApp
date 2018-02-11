@@ -17,11 +17,11 @@ public class ConnectionUtil {
     static {
         try {
 
-
             try {
 
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                connection = DriverManager.getConnection("jdbc:mysql://" + RunnersDatabases.END_POINT_DB_MYSQL + "/"+RunnersDatabases.NAME_DB_MYSQL, RunnersDatabases.USER_DB_MYSQL, RunnersDatabases.PASS_DB_MYSQL);
+                connection = DriverManager.getConnection("jdbc:mysql://" + RunnersDatabases.END_POINT_DB_MYSQL + "/"+RunnersDatabases.NAME_DB_MYSQL + "?autoReconnect=true", RunnersDatabases.USER_DB_MYSQL, RunnersDatabases.PASS_DB_MYSQL);
+
 
             }
 
@@ -39,6 +39,8 @@ public class ConnectionUtil {
 
 
     public static Connection getConnection() {
+
+
         return connection;
     }
 

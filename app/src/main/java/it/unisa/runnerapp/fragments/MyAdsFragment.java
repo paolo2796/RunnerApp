@@ -16,6 +16,7 @@ import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.utils.ConnectionUtil;
 import testapp.com.runnerapp.R;
 
 /**
