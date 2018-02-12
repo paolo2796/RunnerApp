@@ -24,6 +24,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
@@ -46,7 +47,7 @@ import it.unisa.runnerapp.utils.RunnersDatabases;
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends CheckPermissionActivity implements MyAdsFragment.CommunicatorActivity, MyAdsPlannedFragment.CommunicatorActivity, AdsActiveFragment.CommunicatorActivity{
+public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -60,12 +61,16 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
+
             fm = getFragmentManager();
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
 
+
            RequestLive re = new Request_LiveDaoImpl().findByRunnerRecipient("mavit","paolo2796");
            Log.i("Messaggio",String.valueOf(re.getCod()));
+
+
 
     }
 
@@ -173,7 +178,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
 
 
     /* Communicator MyAdsPlannedFragment */
-    @Override
+   @Override
     public void responMyAdsPlannedDetailRun(int index) {
 
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
@@ -181,7 +186,8 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
         startActivity(intent);
     }
 
-    @Override
+
+   @Override
     public void respondStartLiveActivity(int codrun) {
         Log.i("Messaggio",String.valueOf(codrun));
         Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
@@ -190,7 +196,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
 
 
     /* Communicator AdsActiveFragment */
-    @Override
+   @Override
     public void responAdsActiveDetailRun(int index) {
 
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
@@ -198,6 +204,5 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
         startActivity(intent);
 
     }
-
 
 }
