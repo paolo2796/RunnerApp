@@ -1,5 +1,8 @@
 package testapp.com.runnerapp;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -10,8 +13,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -101,6 +107,21 @@ public class MainActivity extends AppCompatActivity
         mf.setAcceptedRequestsAdapter(acceptedRequestsAdapter);
         //mf.setNotificationBadge(notificationBadge);
 
+        FrameLayout frameLayout=findViewById(R.id.container);
+        FloatingActionButton fab=new FloatingActionButton(this);
+        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity= Gravity.BOTTOM|Gravity.RIGHT;
+        lp.bottomMargin=20;
+        lp.rightMargin=15;
+        fab.setLayoutParams(lp);
+        Drawable fabIcon=getResources().getDrawable(R.drawable.ic_close_black_24dp);
+        fabIcon.setTint(getResources().getColor(R.color.background_list));
+        fab.setImageDrawable(fabIcon);
+        fab.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        fab.setVisibility(View.INVISIBLE);
+        frameLayout.addView(fab);
+        frameLayout.invalidate();
+        acceptedRequestsAdapter.setFloatingActionButton(fab);
     }
 
     @Override

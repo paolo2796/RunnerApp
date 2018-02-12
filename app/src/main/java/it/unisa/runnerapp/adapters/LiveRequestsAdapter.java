@@ -167,7 +167,7 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                             Log.i("ORIGINE",""+origin);
                             Log.i("DESTINAZIONE",""+destination);
                             DirectionFinderImpl directionFinder=new DirectionFinderImpl();
-                            LatLng midPoint=directionFinder.execute(origin,destination,true);
+                            LatLng midPoint=directionFinder.execute(origin,destination);
                             Log.i("MIDPOINT",""+midPoint);
                             Request_LiveDao reqDao=new Request_LiveDaoImpl();
                             Runner recipient=new Runner();

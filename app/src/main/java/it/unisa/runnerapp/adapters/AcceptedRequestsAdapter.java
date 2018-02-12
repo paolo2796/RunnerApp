@@ -3,6 +3,7 @@ package it.unisa.runnerapp.adapters;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -24,7 +24,6 @@ import it.unisa.runnerapp.Dao.Interf.Request_LiveDao;
 import it.unisa.runnerapp.beans.RequestLive;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.CheckUtils;
-import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.LevelMapper;
 import testapp.com.runnerapp.R;
@@ -33,10 +32,12 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
 {
     private String user;
 
-    private int             resId;
-    private LayoutInflater  inflater;
-    private LocationManager lManager;
-    private GoogleMap       gMap;
+    private int                  resId;
+    private LayoutInflater       inflater;
+    private LocationManager      lManager;
+    private GoogleMap            gMap;
+    private DirectionFinderImpl  directionFinder;
+    private FloatingActionButton clearButton;
 
     public AcceptedRequestsAdapter(Context ctx, int resId, List<Runner> list)
     {
@@ -58,6 +59,11 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
     public void setGoogleMap(GoogleMap gMap)
     {
         this.gMap=gMap;
+    }
+
+    public void setFloatingActionButton(FloatingActionButton clearButton)
+    {
+        this.clearButton=clearButton;
     }
 
     @Override
@@ -116,19 +122,37 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
                             Log.i("APPLICANT",runner);
                         }
 
-                        DirectionFinderImpl directionFinder=new DirectionFinderImpl(getContext(),gMap,R.mipmap.pin,R.mipmap.pin);
+                        directionFinder=new DirectionFinderImpl(getContext(),gMap,R.mipmap.pin_start,R.mipmap.pin_end);
                         //Origine posizione corrente
                         LatLng origin=new LatLng(location.getLatitude(),location.getLongitude());
                         //Destinazione punto di incontro
                         LatLng destination=requestLive.getWaypoint();
                         //Scrittura percorso su mappa
-                        directionFinder.execute(origin,destination,false);
+                        directionFinder.executeDraw(origin,destination);
+                        clearButton.setOnClickListener(getClearMapListener());
+                        //Viene mostrato il bottone per la pulizia della mappa
+                        clearButton.setVisibility(View.VISIBLE);
                     }
                 }
                 catch (SecurityException ex)
                 {
 
                 }
+            }
+        };
+    }
+
+    private View.OnClickListener getClearMapListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //Viene cancellato il percorso dalla mappa
+                directionFinder.clearMap();
+                //il fab diviene invisibile
+                clearButton.setVisibility(View.INVISIBLE);
             }
         };
     }
