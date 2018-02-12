@@ -14,5 +14,5 @@ public interface Request_LiveDao {
     public void createRequestLive(RequestLive requestlive);
     public void updateRequestLive(String nickapplicant, String nickrecipient);
     public void deleteRequestLive(int idrequestlive);
-    public List<RequestLive> findByRunnerRecipient(String nickrecipient);
+    public RequestLive findByRunnerRecipient(String nickrecipient,String nickapplicant);
 }

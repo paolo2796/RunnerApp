@@ -1,5 +1,6 @@
 package it.unisa.runnerapp.Dao.Implementation;
 
+import android.app.DownloadManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -115,28 +116,32 @@ public class Request_LiveDaoImpl implements Request_LiveDao {
     }
 
     @Override
-    public List<RequestLive> findByRunnerRecipient(final String nickrecipient) {
+    public RequestLive findByRunnerRecipient(final String nickrecipient, final String nickapplicant) {
 
-        List<RequestLive> requests = null;
+        RequestLive requests = null;
         try {
 
-            requests = new AsyncTask<Void, Void, List<RequestLive>>() {
+            requests = new AsyncTask<Void, Void, RequestLive>() {
                 @Override
-                protected List<RequestLive> doInBackground( final Void ... params ) {
+                protected RequestLive doInBackground( final Void ... params ) {
                     ResultSet rs =null;
-                    List<RequestLive> requestslive = new ArrayList<RequestLive>();
                     PreparedStatement ps = null;
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("SELECT * FROM Request_Live AS rl JOIN Utenti AS rapplicant ON rapplicant.nickname = rl.user_applicant JOIN Utenti AS rrecipient ON rrecipient.nickname = rl.user_recipient WHERE rl.user_recipient = ?  ");
+                        ps= ConnectionUtil.getConnection().prepareStatement("SELECT MAX(rl.id) as max FROM Request_Live AS rl WHERE rl.user_recipient=? and rl.user_applicant=?");
                         ps.setString(1,nickrecipient);
+                        ps.setString(2,nickapplicant);
                         rs = ps.executeQuery();
+                        rs.next();
 
-                        while (rs.next()) {
+                        int id = rs.getInt("max");
+                        Log.i("Messaggio",String.valueOf(id));
 
+                        ps = ConnectionUtil.getConnection().prepareStatement("SELECT * FROM Request_Live as rl JOIN Utenti AS rapplicant ON rapplicant.nickname = rl.user_applicant JOIN Utenti AS rrecipient ON rrecipient.nickname = rl.user_recipient WHERE rl.id=" + id);
+                        rs = ps.executeQuery();
+                        RequestLive requestlive = null;
 
-                            RequestLive requestlive = null;
-
+                        rs.next();
 
                             Runner runnerapplicant = new Runner();
 
@@ -164,12 +169,8 @@ public class Request_LiveDaoImpl implements Request_LiveDao {
 
 
 
+                            return new RequestLive(rs.getInt("rl.id"),runnerapplicant,runnerecipient,waypoint);
 
-                            requestlive = new RequestLive(rs.getInt("rl.id"),runnerapplicant,runnerecipient,waypoint);
-
-                            requestslive.add(requestlive);
-
-                        }
 
                     }
 
@@ -177,11 +178,12 @@ public class Request_LiveDaoImpl implements Request_LiveDao {
                     catch (SQLException e) {
                         Log.e("SQLException",Log.getStackTraceString(e));
                     }
-                    return requestslive;
+
+                    return null;
                 }
 
                 @Override
-                protected void onPostExecute( List<RequestLive> result ) {
+                protected void onPostExecute(RequestLive result ) {
                     super.onPostExecute(result);
                 }
             }.execute().get();

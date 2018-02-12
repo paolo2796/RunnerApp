@@ -64,6 +64,8 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsFrag
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
 
+           RequestLive re = new Request_LiveDaoImpl().findByRunnerRecipient("mavit","paolo2796");
+           Log.i("Messaggio",String.valueOf(re.getCod()));
 
     }
 

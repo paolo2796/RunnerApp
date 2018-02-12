@@ -15,6 +15,8 @@ public interface RunDao {
     public void updateRun(Run run);
     public void deleteRun(int idrun);
     public Run findByID(int idrun);
+
+    // recuperate tutte le gare (solo id master)
     public List<Run> getAllRuns();
 
 

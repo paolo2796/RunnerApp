@@ -3,7 +3,13 @@ package testapp.com.runnerapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
@@ -12,11 +18,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
@@ -33,12 +43,12 @@ public class FirebaseTestActivity extends AppCompatActivity {
     private FirebaseApp participationapp;
     private FirebaseDatabase participationdb;
     private DatabaseReference databaserunners;
+    private GeoFire geofire;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
-
 
         participationapp = FirebaseUtils.getFirebaseApp(this,
                 RunnersDatabases.LIVE_REQUEST_APP_ID,
@@ -49,14 +59,156 @@ public class FirebaseTestActivity extends AppCompatActivity {
         participationdb = FirebaseUtils.connectToDatabase(participationapp);
         databaserunners = participationdb.getReference("Runs");
 
+      /*  Query query = databaserunners.orderByChild("datestart").startAt(System.currentTimeMillis());
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i("Mes child add",dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.i("Mes child ch",dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.i("Mes child ch",dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.i("Mes child mv",dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        }); */
+
+
+
+
+        //
+
+
+
+
+        geofire = new GeoFire(databaserunners);
+       /* geofire.queryAtLocation(40.6960004,14.710742100000061,12).addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+            @Override
+            public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
+               DatabaseReference refradiuslocation =  dataSnapshot.getRef();
+
+                   Log.i("Messaggio",String.valueOf(dataSnapshot.getKey()));
+
+               refradiuslocation.orderByChild("datestart").startAt(System.currentTimeMillis() - 2176);
+               refradiuslocation.addChildEventListener(new ChildEventListener() {
+                   @Override
+                   public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                       Log.i("Messaggio sub add", String.valueOf(dataSnapshot.getValue().toString()));
+                       Log.i("Messaggio","__________________-");
+
+                   }
+
+                   @Override
+                   public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                       Log.i("Messaggio sub chang", String.valueOf(dataSnapshot.getValue().toString()));
+                       Log.i("Messaggio","__________________-");
+                   }
+
+                   @Override
+                   public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                   }
+
+                   @Override
+                   public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                       Log.i("Messaggio sub mov", String.valueOf(dataSnapshot.getValue().toString()));
+                       Log.i("Messaggio","__________________-");
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
+            }
+
+            @Override
+            public void onDataExited(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        }); */
+
+        /*
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                Log.i("Query", key);
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                Log.i("Query Moved", key);
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                Log.i("Query","REady");
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                Log.i("Query","Error");
+
+            }
+        });
+ */
+
+
+
+
+/*
 
         databaserunners.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                Run newPost = dataSnapshot.getValue(Run.class);
-                Log.i("Messaggio","id: " + newPost.getId());
-                Log.i("Messaggio","date: " + newPost.getStartDate().toString());
-                Log.i("Messaggio","Previous Post ID: " + prevChildKey);
+                Log.i("Messaggio",prevChildKey);
             }
 
             @Override
@@ -85,60 +237,19 @@ public class FirebaseTestActivity extends AppCompatActivity {
                 Log.i("Messaggio","oncancelled" );
 
             }
-        });
+        }); */
 
 
-
-        ActiveRun activerun = new ActiveRunDaoImpl().findByID(1);
-        activerun.setStartDate(new java.util.Date(2018,02,8,22,38,00));
-        activerun.getMaster().setBirthDate(new java.util.Date(1996,01,27,0,0,0));
+    }
 
 
-      /*  Run run = new Run();
-        run.setId(1);
-        run.setStartDate(new Date());
-        Runner runner = new Runner();
-        runner.setName("paolo");
-        runner.setSurname("vigorito");
-        runner.setNickname("paolo2796");
+    public void saveRunFirebase(Run run){
 
-        runner.setPassword("paolo");
-        run.setMaster(runner);
-        databaserunners.child(String.valueOf(run.getId())).setValue(run); */
-
-      databaserunners.child(String.valueOf(activerun.getId())).setValue(activerun);
-
-        LatLng latLngcustom = new LatLng(activerun.getMeetingPoint().latitude,activerun.getMeetingPoint().longitude);
-
-        databaserunners.child(String.valueOf(activerun.getId())).setValue(latLngcustom);
-
-
-        databaserunners.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if(dataSnapshot.exists()){
-
-                    Run run = null;
-
-                    for(DataSnapshot child: dataSnapshot.getChildren()){
-
-                        run = child.getValue(Run.class);
-                        Log.i("messaggio",run.getMaster().getNickname());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-        //   Log.i(MESSAGE_LOG,"BEFORE");
-
+        databaserunners.child(String.valueOf(run.getId())).setValue(run);
+        geofire.setLocation(String.valueOf(run.getId()), new GeoLocation(run.getMeetingPoint().latitude, run.getMeetingPoint().longitude));
+        Map map = new HashMap();
+        map.put("datestart",run.getStartDate().getTime());
+        databaserunners.child(String.valueOf(run.getId())).updateChildren(map);
 
     }
 
