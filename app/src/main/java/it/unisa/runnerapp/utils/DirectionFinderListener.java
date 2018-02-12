@@ -7,6 +7,6 @@ import java.util.List;
 import it.unisa.runnerapp.utils.Route;
 
 public interface DirectionFinderListener {
-    void onDirectionFinderStart();
+    void clearMap();
     void onDirectionFinderSuccess(List<Route> route);
 }

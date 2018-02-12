@@ -137,8 +137,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         mapview.getMapAsync(this);
 
 
-
-
         return v;
     }
 
@@ -160,7 +158,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     // Implementazione metodi DirectionFinderListener
 
     @Override
-    public void onDirectionFinderStart() {
+    public void clearMap() {
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
                 marker.remove();

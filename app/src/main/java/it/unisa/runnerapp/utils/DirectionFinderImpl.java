@@ -44,10 +44,9 @@ public class DirectionFinderImpl implements DirectionFinderListener {
 
     public DirectionFinderImpl(){};
 
-    public LatLng execute(LatLng origin, LatLng destination, boolean iswaypoint){
+    public LatLng execute(LatLng origin, LatLng destination){
         LatLng puntocentrale = null;
 
-            if(iswaypoint) {
                 List<Route> routes = null;
                 try {
                     routes = new DirectionFinder(origin, destination).execute();
@@ -60,33 +59,24 @@ public class DirectionFinderImpl implements DirectionFinderListener {
                 }
                 int med = routes.get(0).points.size() / 2;
                 return puntocentrale = new LatLng(routes.get(0).points.get(med).latitude, routes.get(0).points.get(med).longitude);
-            }
 
-            else{
-                try {
-                    new DirectionFinder(this,origin,destination).executeDraw();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
 
-        return null;
 
+    }
+
+    public void executeDraw(LatLng origin, LatLng destination){
+
+
+        try {
+            new DirectionFinder(this,origin,destination).executeDraw();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 
 
     // Implementazione metodi DirectionFinderListener
-
-    @Override
-    public void onDirectionFinderStart() {
-
-        if (polylinePaths != null) {
-            for (Polyline polyline:polylinePaths ) {
-                polyline.remove();
-            }
-        }
-    }
 
 
     @Override
@@ -111,6 +101,22 @@ public class DirectionFinderImpl implements DirectionFinderListener {
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+        }
+    }
+
+    @Override
+    public void clearMap(){
+
+        if(polylinePaths!=null) {
+            for (Polyline pol : polylinePaths) {
+                pol.remove();
+            }
+        }
+
+        if(mMap!=null){
+            mMap.clear();
+
         }
     }
 

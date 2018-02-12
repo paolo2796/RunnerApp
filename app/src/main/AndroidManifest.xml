@@ -26,13 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".AdActiveDetailActivity"></activity>
         <activity android:name=".FirebaseTestActivity"></activity>
         <activity android:name=".ErrorConnectionActivity"></activity>
         <activity android:name=".CheckPermissionActivity"></activity>
+        <activity android:name=".MainActivityPV"></activity>
 
         <service android:name="it.unisa.runnerapp.services.LocationUpdater" android:process=":location_updater_runnerapp" />
+
     </application>
 
 </manifest>
