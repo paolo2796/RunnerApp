@@ -1,6 +1,8 @@
 package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +11,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
+import it.unisa.runnerapp.Dao.Interf.Request_LiveDao;
 import it.unisa.runnerapp.beans.LiveRequest;
+import it.unisa.runnerapp.beans.RequestLive;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.CheckUtils;
+import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.LevelMapper;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.R;
@@ -29,6 +38,9 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
     private LayoutInflater   inflater;
     private FirebaseDatabase database;
     private String           user;
+
+    private LocationManager        lManager;
+    private HashMap<String,Marker> nearbyRunners;
 
     private AcceptedRequestsAdapter acceptedRequestsAdapter;
 
@@ -47,6 +59,16 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
     public void setUser(String user)
     {
         this.user=user;
+    }
+
+    public void setLocationManager(LocationManager lManager)
+    {
+        this.lManager=lManager;
+    }
+
+    public void setNearbyRunners(HashMap<String,Marker> nearbyRunners)
+    {
+        this.nearbyRunners=nearbyRunners;
     }
 
     public void setAcceptedRequestsAdapter(AcceptedRequestsAdapter acceptedRequestsAdapter)
@@ -127,8 +149,37 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                 Runner runner=lr.getSender();
                 if(acceptedRequestsAdapter!=null)
                 {
+                    runner.isRecipient(false);
                     acceptedRequestsAdapter.add(runner);
                     acceptedRequestsAdapter.notifyDataSetChanged();
+                    //Creazione punto intermedio e memorizzazione in db
+                    try
+                    {
+                        Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        Marker marker=nearbyRunners.get(sender);
+                        if(location!=null&&marker!=null)
+                        {
+                            LatLng origin=new LatLng(location.getLatitude(),location.getLongitude());
+                            LatLng destination=marker.getPosition();
+                            Log.i("ORIGINE",""+origin);
+                            Log.i("DESTINAZIONE",""+destination);
+                            DirectionFinderImpl directionFinder=new DirectionFinderImpl();
+                            LatLng midPoint=directionFinder.execute(origin,destination,true);
+                            Request_LiveDao reqDao=new Request_LiveDaoImpl();
+                            Runner recipient=new Runner();
+                            recipient.setNickname(user);
+                            Runner applicant=new Runner();
+                            applicant.setNickname(sender);
+                            reqDao.createRequestLive(new RequestLive(applicant,recipient,midPoint));
+                        }
+                        else
+                        {
+                            Log.i("MEX","Runner non in zona,impossibile accettare la richiesta");
+                        }
+                    }
+                    catch (SecurityException ex)
+                    {
+                    }
                 }
             }
         };

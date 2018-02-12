@@ -125,15 +125,16 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 RunnersDatabases.LIVE_REQUEST_DB_NAME);
         liveRequestsDB=FirebaseUtils.connectToDatabase(liveRequestsApp);
 
-        //Inizializzazione Adapter
+        //Inizializzazione Adapter Richieste in Arrivo
         inboxRequestsAdapter.setDatabase(liveRequestsDB);
         inboxRequestsAdapter.setUser(MainActivity.user.getNickname());
-
+        inboxRequestsAdapter.setLocationManager(lManager);
+        inboxRequestsAdapter.setNearbyRunners(nearbyRunners);
+        //Iniazializzazione Adapter Richieste Accettate
+        acceptedRequestsAdapter.setUser(MainActivity.user.getNickname());
+        acceptedRequestsAdapter.setLocationManager(lManager);
+        //Inizializzazione Firebase per la ricezione delle richieste
         registerRunnerForRequests();
-
-        lastLocationUpdateTime= System.currentTimeMillis();
-
-        retrieveAcceptedRequests();
     }
 
     @Override
@@ -151,12 +152,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 ctx.stopService(locationUpdaterService);
                 locationUpdaterService=null;
                 Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Log.i("LATN",""+location);
-                if(location!=null)
-                {
-                    Log.i("LASTN",""+location.getLatitude());
-                    Log.i("LASTN",""+location.getLongitude());
-                }
+
             }
         }
         catch (SecurityException ex)
@@ -166,6 +162,10 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         }
         finally
         {
+            //Istante di tempo in cui è stato ricevuto il primo aggiornamento
+            lastLocationUpdateTime= System.currentTimeMillis();
+            //Recupero richieste accettate
+            retrieveAcceptedRequests();
             super.onResume();
         }
     }
@@ -504,6 +504,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     Runner runner=runnerDao.getByNick(destRef.getParent().getParent().getKey());
                     Log.d("Chiave",destRef.getParent().getParent().getKey());
                     //Aggiunta richiesta accettata alla lista delle richieste accettate
+                    //è recipient in quanto accettatario della richiesta
+                    runner.isRecipient(true);
                     acceptedRequestsAdapter.add(runner);
                     acceptedRequestsAdapter.notifyDataSetChanged();
                     //Memorizzazione dell'accettante
@@ -584,18 +586,17 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     final DatabaseReference childRef=ds.getRef().child("answer");
                     if(childRef!=null)
                     {
-                        Log.i("CHIAVE",childRef.getKey());
                         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)
                             {
-                                Log.i("VALORE",""+dataSnapshot.getValue());
                                 String value=(String)dataSnapshot.getValue();
                                 if (value!=null&&value.equals(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED))
                                 {
-                                    Log.i("PADRE",childRef.getParent().getKey());
                                     RunnerDao runnerDao=new RunnerDaoImpl();
                                     Runner runner=runnerDao.getByNick(childRef.getParent().getKey());
+                                    //non recipient in quanto è colui che ha inviato la richiesta
+                                    runner.isRecipient(false);
                                     acceptedRequestsAdapter.add(runner);
                                     acceptedRequestsAdapter.notifyDataSetChanged();
                                 }
@@ -605,8 +606,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                             public void onCancelled(DatabaseError databaseError) {}
                         });
                     }
-                    else
-                        Log.i("NIENTE","niente");
                 }
             }
 
@@ -629,6 +628,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             for(String user:users)
             {
                 Runner runner=runnerDao.getByNick(user);
+                //recipient in quanto accettatario della richiesta
+                runner.isRecipient(true);
                 acceptedRequestsAdapter.add(runner);
             }
 
