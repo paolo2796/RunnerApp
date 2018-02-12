@@ -93,6 +93,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private Intent                  locationUpdaterService;
 
+    private float traveled_distance;
+    private float travel_velocity;
+
     private static final double RUNNERS_RESEARCH_RADIUS=0.8;
 
     private static final int   TIME_UPDATES=650;
@@ -235,10 +238,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                         //Tempo impegato in secondi
                         spentTime=spentTime/1000;
                         //Velocità in metri al secondo
-                        double velocity= (double)distance/spentTime;
+                        travel_velocity= (float)distance/spentTime;
+                        traveled_distance=+distance;
                         Log.i("DISTANCE",""+distance+" metri");
                         Log.i("TIME",""+spentTime+" sec");
-                        Log.i("VELOCITY",""+velocity+" m/s");
+                        Log.i("VELOCITY",""+travel_velocity+" m/s");
                     }
                     else
                         lastLocationUpdateTime=System.currentTimeMillis();
