@@ -2,6 +2,8 @@ package it.unisa.runnerapp.beans;
 
 import android.graphics.drawable.Drawable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Date;
 
 public class Runner extends GeoUser
@@ -109,6 +111,7 @@ public class Runner extends GeoUser
         this.level=level;
     }
 
+    @Exclude
     public short getLevel()
     {
         return level;

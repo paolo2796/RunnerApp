@@ -13,6 +13,10 @@
     <string name="drawer_open">Apri</string>
     <string name="drawer_close">Chiudi</string>
     <string name="level_runner">Liv.</string>
-    <string name="how_reach">Come raggiungermi?</string>
+    <string name="how_reach">Raggiungimi</string>
+    <string name="myads_removerun">Rimuovi</string>
+    <string name="myads_editrun">Edit</string>
+    <string name="adsactive_startlive">Avvia Live!</string>
+    <string name="ads_followers">Followers</string>
 
 </resources>

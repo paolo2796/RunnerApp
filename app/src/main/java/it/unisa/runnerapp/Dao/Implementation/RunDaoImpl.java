@@ -154,7 +154,6 @@ public class RunDaoImpl implements RunDao {
     @Override
     public Run findByID(final int idrun) {
 
-
         try {
 
             return  new AsyncTask<Void, Void, Run>() {
@@ -165,7 +164,7 @@ public class RunDaoImpl implements RunDao {
                     Run run = null;
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse WHERE Corse.id = '" + idrun + "'");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse join Utenti on Utenti.nickname=Corse.master WHERE Corse.id =" + idrun);
                         rs = ps.executeQuery();
 
 
@@ -177,10 +176,21 @@ public class RunDaoImpl implements RunDao {
                         run.setId(rs.getInt("id"));
                         LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"),rs.getDouble("punto_ritrovo_lng"));
                         run.setMeetingPoint(latLng);
-                        run.setStartDate(rs.getDate("data_inizio"));
 
-                        Runner r = new RunnerDaoImpl().getByNick(rs.getString("master"));
-                        run.setMaster(r);
+                        run.setStartDate((java.util.Date) rs.getDate("data_inizio"));
+
+                        Runner runner = new Runner();
+                        runner.setNickname(rs.getString("nickname"));
+                        runner.setPassword(rs.getString("password"));
+                        runner.setName(rs.getString("nome"));
+                        runner.setSurname(rs.getString("cognome"));
+                        runner.setBirthDate(rs.getDate("data_nascita"));
+                        runner.setWeight(rs.getDouble("peso"));
+                        runner.setLevel(rs.getShort("livello"));
+                        runner.setTraveledKilometers(rs.getDouble("km_percorsi"));
+
+                        run.setMaster(runner);
+
 
 
                     }
