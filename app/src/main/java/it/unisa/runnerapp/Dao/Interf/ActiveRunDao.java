@@ -28,6 +28,8 @@ public interface ActiveRunDao {
     public List<ActiveRun> getAvailableRunsWithin24hByRunner(String nickname, String orderby);
 
 
+
+
     // Recupera tutte le gare disponibili per un determinato utente (senza master)
     public List<ActiveRun> getAvailableRunshByRunner(String nickname, String orderby);
 

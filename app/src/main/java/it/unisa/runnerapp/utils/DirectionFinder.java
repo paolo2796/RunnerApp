@@ -57,7 +57,7 @@ public class DirectionFinder {
     }
 
     public void executeDraw() throws UnsupportedEncodingException {
-        listener.onDirectionFinderStart();
+        listener.clearMap();
         new DownloadRawDataDraw().execute(createUrl());
 
     }

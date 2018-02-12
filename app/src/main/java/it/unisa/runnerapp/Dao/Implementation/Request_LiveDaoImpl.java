@@ -135,7 +135,6 @@ public class Request_LiveDaoImpl implements Request_LiveDao {
                         rs.next();
 
                         int id = rs.getInt("max");
-                        Log.i("Messaggio",String.valueOf(id));
 
                         ps = ConnectionUtil.getConnection().prepareStatement("SELECT * FROM Request_Live as rl JOIN Utenti AS rapplicant ON rapplicant.nickname = rl.user_applicant JOIN Utenti AS rrecipient ON rrecipient.nickname = rl.user_recipient WHERE rl.id=" + id);
                         rs = ps.executeQuery();

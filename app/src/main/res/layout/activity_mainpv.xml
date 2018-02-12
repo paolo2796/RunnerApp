@@ -6,6 +6,8 @@
     xmlns:map="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+
+
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
