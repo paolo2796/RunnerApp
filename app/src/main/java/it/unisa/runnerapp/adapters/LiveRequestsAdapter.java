@@ -147,6 +147,7 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                 //lista delle richieste accettate
                 LiveRequest lr=removeValue(sender);
                 Runner runner=lr.getSender();
+
                 if(acceptedRequestsAdapter!=null)
                 {
                     runner.isRecipient(false);
@@ -157,6 +158,8 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                     {
                         Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         Marker marker=nearbyRunners.get(sender);
+                        Log.i("LOCATION",""+location);
+                        Log.i("MARKERZ",""+marker);
                         if(location!=null&&marker!=null)
                         {
                             LatLng origin=new LatLng(location.getLatitude(),location.getLongitude());
@@ -165,6 +168,7 @@ public class LiveRequestsAdapter extends ArrayAdapter<LiveRequest>
                             Log.i("DESTINAZIONE",""+destination);
                             DirectionFinderImpl directionFinder=new DirectionFinderImpl();
                             LatLng midPoint=directionFinder.execute(origin,destination,true);
+                            Log.i("MIDPOINT",""+midPoint);
                             Request_LiveDao reqDao=new Request_LiveDaoImpl();
                             Runner recipient=new Runner();
                             recipient.setNickname(user);

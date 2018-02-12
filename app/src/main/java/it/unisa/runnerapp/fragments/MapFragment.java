@@ -165,7 +165,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             //Istante di tempo in cui è stato ricevuto il primo aggiornamento
             lastLocationUpdateTime= System.currentTimeMillis();
             //Recupero richieste accettate
-            retrieveAcceptedRequests();
+            //retrieveAcceptedRequests();
             super.onResume();
         }
     }
@@ -201,6 +201,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         try
         {
+            //Inizializzazione mappa per l'adapter
+            acceptedRequestsAdapter.setGoogleMap(googleMap);
+
             gMap=googleMap;
             gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(ctx,R.raw.map_style));
             gMap.setMyLocationEnabled(true);

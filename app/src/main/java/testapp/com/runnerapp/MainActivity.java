@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle aBarToggle;
 
-    public static Runner user=new Runner("mavit","pass","Mauro","Vitale",null,null,70,200,(short)1);;
+    public static Runner user=new Runner("paolo2796","pass","Mauro","Vitale",null,null,70,200,(short)1);;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.live_run_panel);
 
         //tabs
-        /*
+
         TabLayout tabLayout=(TabLayout)findViewById(R.id.tabs);
         ViewPager viewPager=(ViewPager)findViewById(R.id.pager);
         LiveRunListsAdapter liveRunListsAdapter=new LiveRunListsAdapter(getSupportFragmentManager());
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft=fm.beginTransaction();
         MapFragment mf=new MapFragment();
         ft.add(R.id.container,mf);
-        ft.commit();*/
+        ft.commit();
 
 
         //View listHeader=getLayoutInflater().inflate(R.layout.nv_liverequests_header,lw,false);
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         //lw.addHeaderView(listHeader);
         //mf.setInboxRequestsListView(lw);
         //List<LiveRequest> lrs=new ArrayList<>();AcceptedRequestsAdapter acceptedRequestsAdapter=new AcceptedRequestsAdapter(this,R.layout.nv_acceptedrequests_requestitem,new ArrayList<Runner>());
-        /*
+
         AcceptedRequestsAdapter acceptedRequestsAdapter=new AcceptedRequestsAdapter(this,R.layout.nv_acceptedrequests_requestitem,new ArrayList<Runner>());
         LiveRequestsAdapter liveRequestsAdapter=new LiveRequestsAdapter(this,R.layout.nv_receivedrequests_requestitem,new ArrayList<LiveRequest>());
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
 
         mf.setInboxRequestsAdapter(liveRequestsAdapter);
         mf.setAcceptedRequestsAdapter(acceptedRequestsAdapter);
-        //mf.setNotificationBadge(notificationBadge);*/
+        //mf.setNotificationBadge(notificationBadge);
 
     }
 
