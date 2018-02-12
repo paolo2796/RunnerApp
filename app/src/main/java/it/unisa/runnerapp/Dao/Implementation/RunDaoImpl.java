@@ -167,7 +167,6 @@ public class RunDaoImpl implements RunDao {
                         ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse join Utenti on Utenti.nickname=Corse.master WHERE Corse.id =" + idrun);
                         rs = ps.executeQuery();
 
-
                         rs.next();
 
 
@@ -231,27 +230,23 @@ public class RunDaoImpl implements RunDao {
                     PreparedStatement ps = null;
                     try {
 
+
                         ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse");
                         rs = ps.executeQuery();
 
-
                         while (rs.next()) {
-
-
                             Run run = new Run();
-
                             run.setId(rs.getInt("id"));
                             LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"),rs.getDouble("punto_ritrovo_lng"));
                             run.setMeetingPoint(latLng);
-                            run.setStartDate(rs.getDate("data_inizio"));
 
-                            Runner r = new RunnerDaoImpl().getByNick(rs.getString("master"));
-                            run.setMaster(r);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
 
+                            Runner runner = new Runner();
+                            runner.setNickname(rs.getString("master"));
+                            run.setMaster(runner);
 
                             runs.add(run);
-
-
 
                         }
 

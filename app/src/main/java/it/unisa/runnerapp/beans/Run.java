@@ -1,6 +1,7 @@
 package it.unisa.runnerapp.beans;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.Exclude;
 
 import java.util.Date;
 
@@ -46,6 +47,7 @@ public class Run
         this.meetingPoint=meetingPoint;
     }
 
+    @Exclude
     public LatLng getMeetingPoint()
     {
         return meetingPoint;
@@ -56,6 +58,7 @@ public class Run
         this.start=start;
     }
 
+    @Exclude
     public Date getStartDate()
     {
         return start;
@@ -66,6 +69,7 @@ public class Run
         this.master=master;
     }
 
+    @Exclude
     public Runner getMaster()
     {
         return master;

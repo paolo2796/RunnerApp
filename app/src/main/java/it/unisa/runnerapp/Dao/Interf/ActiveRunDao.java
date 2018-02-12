@@ -17,7 +17,7 @@ public interface ActiveRunDao {
     public void deleteActiveRun(int idactiverun);
     public List<ActiveRun> getAllActiveRuns();
 
-    // Recupera una determinata corsa senza recuperando solamente l'id del master
+    // Recupera una determinata corsa (recupera solamente l'id del master)
     public ActiveRun findByID(int idrun);
 
 
@@ -26,6 +26,10 @@ public interface ActiveRunDao {
 
     // Recupera tutte le gare disponibili per un determinato utente che si terranno entro 24 ore (senza master)
     public List<ActiveRun> getAvailableRunsWithin24hByRunner(String nickname, String orderby);
+
+
+    // Recupera tutte le gare disponibili per un determinato utente (senza master)
+    public List<ActiveRun> getAvailableRunshByRunner(String nickname, String orderby);
 
     public List<ActiveRun> findByRunnerWithin24hWithoutMaster(String nickname, String order);
 
