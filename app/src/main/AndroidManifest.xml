@@ -22,17 +22,20 @@
 
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".AdActiveDetailActivity"></activity>
-        <activity android:name=".FirebaseTestActivity"></activity>
+        <activity android:name=".FirebaseTestActivity">
+
+
+        </activity>
         <activity android:name=".ErrorConnectionActivity"></activity>
         <activity android:name=".CheckPermissionActivity"></activity>
 
         <activity android:name=".MainActivityPV" android:theme="@style/AppTheme.TransNav">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
