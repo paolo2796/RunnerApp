@@ -53,19 +53,18 @@ public class CheckPermissionActivity extends AppCompatActivity {
     }
 
     public boolean netCheckIn(){
-                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                if(cm.getActiveNetworkInfo()==null){
-                    startActivity(new Intent(this,ErrorConnectionActivity.class));
-                    return false;
-                }
-                return true;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(cm.getActiveNetworkInfo()==null){
+          startActivity(new Intent(this,ErrorConnectionActivity.class));
+          return false;
+        }
+        return true;
     }
 
     public boolean checkGPS(){
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
 
+        checkManifestPermission();
         if(!locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 
             Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -75,6 +74,13 @@ public class CheckPermissionActivity extends AppCompatActivity {
         }
 
         return true;
+
+    }
+
+    public void checkManifestPermission(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
 
     }
 
