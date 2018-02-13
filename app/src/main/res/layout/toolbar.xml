@@ -8,4 +8,20 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
     android:background="@color/colorPrimary"
-    android:fitsSystemWindows="true" />
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/finishRunButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_done_black_24dp"
+            android:tint="@android:color/white"
+            android:background="@android:color/transparent"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

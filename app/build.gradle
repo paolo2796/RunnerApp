@@ -39,7 +39,8 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
 
     compile 'com.roughike:bottom-bar:2.0'
-
+    //Sliding Up panel
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
 
     implementation files('libs/mysql-connector-java-5.1.45-bin.jar')
 }

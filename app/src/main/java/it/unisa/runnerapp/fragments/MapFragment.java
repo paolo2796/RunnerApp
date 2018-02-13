@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,13 +59,11 @@ import it.unisa.runnerapp.services.LocationUpdater;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
-import testapp.com.runnerapp.MainActivity;
+import testapp.com.runnerapp.LiveRunActivity;
 import testapp.com.runnerapp.R;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
-    private TextView         notificationsBadge;
-    private Integer          notificationsCounter;
     private Context          ctx;
 
     private GeoUser          gUser;
@@ -93,8 +91,14 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private Intent                  locationUpdaterService;
 
-    private float traveled_distance;
-    private float travel_velocity;
+    private TextView tvBurnedCalories;
+    private TextView tvTraveledDistance;
+    private TextView tvAvgSpeed;
+
+    private float  traveled_distance;
+    private double burned_calories;
+    private double avg_velocity;
+    private int    avg_velocity_counter;
 
     private static final double RUNNERS_RESEARCH_RADIUS=0.8;
 
@@ -105,6 +109,10 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private static final String ACCEPTED_REQUESTS_KEY="AcceptedUser";
     private static final String LOCATION_DEBUG_KEY="Location Update";
     private static final String SP_ACCEPTED_REQUESTS_NAME="accepted_requests";
+
+    private static final String VELOCITY_UNIT="m/s";
+    private static final String CALORIES_UNIT="kCal";
+    private static final String DISTANCE_UNIT="m";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -127,14 +135,24 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
         //Inizializzazione Adapter Richieste in Arrivo
         inboxRequestsAdapter.setDatabase(liveRequestsDB);
-        inboxRequestsAdapter.setUser(MainActivity.user.getNickname());
+        inboxRequestsAdapter.setUser(LiveRunActivity.user.getNickname());
         inboxRequestsAdapter.setLocationManager(lManager);
         inboxRequestsAdapter.setNearbyRunners(nearbyRunners);
         //Iniazializzazione Adapter Richieste Accettate
-        acceptedRequestsAdapter.setUser(MainActivity.user.getNickname());
+        acceptedRequestsAdapter.setUser(LiveRunActivity.user.getNickname());
         acceptedRequestsAdapter.setLocationManager(lManager);
         //Inizializzazione Firebase per la ricezione delle richieste
         registerRunnerForRequests();
+
+        //Inizializzazione sliding panel
+        //Istante di tempo in cui è stato ricevuto il primo aggiornamento
+        lastLocationUpdateTime= System.currentTimeMillis();
+        //Inizializzazione contatore per il n.campionamenti
+        avg_velocity_counter=0;
+
+        tvAvgSpeed.setText("0 "+VELOCITY_UNIT);
+        tvTraveledDistance.setText("0 "+DISTANCE_UNIT);
+        tvBurnedCalories.setText("0 "+CALORIES_UNIT);
     }
 
     @Override
@@ -162,8 +180,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         }
         finally
         {
-            //Istante di tempo in cui è stato ricevuto il primo aggiornamento
-            lastLocationUpdateTime= System.currentTimeMillis();
             //Recupero richieste accettate
             //retrieveAcceptedRequests();
             super.onResume();
@@ -180,7 +196,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Aggiunta informazioni necessarie quali nickname dell'utente
         //e gli intervalli di tempo e distanza con cui richiedere gli
         //aggiornamenti
-        locationUpdaterService.putExtra(LocationUpdater.USER_ID_KEY,MainActivity.user.getNickname());
+        locationUpdaterService.putExtra(LocationUpdater.USER_ID_KEY, LiveRunActivity.user.getNickname());
         locationUpdaterService.putExtra(LocationUpdater.TIME_INTERVAL_KEY,TIME_UPDATES);
         locationUpdaterService.putExtra(LocationUpdater.DISTANCE_INTERVAL_KEY,DISTANCE_UPDATES);
         //Avvio del service
@@ -231,8 +247,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 {
                     if(bestLocation!=null)
                     {
-                        //Calcolo delle calorie bruciate,della velocità e della distanza percorsa
-
+                        avg_velocity_counter++;
                         //Distanza percorsa in metri
                         float distance=bestLocation.distanceTo(location);
                         long currentTime=System.currentTimeMillis();
@@ -241,16 +256,25 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                         //Tempo impegato in secondi
                         spentTime=spentTime/1000;
                         //Velocità in metri al secondo
-                        travel_velocity= (float)distance/spentTime;
-                        traveled_distance=+distance;
+                        double current_velocity= (double)distance/spentTime;
+                        avg_velocity=((avg_velocity*(avg_velocity_counter-1))+current_velocity)/avg_velocity_counter;
+                        traveled_distance+=distance;
+                        //Calcolo delle calorie bruciate,della velocità e della distanza percorsa
+                        burned_calories= LiveRunActivity.user.getWeight()*(distance/1000);
+
                         Log.i("DISTANCE",""+distance+" metri");
                         Log.i("TIME",""+spentTime+" sec");
-                        Log.i("VELOCITY",""+travel_velocity+" m/s");
+                        Log.i("VELOCITY",""+avg_velocity+" m/s");
+                        lastLocationUpdateTime=System.currentTimeMillis();
+
+                        //Aggiornamento valori visualizzati
+                        DecimalFormat formatter=new DecimalFormat("##.##");
+                        tvAvgSpeed.setText(formatter.format(avg_velocity)+" "+VELOCITY_UNIT);
+                        tvTraveledDistance.setText(formatter.format(traveled_distance)+" "+DISTANCE_UNIT);
+                        tvBurnedCalories.setText(formatter.format(burned_calories)+" "+CALORIES_UNIT);
                     }
                     else
                         lastLocationUpdateTime=System.currentTimeMillis();
-
-                    lastLocationUpdateTime=System.currentTimeMillis();
 
                     bestLocation=location;
                     //Se la mappa non è stata inizializzata vengono creati i dati per farlo
@@ -258,7 +282,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     //nella base di dati di firebase
                     if(gUser==null)
                     {
-                        gUser=new GeoUser(MainActivity.user.getNickname());
+                        gUser=new GeoUser(LiveRunActivity.user.getNickname());
                         //Si procede ad ottenere il root di tutti i runner nel db
                         userLocationReference=locationsDB.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
                         gFire=new GeoFire(userLocationReference);
@@ -418,7 +442,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         //Registrazione presso il db che consente di gestire le richieste
         DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
-        consumerReference=consumerReference.child(MainActivity.user.getNickname());
+        consumerReference=consumerReference.child(LiveRunActivity.user.getNickname());
         //Registrazione listener che gestirà le richieste in arrivo
         consumerReference.addChildEventListener(getReceivedRequestListener());
     }
@@ -427,7 +451,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         //Navigo verso il nodo a cui inviare la richiesta
         DatabaseReference consumerReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT);
-        consumerReference=consumerReference.child(runner+"/"+MainActivity.user.getNickname());
+        consumerReference=consumerReference.child(runner+"/"+ LiveRunActivity.user.getNickname());
         consumerReference.setValue(ServerValue.TIMESTAMP);
         consumerReference=consumerReference.child(RunnersDatabases.LIVE_REQUEST_DB_ANSWER_NODE);
         consumerReference.addValueEventListener(getOnRequestAnsweredListener());
@@ -539,11 +563,19 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         this.acceptedRequestsAdapter=acceptedRequestsAdapter;
     }
 
-    public void setNotificationBadge(TextView notificationBadge)
+    public void setAvgVelocityTextView(TextView tvAvgSpeed)
     {
-        this.notificationsBadge=notificationBadge;
-        notificationsCounter=0;
-        notificationBadge.setText(""+notificationsCounter);
+        this.tvAvgSpeed=tvAvgSpeed;
+    }
+
+    public void setBurnedCaloriesTextView(TextView tvBurnedCalories)
+    {
+        this.tvBurnedCalories=tvBurnedCalories;
+    }
+
+    public void setTraveledDistanceTextView(TextView tvTraveledDistance)
+    {
+        this.tvTraveledDistance=tvTraveledDistance;
     }
 
     public void onSavedInstanceState(Bundle savedInstanceState)
@@ -569,7 +601,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             }
             catch (SecurityException ex)
             {
-
             }
         }
     }
@@ -577,7 +608,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void retrieveAcceptedRequests()
     {
         //Posizionamento sul nodo associato all'utente
-        DatabaseReference dr=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT+"/"+MainActivity.user.getNickname());
+        DatabaseReference dr=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT+"/"+ LiveRunActivity.user.getNickname());
         //Recupero dei figli
         ValueEventListener eventListener=new ValueEventListener() {
             @Override

@@ -8,18 +8,65 @@
     android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <include
-            layout="@layout/toolbar">
-        </include>
-        <FrameLayout
-            android:id="@+id/container"
+        android:gravity="bottom"
+        sothree:umanoDragView="@+id/dragView"
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="40dp"
+        sothree:umanoParalaxOffset="100dp"
+        sothree:umanoShadowHeight="4dp">
+
+        <!-- CONTENUTO PRINCIPALE -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/toolbar">
+            </include>
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+        </LinearLayout>
+
+        <!-- PANNELLO A SCORRIMENTO -->
+        <LinearLayout
+            android:id="@+id/slidingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_sliding_panel"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <!-- CONTENUTO PANNELLO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!-- LABEL INIZIALE VISIBILE -->
+                <ImageView
+                    android:id="@+id/sliderIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="@color/icon_sliding_panel"
+                    android:src="@drawable/ic_keyboard_arrow_up_black_40dp"/>
+                <!-- CONTENUTO NASCOSTO-->
+                <include
+                    layout="@layout/sliding_panel_liverun"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
 
     <LinearLayout
         android:orientation="vertical"

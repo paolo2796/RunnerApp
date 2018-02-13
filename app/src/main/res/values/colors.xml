@@ -13,4 +13,8 @@
     <color name="background_list">#EEEEEE</color>
     <color name="delay_participation">#E10000</color>
     <color name="tempv_celestial">#1bb4c6</color>
+
+    <color name="foreground_sliding_panel">#EEEEEE</color>
+    <color name="background_sliding_panel">#212121</color>
+    <color name="icon_sliding_panel">#EEEEEE</color>
 </resources>
