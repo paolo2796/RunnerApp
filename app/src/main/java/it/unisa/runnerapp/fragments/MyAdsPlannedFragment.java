@@ -10,7 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoQuery;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +30,9 @@ import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.utils.ConnectionUtil;
+import it.unisa.runnerapp.utils.FirebaseUtils;
+import it.unisa.runnerapp.utils.RunnersDatabases;
+import testapp.com.runnerapp.CheckPermissionActivity;
 import testapp.com.runnerapp.R;
 
 /**
@@ -32,6 +40,9 @@ import testapp.com.runnerapp.R;
  */
 
     public class MyAdsPlannedFragment extends Fragment implements MyAdPlannedAdapter.Communicator  {
+
+    // DB Firebase
+    public static  DatabaseReference databaserunners = CheckPermissionActivity.participationdb.getReference("Runs");
 
         List<ActiveRun> runsactive;
         public ListView listview;
@@ -102,6 +113,15 @@ import testapp.com.runnerapp.R;
             public void responMyAdsPlannedDetailRun(int index);
             public void respondStartLiveActivity(int codrun);
         }
+
+
+
+    public static void removeParticipationFirebase(ActiveRun run, String nick){
+
+        DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
+        refrun.child(nick).removeValue();
+
+    }
 
 
 

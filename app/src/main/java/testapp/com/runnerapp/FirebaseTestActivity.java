@@ -168,10 +168,7 @@ public class FirebaseTestActivity extends AppCompatActivity{
         DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
 
         for(Runner runner: runners){
-
             refrun.child(String.valueOf(runner.getNickname())).setValue(runner.getNickname());
-
-
         }
 
 

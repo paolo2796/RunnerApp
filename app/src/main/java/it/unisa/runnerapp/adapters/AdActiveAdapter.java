@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
 import testapp.com.runnerapp.R;
@@ -119,6 +121,9 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
                 Toast.makeText(getContext(),"Parteciperai a questa gara! Vai in sezione 'Programmate'",Toast.LENGTH_LONG).show();
                 new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
+
+                AdsActiveFragment.saveParticipationFirebase(activeruncurren,"paolo2796");
+                AdsActiveFragment.databaserunners.child(String.valueOf(activeruncurren.getId())).child("participation");
                 AdActiveAdapter.this.remove(activeruncurren);
                 AdActiveAdapter.this.notifyDataSetChanged();
             }
@@ -228,14 +233,13 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
 
 
-    public void setCommunicator(AdActiveAdapter.Communicator communicator) {
-        this.communicator = communicator;
-    }
+    public void setCommunicator(AdActiveAdapter.Communicator communicator) {this.communicator = communicator;}
 
-    public interface Communicator{
+    public interface Communicator{public void respondDetailRun(int index);}
 
-        public void respondDetailRun(int index);
-    }
+
+
+
 
 
 

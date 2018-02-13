@@ -16,8 +16,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import it.unisa.runnerapp.utils.ConnectionUtil;
+import it.unisa.runnerapp.utils.FirebaseUtils;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
  * Created by Paolo on 10/02/2018.
@@ -28,11 +33,18 @@ public class CheckPermissionActivity extends AppCompatActivity {
 
     private LocationManager locationmanager;
 
+    // DB Firebase
+    public static FirebaseApp participationapp;
+    public static FirebaseDatabase participationdb;
+    public  static DatabaseReference databaserunners;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        initRunsFireBase();
     }
 
     @Override
@@ -85,6 +97,16 @@ public class CheckPermissionActivity extends AppCompatActivity {
     }
 
     public LocationManager getLocationmanager(){return locationmanager;}
+
+
+    public void initRunsFireBase() {
+
+        if(participationapp==null) {
+            participationapp = FirebaseUtils.getFirebaseApp(this, RunnersDatabases.LIVE_REQUEST_APP_ID, RunnersDatabases.LIVE_REQUEST_API_KEY, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
+            participationdb = FirebaseUtils.connectToDatabase(participationapp);
+        }
+
+    }
 
 
 }

@@ -109,7 +109,6 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
 
         public void initializeMap(LatLng pointmeeting, View convertView, int position){
-
             this.position=position;
             this.pointmeeting = pointmeeting;
             mapView = (MapView) convertView.findViewById(R.id.pointmeetmap);

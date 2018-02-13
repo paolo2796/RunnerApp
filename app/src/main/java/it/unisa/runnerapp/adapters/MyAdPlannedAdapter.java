@@ -120,6 +120,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
                 int tag = Integer.parseInt(v.getTag().toString());
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
                 new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
+                MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren,"paolo2796");
                 MyAdPlannedAdapter.this.remove(activeruncurren);
                 MyAdPlannedAdapter.this.notifyDataSetChanged();
 
@@ -264,5 +265,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     public void setCommunicator(Communicator communicator) {
         this.communicator = communicator;
     }
+
+
 
 }

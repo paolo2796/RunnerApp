@@ -43,6 +43,7 @@ import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
+import testapp.com.runnerapp.CheckPermissionActivity;
 import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
@@ -53,10 +54,8 @@ import testapp.com.runnerapp.R;
 
 public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Communicator {
     // DB Firebase
-    private static FirebaseApp participationapp;
-    private  static FirebaseDatabase participationdb;
-    private static DatabaseReference databaserunners;
-    private static GeoFire geofire;
+    public static  DatabaseReference databaserunners = CheckPermissionActivity.participationdb.getReference("Runs");
+    private GeoFire geofire;
     private GeoQuery geoquery;
 
 
@@ -84,9 +83,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
         ((MainActivityPV) getActivity()).checkManifestPermission();
         ((MainActivityPV) getActivity()).getLocationmanager().requestLocationUpdates(LocationManager.GPS_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
-        initRunsFireBase();
-
-
+        geofire = new GeoFire(databaserunners);
     }
 
 
@@ -129,6 +126,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
             public void onLocationChanged(Location location) {
                 Log.i(MESSAGE_LOG, String.valueOf(location.getLatitude() + "-" + location.getLongitude()));
                 if(geoquery==null) {
+                    Log.i("Messaggio","SONO DENTRO");
                     myposition = location;
                     queryAtLocation();
                 }
@@ -151,19 +149,6 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
             }
         };
-
-
-    }
-
-
-    public void initRunsFireBase() {
-
-        if(participationapp==null) {
-            participationapp = FirebaseUtils.getFirebaseApp(getActivity(), RunnersDatabases.LIVE_REQUEST_APP_ID, RunnersDatabases.LIVE_REQUEST_API_KEY, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
-            participationdb = FirebaseUtils.connectToDatabase(participationapp);
-            databaserunners = participationdb.getReference("Runs");
-            geofire = new GeoFire(databaserunners);
-        }
 
     }
 
@@ -266,16 +251,17 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                 Log.i("onDataChanged", dataSnapshot.getKey());
                 Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
                 Map<String, String> td = (HashMap<String, String>) dataSnapshot.child("participation").getValue();
-
                 int idrun = Integer.parseInt(dataSnapshot.getKey());
 
+
+                /* PER ORA NON SERVE
                 Log.i("EVAIIII",arrayadapter.getMapRunPos().get(idrun)!=null? "SONO DIVERSO DA NULL":"SONO NULL");
                 if(arrayadapter.getMapRunPos().get(idrun)==null) {
                     // Inserisci gara all'interno della sezione partecipa
                     ActiveRun activeRun = new ActiveRunDaoImpl().findByID(idrun);
                     arrayadapter.add(activeRun);
                     arrayadapter.notifyDataSetChanged();
-                }
+                } */
 
             }
 
@@ -289,6 +275,12 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
             }
         };
+    }
+
+    public static void saveParticipationFirebase(ActiveRun run, String nick){
+
+        DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
+        refrun.child(nick).setValue(nick);
     }
 
 
