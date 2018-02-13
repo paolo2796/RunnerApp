@@ -1,5 +1,7 @@
 package it.unisa.runnerapp.beans;
 
+import com.google.firebase.database.Exclude;
+
 public class GeoUser
 {
     private String   nickname;

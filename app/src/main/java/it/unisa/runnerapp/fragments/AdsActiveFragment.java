@@ -1,8 +1,14 @@
 package it.unisa.runnerapp.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +16,33 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
+import it.unisa.runnerapp.beans.Runner;
+import it.unisa.runnerapp.utils.FirebaseUtils;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
@@ -25,20 +52,51 @@ import testapp.com.runnerapp.R;
 
 
 public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Communicator {
+    // DB Firebase
+    private static FirebaseApp participationapp;
+    private  static FirebaseDatabase participationdb;
+    private static DatabaseReference databaserunners;
+    private static GeoFire geofire;
+    private GeoQuery geoquery;
 
-     List<ActiveRun> runsactive;
-     ListView listview;
-     public AdActiveAdapter arrayadapter;
-     AdsActiveFragment.CommunicatorActivity communicatoractivity;
-     List<ActiveRun> runs;
 
-     @Override
-     public void onCreate(Bundle savedInstanceState){
+    private static int MINTIME = 10000;
+    private static int MINDISTANCE = 50;
+    private static String MESSAGE_LOG = "Messaggio AdsActiveF";
 
-         super.onCreate(savedInstanceState);
-         runs = new ActiveRunDaoImpl().getAvailableRunsWithin24hByRunner("paolo2796","data_inizio");
 
-     }
+
+    private ListView listview;
+    public AdActiveAdapter arrayadapter;
+    private AdsActiveFragment.CommunicatorActivity communicatoractivity;
+    private List<ActiveRun> runs;
+    private LocationListener mylocationlistener;
+    private Location myposition;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        runs = new ArrayList<ActiveRun>();
+
+        mylocationlistener = getMyLocationListener();
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        ((MainActivityPV) getActivity()).getLocationmanager().requestLocationUpdates(LocationManager.GPS_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
+        initRunsFireBase();
+
+
+    }
 
 
     @Override
@@ -46,14 +104,14 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
-        arrayadapter = new AdActiveAdapter(this.getActivity(),R.layout.row_adactive,runs);
+        arrayadapter = new AdActiveAdapter(this.getActivity(), R.layout.row_adactive, runs);
         arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
         return v;
     }
 
 
-    public void setCommunicator(AdsActiveFragment.CommunicatorActivity communicatoractivity){
+    public void setCommunicator(AdsActiveFragment.CommunicatorActivity communicatoractivity) {
         this.communicatoractivity = communicatoractivity;
     }
 
@@ -66,11 +124,182 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         public void responAdsActiveDetailRun(int index);
     }
 
-    public static AdsActiveFragment newInstance(AdsActiveFragment.CommunicatorActivity communicator){
+    public static AdsActiveFragment newInstance(AdsActiveFragment.CommunicatorActivity communicator) {
         AdsActiveFragment adsActiveFragment = new AdsActiveFragment();
         adsActiveFragment.setCommunicator(communicator);
         return adsActiveFragment;
     }
+
+
+    public LocationListener getMyLocationListener() {
+
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.i(MESSAGE_LOG, String.valueOf(location.getLatitude() + "-" + location.getLongitude()));
+                if(geoquery==null) {
+                    myposition = location;
+                    queryAtLocation();
+                }
+
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+
+    }
+
+
+    public void initRunsFireBase() {
+
+        if(participationapp==null) {
+            participationapp = FirebaseUtils.getFirebaseApp(getActivity(), RunnersDatabases.LIVE_REQUEST_APP_ID, RunnersDatabases.LIVE_REQUEST_API_KEY, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
+            participationdb = FirebaseUtils.connectToDatabase(participationapp);
+            databaserunners = participationdb.getReference("Runs");
+            geofire = new GeoFire(databaserunners);
+        }
+
+    }
+
+
+    public void queryAtLocation(){
+
+        geoquery = geofire.queryAtLocation(new GeoLocation(myposition.getLatitude(),myposition.getLongitude()),12);
+        geoquery.addGeoQueryDataEventListener(getGeoQueryDataEventListener());
+
+
+    }// End method
+
+
+
+    public GeoQueryDataEventListener getGeoQueryDataEventListener(){
+
+        return new GeoQueryDataEventListener() {
+            @Override
+            public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
+
+                Log.i("onDataEntered",dataSnapshot.getKey());
+                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                Log.i(MESSAGE_LOG,datestart.toString() + "- "+ String.valueOf(System.currentTimeMillis()));
+
+                if(datestart>=System.currentTimeMillis()){
+                    Map<String, String> td = (HashMap<String,String>) dataSnapshot.child("participation").getValue();
+                    Set list = td.keySet();
+                    Iterator iter = list.iterator();
+                    boolean istrue = false;
+
+                    // Verifico se l'utente loggato sta già partecipando a questa gara
+                    while(iter.hasNext() && !istrue) {
+                        Object key = iter.next();
+                        String value = td.get(key);
+                        if(td.get(key).equals("paolo2796")){
+
+                            istrue=true;
+
+                            Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
+                        }
+
+                    } // End while
+
+
+                    if(!istrue){
+                        Log.i(MESSAGE_LOG,"NON STO PARTECIPANDO");
+                        // Inserisci gara all'interno della sezione partecipa
+                        ActiveRun activeRun = new ActiveRunDaoImpl().findByID(Integer.valueOf(dataSnapshot.getKey()));
+                        arrayadapter.add(activeRun);
+                        arrayadapter.notifyDataSetChanged();
+                    }
+                } //End if
+            }
+
+            @Override
+            public void onDataExited(DataSnapshot dataSnapshot) {
+
+                Log.i("onDataExited",dataSnapshot.getKey());
+
+                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                if(datestart>=System.currentTimeMillis()){
+
+                    //rimuovi gara dalla sezione partecipa
+                    Map<String, String> td = (HashMap<String,String>) dataSnapshot.child("participation").getValue();
+                    Set list = td.keySet();
+                    Iterator iter = list.iterator();
+                    boolean istrue = false;
+                    // Verifico se l'utente loggato sta già partecipando a questa gara
+                    while(iter.hasNext() && !istrue) {
+                        Object key = iter.next();
+                        String value = td.get(key);
+                        if(td.get(key).equals("paolo2796")){
+
+                            istrue=true;
+
+                            Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
+                        }
+
+                    } // End while
+
+
+                    if(!istrue){
+                        Log.i(MESSAGE_LOG,"NON STO PARTECIPANDO");
+                        // Inserisci gara all'interno della sezione partecipa
+
+                        arrayadapter.remove(arrayadapter.getItem(arrayadapter.getMapRunPos().get(Integer.valueOf(dataSnapshot.getKey()))));
+                        arrayadapter.notifyDataSetChanged();
+                    }
+                } //End if
+
+            }
+
+            @Override
+            public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
+                Log.i("onDataChanged", dataSnapshot.getKey());
+                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                Map<String, String> td = (HashMap<String, String>) dataSnapshot.child("participation").getValue();
+
+                int idrun = Integer.parseInt(dataSnapshot.getKey());
+
+                Log.i("EVAIIII",arrayadapter.getMapRunPos().get(idrun)!=null? "SONO DIVERSO DA NULL":"SONO NULL");
+                if(arrayadapter.getMapRunPos().get(idrun)==null) {
+                    // Inserisci gara all'interno della sezione partecipa
+                    ActiveRun activeRun = new ActiveRunDaoImpl().findByID(idrun);
+                    arrayadapter.add(activeRun);
+                    arrayadapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        };
+    }
+
 
 
 }

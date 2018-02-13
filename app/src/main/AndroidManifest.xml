@@ -20,7 +20,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity">
+
+
+
+        </activity>
         <activity android:name=".AdActiveDetailActivity" />
         <activity android:name=".FirebaseTestActivity">
 
@@ -29,7 +33,19 @@
         <activity android:name=".CheckPermissionActivity" />
         <activity
             android:name=".MainActivityPV"
-            android:theme="@style/AppTheme.TransNav" />
+            android:theme="@style/AppTheme.TransNav">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps">
+
+        </activity>
     </application>
 
 </manifest>

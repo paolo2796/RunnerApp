@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,6 +46,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     AdActiveAdapter.Communicator communicator;
     private List<AdActiveAdapter.ViewHolder> lstHolders;
     private Handler mHandler = new Handler();
+    private HashMap<Integer,Integer> maprunpos;
 
     private Runnable updateRemainingTimeRunnable = new Runnable() {
         @Override
@@ -62,6 +64,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         super(context, resource, runs);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         lstHolders = new ArrayList<AdActiveAdapter.ViewHolder>();
+        maprunpos = new HashMap<>();
         startUpdateTimer();
     }
 
@@ -69,9 +72,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ActiveRun activeruncurrent = getItem(position);
+
         AdActiveAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+            maprunpos.put(activeruncurrent.getId(),position);
             holder = new AdActiveAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_adactive, parent, false);
             holder.starthour = (TextView) convertView.findViewById(R.id.starthour);
@@ -231,5 +236,9 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
         public void respondDetailRun(int index);
     }
+
+
+
+    public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
 
 }
