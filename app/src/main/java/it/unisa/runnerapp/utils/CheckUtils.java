@@ -151,5 +151,4 @@ public class CheckUtils
         return bitmap;
     }
 
-
 }

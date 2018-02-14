@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -27,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -56,8 +57,10 @@ import it.unisa.runnerapp.beans.GeoUser;
 import it.unisa.runnerapp.beans.LiveRequest;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.services.LocationUpdater;
+import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
+import it.unisa.runnerapp.utils.NotificationUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.LiveRunActivity;
 import testapp.com.runnerapp.R;
@@ -68,7 +71,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private GeoUser          gUser;
 
-    private static LocationManager         lManager;
+    private static LocationManager  lManager;
     private LocationProvider        lProvider;
     private Location                bestLocation;
     private static LocationListener locationListener;
@@ -89,7 +92,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private GeoFire               gFire;
     private GeoQueryEventListener nearbyRunnersListener;
 
-    private Intent                  locationUpdaterService;
+    private Intent  locationUpdaterService;
+    private boolean locationUpdaterServiceState;
 
     private TextView tvBurnedCalories;
     private TextView tvTraveledDistance;
@@ -100,6 +104,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private double avg_velocity;
     private int    avg_velocity_counter;
 
+    //Array icone marker
+    private static final int[] icons={R.drawable.ic_baseball,R.drawable.ic_basketball,R.drawable.ic_soccer,R.drawable.ic_tennis};
+
     private static final double RUNNERS_RESEARCH_RADIUS=0.8;
 
     private static final int   TIME_UPDATES=650;
@@ -108,7 +115,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private static final String ACCEPTED_REQUESTS_KEY="AcceptedUser";
     private static final String LOCATION_DEBUG_KEY="Location Update";
-    private static final String SP_ACCEPTED_REQUESTS_NAME="accepted_requests";
+    public static final String  SP_ACCEPTED_REQUESTS_NAME="accepted_requests";
 
     private static final String VELOCITY_UNIT="m/s";
     private static final String CALORIES_UNIT="kCal";
@@ -119,18 +126,20 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         super.onCreate(savedInstanceState);
         ctx = getContext();
-
+        //Inizializzazione mappa utenti nelle vicinanze
         nearbyRunners=new HashMap<>();
-
+        //Inizializzazione location manager
         lManager = GeoUtils.getLocationManager(ctx);
         lProvider = GeoUtils.getBestProvider(lManager);
 
+        //Connessione al db firebase per le posizioni
         locationsDB=FirebaseDatabase.getInstance();
         FirebaseApp liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
                 RunnersDatabases.LIVE_REQUEST_APP_ID,
                 RunnersDatabases.LIVE_REQUEST_API_KEY,
                 RunnersDatabases.LIVE_REQUEST_DB_URL,
                 RunnersDatabases.LIVE_REQUEST_DB_NAME);
+        //Connessione al db Firebase per le richieste in live
         liveRequestsDB=FirebaseUtils.connectToDatabase(liveRequestsApp);
 
         //Inizializzazione Adapter Richieste in Arrivo
@@ -141,14 +150,19 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Iniazializzazione Adapter Richieste Accettate
         acceptedRequestsAdapter.setUser(LiveRunActivity.user.getNickname());
         acceptedRequestsAdapter.setLocationManager(lManager);
+
         //Inizializzazione Firebase per la ricezione delle richieste
         registerRunnerForRequests();
+        //Recupero richieste accettate
+        //retrieveAcceptedRequests();
 
         //Inizializzazione sliding panel
         //Istante di tempo in cui è stato ricevuto il primo aggiornamento
         lastLocationUpdateTime= System.currentTimeMillis();
         //Inizializzazione contatore per il n.campionamenti
         avg_velocity_counter=0;
+        //Attivazione del service
+        locationUpdaterServiceState=true;
 
         tvAvgSpeed.setText("0 "+VELOCITY_UNIT);
         tvTraveledDistance.setText("0 "+DISTANCE_UNIT);
@@ -162,6 +176,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         {
             if(locationListener==null)
                 locationListener = getLocationListener();
+            //Richiesta aggiornamenti di posizione
             GeoUtils.startLocationUpdates(lManager, LocationManager.GPS_PROVIDER, TIME_UPDATES,DISTANCE_UPDATES, locationListener);
 
             if(locationUpdaterService!=null)
@@ -169,8 +184,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 //Il service viene arrestato
                 ctx.stopService(locationUpdaterService);
                 locationUpdaterService=null;
+                //Ultima posizione disponibile
                 Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
             }
         }
         catch (SecurityException ex)
@@ -180,8 +195,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         }
         finally
         {
-            //Recupero richieste accettate
-            //retrieveAcceptedRequests();
             super.onResume();
         }
     }
@@ -191,16 +204,20 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     {
         //Stop agli aggiornamenti in foreground
         GeoUtils.stopLocationUpdates(lManager,locationListener);
-        //Creazione intent da lanciare
-        locationUpdaterService=new Intent(ctx, LocationUpdater.class);
-        //Aggiunta informazioni necessarie quali nickname dell'utente
-        //e gli intervalli di tempo e distanza con cui richiedere gli
-        //aggiornamenti
-        locationUpdaterService.putExtra(LocationUpdater.USER_ID_KEY, LiveRunActivity.user.getNickname());
-        locationUpdaterService.putExtra(LocationUpdater.TIME_INTERVAL_KEY,TIME_UPDATES);
-        locationUpdaterService.putExtra(LocationUpdater.DISTANCE_INTERVAL_KEY,DISTANCE_UPDATES);
-        //Avvio del service
-        ctx.startService(locationUpdaterService);
+        //Se è richiesta l'attivazione del service
+        if(locationUpdaterServiceState)
+        {
+            //Creazione intent da lanciare
+            locationUpdaterService=new Intent(ctx, LocationUpdater.class);
+            //Aggiunta informazioni necessarie quali nickname dell'utente
+            //e gli intervalli di tempo e distanza con cui richiedere gli
+            //aggiornamenti
+            locationUpdaterService.putExtra(LocationUpdater.USER_ID_KEY, LiveRunActivity.user.getNickname());
+            locationUpdaterService.putExtra(LocationUpdater.TIME_INTERVAL_KEY,TIME_UPDATES);
+            locationUpdaterService.putExtra(LocationUpdater.DISTANCE_INTERVAL_KEY,DISTANCE_UPDATES);
+            //Avvio del service
+            ctx.startService(locationUpdaterService);
+        }
         super.onPause();
     }
 
@@ -340,7 +357,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             {
                 if(!key.equals(gUser.getNickname())&&nearbyRunners.get(key)==null)
                 {
-                    Marker marker=gMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
+                    Marker marker=gMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(location.latitude,location.longitude))
+                            .icon(BitmapDescriptorFactory.fromBitmap(CheckUtils.getBitmapFromVectorDrawable(getContext(),getRandomIcon()))));
                     marker.setTag(key);
                     nearbyRunners.put(key,marker);
                 }
@@ -363,11 +382,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 if(!key.equals(gUser.getNickname()))
                 {
                     Marker marker=nearbyRunners.get(key);
-                    marker.remove();
-                    nearbyRunners.remove(key);
-                    marker=gMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
-                    marker.setTag(key);
-                    nearbyRunners.put(key,marker);
+                    marker.setPosition(new LatLng(location.latitude,location.longitude));
                 }
             }
 
@@ -485,10 +500,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     inboxRequestsAdapter.notifyDataSetChanged();
 
                     //Aggiornamento numero notifica
-                    //notificationsCounter++;
-                    //notificationsBadge.setText(""+notificationsCounter);
-                    //notificationsBadge.invalidate();
-                    Toast.makeText(getContext(),"Richiesta ricevuta da "+key,Toast.LENGTH_LONG).show();
+                    NotificationUtils.sendNotification(getContext(),"Be fast!",key+" ti ha inviato una richiesta!",R.drawable.ic_request_notification);
                 }
                 //Richiesta che è stata precedentemente accettata
                 catch (ClassCastException ex)
@@ -524,7 +536,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 //In questo caso la richiesta è stata accettata
                 if(dataSnapshot.getValue()!=null&&((String)dataSnapshot.getValue()).contains(RunnersDatabases.LIVE_REQEUEST_DB_REQUEST_ACCEPTED))
                 {
-                    Toast.makeText(getContext(),"La richiesta è stata accettata",Toast.LENGTH_LONG).show();
                     DatabaseReference destRef=dataSnapshot.getRef();
                     //Recupero dati dell'accettante
                     RunnerDao runnerDao=new RunnerDaoImpl();
@@ -543,6 +554,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     editor.clear();
                     editor.putStringSet(ACCEPTED_REQUESTS_KEY,users);
                     editor.commit();
+                    //Invio della notifica
+                    NotificationUtils.sendNotification(getContext(),"Keep in movement",runner.getNickname()+" ha accettato la tua richiesta!",R.drawable.ic_runner_notification);
                 }
             }
 
@@ -551,6 +564,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             {
             }
         };
+    }
+
+    private int getRandomIcon()
+    {
+        Random random=new Random();
+        return icons[random.nextInt(icons.length)];
     }
 
     public void setInboxRequestsAdapter(LiveRequestsAdapter inboxRequestsAdapter)
@@ -669,5 +688,35 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
             acceptedRequestsAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void stopBackgroundUpdates()
+    {
+        this.locationUpdaterServiceState=false;
+    }
+
+    public FirebaseDatabase getLocationDatabase()
+    {
+        return locationsDB;
+    }
+
+    public FirebaseDatabase getLiveRequestsDatabase()
+    {
+        return liveRequestsDB;
+    }
+
+    public float getTraveledKilometers()
+    {
+        return traveled_distance;
+    }
+
+    public double getBurnedCalories()
+    {
+        return burned_calories;
+    }
+
+    public double getAvgVelocity()
+    {
+        return avg_velocity;
     }
 }

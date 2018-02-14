@@ -1,6 +1,8 @@
 package testapp.com.runnerapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -28,18 +30,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
+import it.unisa.runnerapp.Dao.Implementation.FinishedRunDaoImpl;
+import it.unisa.runnerapp.Dao.Interf.FinishedRunDao;
 import it.unisa.runnerapp.adapters.AcceptedRequestsAdapter;
 import it.unisa.runnerapp.adapters.LiveRequestsAdapter;
 import it.unisa.runnerapp.adapters.LiveRunListsAdapter;
+import it.unisa.runnerapp.beans.FinishedRun;
 import it.unisa.runnerapp.beans.LiveRequest;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AcceptedRequestsListFragment;
 import it.unisa.runnerapp.fragments.MapFragment;
 import it.unisa.runnerapp.fragments.ReceivedRequestsListFragment;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 
 public class LiveRunActivity extends AppCompatActivity
 {
@@ -152,7 +160,32 @@ public class LiveRunActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-
+                //Viene stoppato l'avvio del service
+                mapFragment.stopBackgroundUpdates();
+                //Viene cancellata la posizione live del runner dal db
+                FirebaseDatabase locationsDB=mapFragment.getLocationDatabase();
+                DatabaseReference runnerReference=locationsDB.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT+"/"+user.getNickname());
+                runnerReference.removeValue();
+                //Viene cancellato il reference per le richieste live
+                FirebaseDatabase liveRequestsDB=mapFragment.getLiveRequestsDatabase();
+                DatabaseReference runnerRequestsReference=liveRequestsDB.getReference(RunnersDatabases.LIVE_REQUEST_DB_ROOT+"/"+user.getNickname());
+                runnerRequestsReference.removeValue();
+                //Viene azzerato il file shared preferences
+                SharedPreferences sharedPreferences=getSharedPreferences(MapFragment.SP_ACCEPTED_REQUESTS_NAME,MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+                //Memorizzazione dati nel db mysql
+                FinishedRun finishedRun=new FinishedRun();
+                Runner runner=new Runner();
+                runner.setNickname(user.getNickname());
+                finishedRun.setRunner(runner);
+                //finishedRun.setId();
+                finishedRun.setAverageSpeed(mapFragment.getAvgVelocity());
+                finishedRun.setBurnedCal(mapFragment.getBurnedCalories());
+                finishedRun.setTraveledKm(mapFragment.getTraveledKilometers());
+                FinishedRunDao finishedRunDao=new FinishedRunDaoImpl();
+                //finishedRunDao.createFinishedRun(finishedRun);
             }
         };
     }
@@ -177,14 +210,14 @@ public class LiveRunActivity extends AppCompatActivity
     {
         FloatingActionButton fab=new FloatingActionButton(this);
         FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.gravity= Gravity.BOTTOM|Gravity.RIGHT;
-        lp.bottomMargin=20;
+        lp.gravity= Gravity.CENTER|Gravity.RIGHT;
         lp.rightMargin=15;
         fab.setLayoutParams(lp);
         Drawable fabIcon=getResources().getDrawable(R.drawable.ic_close_black_24dp);
         fabIcon.setTint(getResources().getColor(R.color.background_list));
         fab.setImageDrawable(fabIcon);
-        fab.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        fab.setBackgroundColor(getResources().getColor(R.color.fab_show_path));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fab_show_path)));
         fab.setVisibility(View.INVISIBLE);
 
         return fab;

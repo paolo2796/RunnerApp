@@ -26,6 +26,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tint="@color/infowindow_icons"
                 android:src="@drawable/ic_face_black_24dp"/>
             <TextView
                 android:id="@+id/names"
@@ -33,9 +34,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:layout_marginLeft="5dp"
-                android:textColor="@android:color/black"
+                android:textColor="@color/infowindow_icons"
                 tools:text="Mauro Vitale, mavit"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -48,6 +48,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tint="@color/infowindow_icons"
                 android:src="@drawable/ic_explore_black_24dp"/>
             <TextView
                 android:id="@+id/personalInfo"
@@ -69,6 +70,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tint="@color/infowindow_icons"
                 android:src="@drawable/ic_directions_run_black_24dp"/>
             <TextView
                 android:id="@+id/runInfo"
@@ -88,6 +90,6 @@
         android:layout_alignTop="@id/mainPanel"
         android:layout_alignBottom="@id/mainPanel"
         android:tint="@color/infowindow_custom_cloud_background"
-        android:background="@color/refuse_request"
+        android:background="@color/infowindow_icons"
         android:src="@drawable/ic_directions_run_black_36dp"/>
 </RelativeLayout>

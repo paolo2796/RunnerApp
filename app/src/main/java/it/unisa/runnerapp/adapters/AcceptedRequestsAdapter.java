@@ -110,19 +110,11 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
 
                         RequestLive requestLive;
                         if(isRecipient)
-                        {
                             requestLive=reqDao.findByRunnerRecipient(runner,user);
-                            Log.i("RECIPIENT",runner);
-                            Log.i("APPLICANT",user);
-                        }
                         else
-                        {
                             requestLive=reqDao.findByRunnerRecipient(user,runner);
-                            Log.i("RECIPIENT",user);
-                            Log.i("APPLICANT",runner);
-                        }
 
-                        directionFinder=new DirectionFinderImpl(getContext(),gMap,R.mipmap.pin_start,R.mipmap.pin_end);
+                        directionFinder=new DirectionFinderImpl(getContext(),gMap,R.drawable.ic_pin_start,R.drawable.ic_pin_end);
                         //Origine posizione corrente
                         LatLng origin=new LatLng(location.getLatitude(),location.getLongitude());
                         //Destinazione punto di incontro

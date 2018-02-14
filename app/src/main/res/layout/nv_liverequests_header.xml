@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:maxHeight="200dp"
-    android:background="@mipmap/asd"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/headerImage"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="200dp"
+        android:maxHeight="200dp"
+        android:background="@mipmap/header_image"
+        android:layout_marginBottom="0dp"></RelativeLayout>
 
-        <TextView
-            android:id="@+id/badge_request_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@layout/circular_notification_badge"
-            android:backgroundTint="@color/refuse_request"
-            android:textSize="15dp"
-            android:gravity="center"
-            android:textColor="@color/background_list"
-            tools:text="5"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#521476"
+        android:layout_below="@id/headerImage"/>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/background_list"
-            android:text="@string/live_run_requests_header_title"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-    -->
 </RelativeLayout>
