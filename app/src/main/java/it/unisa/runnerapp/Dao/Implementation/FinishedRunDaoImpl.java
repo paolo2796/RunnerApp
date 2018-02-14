@@ -42,7 +42,6 @@ public class FinishedRunDaoImpl implements FinishedRunDao {
 
                         ps = ConnectionUtil.getConnection().prepareStatement(sql);
 
-
                         ps.setInt(1, finishedrun.getId());
                         ps.setString(2,finishedrun.getRunner().getNickname());
                         ps.setDouble(3,finishedrun.getTraveledKm());

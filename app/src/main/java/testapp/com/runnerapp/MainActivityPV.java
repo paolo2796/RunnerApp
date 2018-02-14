@@ -67,9 +67,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             bottomBar.setOnTabSelectListener(getTabSelectListener());
 
 
-           RequestLive re = new Request_LiveDaoImpl().findByRunnerRecipient("mavit","paolo2796");
-           Log.i("Messaggio",String.valueOf(re.getCod()));
-
 
 
     }
@@ -131,6 +128,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfragment);
                     ft.commit();
+
                     myadsfragment.setCommunicator(MainActivityPV.this);
 
                 }
@@ -140,6 +138,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, adsactivefragment);
                     ft.commit();
+
 
                 }
                 else if (tabId == R.id.myadsfinished_tab) {

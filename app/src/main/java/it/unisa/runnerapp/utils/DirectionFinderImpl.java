@@ -114,10 +114,6 @@ public class DirectionFinderImpl implements DirectionFinderListener {
             }
         }
 
-        if(mMap!=null){
-            mMap.clear();
-
-        }
     }
 
 

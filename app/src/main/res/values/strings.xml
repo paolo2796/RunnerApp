@@ -17,7 +17,7 @@
     <string name="myads_editrun">Edit</string>
     <string name="adsactive_startlive">Avvia Live!</string>
     <string name="ads_followers">Followers</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_add_notice">AddNoticeActivity</string>
 
 </resources>

@@ -21,8 +21,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
+import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
 import testapp.com.runnerapp.R;
@@ -45,6 +48,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     AdActiveAdapter.Communicator communicator;
     private List<AdActiveAdapter.ViewHolder> lstHolders;
     private Handler mHandler = new Handler();
+    private HashMap<Integer,Integer> maprunpos;
 
     private Runnable updateRemainingTimeRunnable = new Runnable() {
         @Override
@@ -62,6 +66,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         super(context, resource, runs);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         lstHolders = new ArrayList<AdActiveAdapter.ViewHolder>();
+        maprunpos = new HashMap<>();
         startUpdateTimer();
     }
 
@@ -69,9 +74,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ActiveRun activeruncurrent = getItem(position);
+
         AdActiveAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+            maprunpos.put(activeruncurrent.getId(),position);
             holder = new AdActiveAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_adactive, parent, false);
             holder.starthour = (TextView) convertView.findViewById(R.id.starthour);
@@ -114,6 +121,9 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
                 Toast.makeText(getContext(),"Parteciperai a questa gara! Vai in sezione 'Programmate'",Toast.LENGTH_LONG).show();
                 new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
+
+                AdsActiveFragment.saveParticipationFirebase(activeruncurren,"paolo2796");
+                AdsActiveFragment.databaserunners.child(String.valueOf(activeruncurren.getId())).child("participation");
                 AdActiveAdapter.this.remove(activeruncurren);
                 AdActiveAdapter.this.notifyDataSetChanged();
             }
@@ -223,13 +233,16 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
 
 
-    public void setCommunicator(AdActiveAdapter.Communicator communicator) {
-        this.communicator = communicator;
-    }
+    public void setCommunicator(AdActiveAdapter.Communicator communicator) {this.communicator = communicator;}
 
-    public interface Communicator{
+    public interface Communicator{public void respondDetailRun(int index);}
 
-        public void respondDetailRun(int index);
-    }
+
+
+
+
+
+
+    public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
 
 }
