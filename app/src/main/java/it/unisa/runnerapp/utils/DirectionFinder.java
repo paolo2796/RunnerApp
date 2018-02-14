@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
  * Created by Mai Thanh Hiep on 4/3/2016.
  */
 public class DirectionFinder {
-
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "&key=AIzaSyDRaSSUaXvT6j25mbix-9Nm_-bEuxB7w9Q";
 
@@ -58,7 +57,7 @@ public class DirectionFinder {
     }
 
     public void executeDraw() throws UnsupportedEncodingException {
-//        listener.clearMap();
+        listener.clearMap();
         new DownloadRawDataDraw().execute(createUrl());
 
     }

@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         directionfinder.clearMap();
-
+        directionfinder.executeDraw(new LatLng(40.7289515,14.705428799999936), new LatLng(40.7035379,14.708282000000054));
 
 
     }
