@@ -2,6 +2,7 @@ package it.unisa.runnerapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
         nobtn.setTag(1);
         yesbtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
         nobtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.show();
 
     }

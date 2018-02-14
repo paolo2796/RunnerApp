@@ -3,6 +3,7 @@ package it.unisa.runnerapp.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.firebase.geofire.GeoFire;
@@ -43,6 +45,7 @@ import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
+import testapp.com.runnerapp.AddNoticeActivity;
 import testapp.com.runnerapp.CheckPermissionActivity;
 import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
@@ -65,12 +68,15 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
 
 
-    private ListView listview;
     public AdActiveAdapter arrayadapter;
     private AdsActiveFragment.CommunicatorActivity communicatoractivity;
     private List<ActiveRun> runs;
     private LocationListener mylocationlistener;
     private Location myposition;
+
+    //Component View
+    private ListView listview;
+    private Button addnoticebtn;
 
 
     @Override
@@ -89,12 +95,14 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
+        View v = inflater.inflate(R.layout.adsactive_fragment, container, false);
 
         listview = (ListView) v.findViewById(R.id.listview);
+        addnoticebtn = (Button) v.findViewById(R.id.addrun_btn);
         arrayadapter = new AdActiveAdapter(this.getActivity(), R.layout.row_adactive, runs);
         arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
+        addnoticebtn.setOnClickListener(getOnClickAddNoticeListener());
         return v;
     }
 
@@ -116,6 +124,18 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         AdsActiveFragment adsActiveFragment = new AdsActiveFragment();
         adsActiveFragment.setCommunicator(communicator);
         return adsActiveFragment;
+    }
+
+
+    public View.OnClickListener getOnClickAddNoticeListener(){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AddNoticeActivity.class));
+
+            }
+        };
     }
 
 

@@ -128,6 +128,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfragment);
                     ft.commit();
+
                     myadsfragment.setCommunicator(MainActivityPV.this);
 
                 }
@@ -137,6 +138,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, adsactivefragment);
                     ft.commit();
+
 
                 }
                 else if (tabId == R.id.myadsfinished_tab) {
