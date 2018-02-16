@@ -107,7 +107,6 @@ public class DirectionFinderImpl implements DirectionFinderListener {
 
     @Override
     public void clearMap(){
-
         if(polylinePaths!=null) {
             for (Polyline pol : polylinePaths) {
                 pol.remove();

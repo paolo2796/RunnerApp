@@ -17,13 +17,13 @@
                 android:id="@+id/icondatestart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_datestart_24dp"/>
+                android:src="@drawable/ic_datestart_30dp"/>
 
             <ImageView
                 android:id="@+id/iconstart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_starthour_24dp"/>
+                android:src="@drawable/ic_starthour_30dp"/>
 
             <ImageView
                 android:id="@+id/iconburnedcal"

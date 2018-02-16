@@ -3,6 +3,7 @@ package it.unisa.runnerapp.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,11 +18,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryDataEventListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,15 +60,14 @@ import testapp.com.runnerapp.R;
 
 public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Communicator {
     // DB Firebase
-    public static  DatabaseReference databaserunners = CheckPermissionActivity.participationdb.getReference("Runs");
     private GeoFire geofire;
     private GeoQuery geoquery;
+    private GeoQueryDataEventListener geoquerydataeventlistener;
 
 
     private static int MINTIME = 10000;
-    private static int MINDISTANCE = 50;
+    private static int MINDISTANCE = 100;
     private static String MESSAGE_LOG = "Messaggio AdsActiveF";
-
 
 
     public AdActiveAdapter arrayadapter;
@@ -73,6 +75,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
     private List<ActiveRun> runs;
     private LocationListener mylocationlistener;
     private Location myposition;
+    private LocationManager locationmanager;
 
     //Component View
     private ListView listview;
@@ -81,15 +84,9 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         runs = new ArrayList<ActiveRun>();
 
-        mylocationlistener = getMyLocationListener();
-
-        ((MainActivityPV) getActivity()).checkManifestPermission();
-        ((MainActivityPV) getActivity()).getLocationmanager().requestLocationUpdates(LocationManager.GPS_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
-        geofire = new GeoFire(databaserunners);
     }
 
 
@@ -103,6 +100,14 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
         addnoticebtn.setOnClickListener(getOnClickAddNoticeListener());
+
+
+
+        locationmanager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        geofire = new GeoFire(MainActivityPV.databaserunners);
+        mylocationlistener = getMyLocationListener();
+        geoquerydataeventlistener = getGeoQueryDataEventListener();
+
         return v;
     }
 
@@ -118,6 +123,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
     public interface CommunicatorActivity {
         public void responAdsActiveDetailRun(int index);
+        public void respondAddNotice(Location myposition);
     }
 
     public static AdsActiveFragment newInstance(AdsActiveFragment.CommunicatorActivity communicator) {
@@ -129,10 +135,11 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
     public View.OnClickListener getOnClickAddNoticeListener(){
 
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AddNoticeActivity.class));
+                communicatoractivity.respondAddNotice(myposition);
 
             }
         };
@@ -141,17 +148,15 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
     public LocationListener getMyLocationListener() {
 
+
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Log.i(MESSAGE_LOG, String.valueOf(location.getLatitude() + "-" + location.getLongitude()));
-                if(geoquery==null) {
-                    Log.i("Messaggio","SONO DENTRO");
-                    myposition = location;
-                    queryAtLocation();
-                }
-
-
+                myposition = location;
+                geoquery = geofire.queryAtLocation(new GeoLocation(myposition.getLatitude(),myposition.getLongitude()),12);
+                geoquery.removeAllListeners();
+                geoquery.addGeoQueryDataEventListener(geoquerydataeventlistener);
             }
 
             @Override
@@ -173,14 +178,6 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
     }
 
 
-    public void queryAtLocation(){
-
-        geoquery = geofire.queryAtLocation(new GeoLocation(myposition.getLatitude(),myposition.getLongitude()),12);
-        geoquery.addGeoQueryDataEventListener(getGeoQueryDataEventListener());
-
-
-    }// End method
-
 
 
     public GeoQueryDataEventListener getGeoQueryDataEventListener(){
@@ -191,7 +188,6 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
                 Log.i("onDataEntered",dataSnapshot.getKey());
                 Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
-                Log.i(MESSAGE_LOG,datestart.toString() + "- "+ String.valueOf(System.currentTimeMillis()));
 
                 if(datestart>=System.currentTimeMillis()){
                     Map<String, String> td = (HashMap<String,String>) dataSnapshot.child("participation").getValue();
@@ -204,9 +200,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                         Object key = iter.next();
                         String value = td.get(key);
                         if(td.get(key).equals("paolo2796")){
-
                             istrue=true;
-
                             Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
                         }
 
@@ -241,9 +235,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                         Object key = iter.next();
                         String value = td.get(key);
                         if(td.get(key).equals("paolo2796")){
-
                             istrue=true;
-
                             Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
                         }
 
@@ -263,6 +255,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
             @Override
             public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+                Log.i("onDataMoved", dataSnapshot.getKey());
 
             }
 
@@ -275,7 +268,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
 
                 /* PER ORA NON SERVE
-                Log.i("EVAIIII",arrayadapter.getMapRunPos().get(idrun)!=null? "SONO DIVERSO DA NULL":"SONO NULL");
+                Log.i(MESSAGE_LOG,arrayadapter.getMapRunPos().get(idrun)!=null? "SONO DIVERSO DA NULL":"SONO NULL");
                 if(arrayadapter.getMapRunPos().get(idrun)==null) {
                     // Inserisci gara all'interno della sezione partecipa
                     ActiveRun activeRun = new ActiveRunDaoImpl().findByID(idrun);
@@ -293,15 +286,34 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
             @Override
             public void onGeoQueryError(DatabaseError error) {
 
+                Toast.makeText(getActivity(), "C'è un problema di connessione.Riprova!", Toast.LENGTH_SHORT).show();
+
             }
         };
     }
 
-    public static void saveParticipationFirebase(ActiveRun run, String nick){
 
-        DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
-        refrun.child(nick).setValue(nick);
+    @Override
+    public void onStart(){
+        super.onStart();
+        ((MainActivityPV) getActivity()).checkManifestPermission();
+        locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
+        Log.i(MESSAGE_LOG + "locationmanager",String.valueOf(locationmanager));
+        Log.i(MESSAGE_LOG + "mylistener",String.valueOf(mylocationlistener));
+        Log.i(MESSAGE_LOG + "geolistener",String.valueOf(geoquerydataeventlistener));
+        Log.i(MESSAGE_LOG + "geoquery",String.valueOf(geoquery));
     }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        locationmanager.removeUpdates(mylocationlistener);
+        if(geoquery!=null)
+        geoquery.removeAllListeners();
+    }
+
+
 
 
 

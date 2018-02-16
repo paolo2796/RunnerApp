@@ -29,10 +29,12 @@ import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 import testapp.com.runnerapp.CheckPermissionActivity;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -41,8 +43,6 @@ import testapp.com.runnerapp.R;
 
     public class MyAdsPlannedFragment extends Fragment implements MyAdPlannedAdapter.Communicator  {
 
-    // DB Firebase
-    public static  DatabaseReference databaserunners = CheckPermissionActivity.participationdb.getReference("Runs");
 
         List<ActiveRun> runsactive;
         public ListView listview;
@@ -61,7 +61,7 @@ import testapp.com.runnerapp.R;
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
             listview = (ListView) v.findViewById(R.id.listview);
-            runs = new PActiveRunDaoImpl().findRunByRunner("paolo2796", "data_inizio");
+            runs = new PActiveRunDaoImpl().findRunActiveByRunner("paolo2796", "data_inizio");
             arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
             arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);
@@ -91,10 +91,12 @@ import testapp.com.runnerapp.R;
             public void onClick(View v) {
 
                 if(Integer.parseInt(v.getTag().toString())==0){
+
                     new ActiveRunDaoImpl().deleteActiveRun(run.getId());
                     it.unisa.runnerapp.fragments.MyAdsPlannedFragment.this.arrayadapter.remove(run);
                     it.unisa.runnerapp.fragments.MyAdsPlannedFragment.this.arrayadapter.notifyDataSetChanged();
                     dialog.dismiss();
+
                 }
 
                 else{
@@ -118,13 +120,10 @@ import testapp.com.runnerapp.R;
 
     public static void removeParticipationFirebase(ActiveRun run, String nick){
 
-        DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
+        DatabaseReference refrun = MainActivityPV.databaserunners.child(String.valueOf(run.getId())).child("participation");
         refrun.child(nick).removeValue();
 
     }
 
-
-
-
-    }
+}
 

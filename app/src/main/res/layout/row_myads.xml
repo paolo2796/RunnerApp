@@ -31,7 +31,7 @@
             android:background="@color/tempv_celestial"
             android:text="@string/myads_editrun"
             android:onClick="editRun"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/delayparticipation_btn"

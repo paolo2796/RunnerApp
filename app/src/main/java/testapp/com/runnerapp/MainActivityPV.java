@@ -3,7 +3,9 @@ package testapp.com.runnerapp;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -18,6 +21,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -38,9 +44,11 @@ import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
+import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
@@ -48,6 +56,9 @@ import it.unisa.runnerapp.utils.RunnersDatabases;
  */
 
 public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
+
+    // DB Firebase
+    public static DatabaseReference databaserunners;
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -65,10 +76,12 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             fm = getFragmentManager();
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
+            initFire();
 
+    }
 
-
-
+    public void initFire(){
+        databaserunners = FirebaseDatabase.getInstance().getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
     }
 
 
@@ -172,10 +185,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     }
 
 
-
-
-
-
     /* Communicator MyAdsPlannedFragment */
    @Override
     public void responMyAdsPlannedDetailRun(int index) {
@@ -201,6 +210,23 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         Intent intent = new Intent(this,AdActiveDetailActivity.class);
         intent.putExtra("codrun",adsactivefragment.arrayadapter.getItem(index).getId());
         startActivity(intent);
+
+    }
+
+    @Override
+    public void respondAddNotice(Location myposition){
+        Intent intent = new Intent(this,AddNoticeActivity.class);
+
+       if(myposition!=null){
+           intent.putExtra("mylatitude",myposition.getLatitude());
+           intent.putExtra("mylongitude",myposition.getLongitude());
+           startActivity(intent);
+        }
+
+        else{
+           startActivity(intent);
+
+       }
 
     }
 

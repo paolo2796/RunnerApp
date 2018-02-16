@@ -93,7 +93,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="10dp"
                 android:background="@drawable/rectangle_corner"
-                android:drawableTop="@drawable/ic_estimatedtime_30dp"
+                android:drawableTop="@drawable/ic_wristwatch_30dp"
                 android:textColorHint="#dedede"
                 android:textColor="#dedede"
                 android:hint="In quanto tempo?"
@@ -126,7 +126,8 @@
             android:hint="Aggiungi"
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:onClick="onClickAddRun"/>
 
     </FrameLayout>
 
