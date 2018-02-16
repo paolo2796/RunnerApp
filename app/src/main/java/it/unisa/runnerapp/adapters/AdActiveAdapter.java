@@ -195,7 +195,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 participationbtn.setVisibility(View.VISIBLE);
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");

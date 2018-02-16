@@ -230,6 +230,10 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                             run.setEstimatedHours(rs.getInt("ore_previste"));
                             run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
 
+                            Runner master = new Runner();
+                            master.setNickname(rs.getString("Corse.master"));
+                            run.setMaster(master);
+
                             activeruns.add(run);
 
                         }

@@ -178,7 +178,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             if (timeDiff > 0) {
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");

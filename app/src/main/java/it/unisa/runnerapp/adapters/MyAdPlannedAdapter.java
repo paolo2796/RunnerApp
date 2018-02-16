@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -121,12 +122,23 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int tag = Integer.parseInt(v.getTag().toString());
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
-                new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
-                MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren,"paolo2796");
-                MyAdPlannedAdapter.this.remove(activeruncurren);
-                MyAdPlannedAdapter.this.notifyDataSetChanged();
+
+
+                if(activeruncurren.getMaster().getNickname().equals("paolo2796")){
+
+                    Toast.makeText(MyAdPlannedAdapter.this.getContext(), "Sei il proprietario di questo annuncio. Devi partecipare in quanto sei master!", Toast.LENGTH_SHORT).show();
+
+
+                }
+                else {
+                    new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(), "paolo2796");
+                    MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren, "paolo2796");
+                    MyAdPlannedAdapter.this.remove(activeruncurren);
+                    MyAdPlannedAdapter.this.notifyDataSetChanged();
+                }
 
             }
         };
@@ -200,7 +212,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
                 cancelrunbtn.setVisibility(View.VISIBLE);
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");
