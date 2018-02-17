@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
                 android:text="Paolo"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
 
 
             <TextView
@@ -44,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/name_tw"
                 android:textColor="@android:color/white"
-                android:text="Vigorito"/>
+                android:text="Vigorito"
+                android:textSize="20sp"/>
 
         </RelativeLayout>
 
