@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
     <string name="app_name">RunnerApp</string>
     <string name="adactive_participation">Partecipa</string>
     <string name="adactive_cancel">Annulla</string>

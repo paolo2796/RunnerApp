@@ -100,6 +100,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+
         double mylatitude = getIntent().getDoubleExtra("mylatitude",0);
         double mylongitude = getIntent().getDoubleExtra("mylongitude",0);
         if(mylatitude!=0 && mylongitude!=0){
@@ -137,8 +138,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClickAddRun(View v){
         if(checkField()){
-
-
             addrun.setEnabled(false);
             java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
             Runner runner = new RunnerDaoImpl().getByNick("paolo2796");
@@ -147,7 +146,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             int estimatedhour = Integer.parseInt(stringarray[0]);
             int estimatedmin = Integer.parseInt(stringarray[1]);
             ActiveRun activeRun = new ActiveRun(myposition,date,runner,estimatedkm,estimatedhour,estimatedmin);
-           new ActiveRunDaoImpl().createActiveRun(activeRun);
+            new ActiveRunDaoImpl().createActiveRun(activeRun);
             new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
 
             this.saveRunFirebase((Run) activeRun);
