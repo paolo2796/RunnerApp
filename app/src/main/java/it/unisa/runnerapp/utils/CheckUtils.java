@@ -158,4 +158,23 @@ public class CheckUtils
         return bitmap;
     }
 
+
+    public static short convertLevelFromStringToShort(String level){
+
+        short levelnum=0;
+
+        if(level.equalsIgnoreCase("Principiante"))
+            levelnum = 1;
+        else if(level.equalsIgnoreCase("Dilettante"))
+            levelnum=2;
+        else if(level.equalsIgnoreCase("Esperto"))
+            levelnum=3;
+        else if(level.equalsIgnoreCase("Maratoner"))
+            levelnum=4;
+        else{}
+
+        return levelnum;
+
+    }
+
 }

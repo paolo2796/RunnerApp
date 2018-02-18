@@ -27,6 +27,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:hint="Email"
+                android:inputType="textWebEmailAddress"
                 android:textColorHint="@android:color/white"
                 android:textColor="@android:color/white"/>
 
@@ -50,7 +51,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:hint="Password"
-                android:inputType="number"
+                android:inputType="textWebPassword"
                 android:textColorHint="@android:color/white"
                 android:textColor="@android:color/white"/>
 
@@ -90,13 +91,27 @@
                 android:textColor="@android:color/white"/>
 
 
+            <EditText
+                android:id="@+id/weightreg_et"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignStart="@id/emailreg_et"
+                android:layout_alignEnd="@id/emailreg_et"
+                android:layout_below="@id/surnamereg_et"
+                android:gravity="center"
+                android:hint="Peso"
+                android:inputType="number"
+                android:textColorHint="@android:color/white"
+                android:textColor="@android:color/white"/>
+
+
             <Button
                 android:id="@+id/datebirthreg_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/emailreg_et"
                 android:layout_alignEnd="@id/emailreg_et"
-                android:layout_below="@id/profileload_btn"
+                android:layout_below="@id/weightreg_et"
                 android:paddingLeft="10dp"
                 android:textColorHint="@android:color/white"
                 android:textColor="@android:color/white"
@@ -107,18 +122,6 @@
 
 
 
-            <EditText
-                android:id="@+id/weightreg_et"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignStart="@id/emailreg_et"
-                android:layout_alignEnd="@id/emailreg_et"
-                android:layout_below="@id/datebirthreg_btn"
-                android:gravity="center"
-                android:hint="Peso"
-                android:inputType="number"
-                android:textColorHint="@android:color/white"
-                android:textColor="@android:color/white"/>
 
 
             <TextView
@@ -126,7 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/emailreg_et"
-                android:layout_below="@id/weightreg_et"
+                android:layout_below="@id/datebirthreg_btn"
                 android:text="Il tuo livello"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"/>

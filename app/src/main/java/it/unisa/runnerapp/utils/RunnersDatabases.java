@@ -20,6 +20,15 @@ public interface RunnersDatabases
     final String PARTICIPATION_DB_ROOT="Runs";
 
 
+    // CREDENTIAL FIREBASE USERS
+    final String USERS_APP_ID="1:387433254417:android:6976f070661a5b9b";
+    final String USERS_API_KEY="AIzaSyD71qlyuRyl22IDMkoGfdRR2tWBAhVvQXU";
+    final String USERS_DB_URL="https://users-ed69e.firebaseio.com";
+    final String USERS_DB_NAME="users-ed69e";
+    final String USERS_DB_ROOT="Users";
+
+
+
     // CREDENTIAL DATABASE SERVER MYSQL
     final String END_POINT_DB_MYSQL="runnerdb.cavvdye4ioch.us-east-1.rds.amazonaws.com";
     final String NAME_DB_MYSQL="runnerdb";

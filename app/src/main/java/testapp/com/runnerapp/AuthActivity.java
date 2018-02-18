@@ -5,10 +5,16 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import it.unisa.runnerapp.fragments.LoginFragment;
 import it.unisa.runnerapp.fragments.RegistrationFragment;
+import it.unisa.runnerapp.utils.FirebaseUtils;
+import it.unisa.runnerapp.utils.RunnersDatabases;
 
-public class AuthActivity extends CheckPermissionActivity implements LoginFragment.Communicator {
+public class AuthActivity extends CheckPermissionActivity implements LoginFragment.Communicator, RegistrationFragment.Communicator {
 
 
     //Fragments
@@ -17,10 +23,21 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
     FragmentManager fm;
 
 
+    // DB Firebase
+    public static DatabaseReference databaseusers;
+    public static FirebaseApp firebaseapp;
+    public static FirebaseDatabase firebasedatabase;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+
+        firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.USERS_API_KEY,RunnersDatabases.USERS_APP_ID,RunnersDatabases.USERS_DB_URL,RunnersDatabases.USERS_DB_NAME);
+        firebasedatabase =  FirebaseUtils.connectToDatabase(firebaseapp);
+        databaseusers = firebasedatabase.getReference("Users");
+
 
         fm = getFragmentManager();
 
@@ -44,5 +61,14 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
         ft.commit();
 
 
+
+    }
+
+    @Override
+    public void sendLogin() {
+        logfrag = new LoginFragment();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.containerfragment_frame, logfrag);
+        ft.commit();
     }
 }
