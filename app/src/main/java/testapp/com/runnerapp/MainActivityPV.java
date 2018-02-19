@@ -60,7 +60,10 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     // DB Firebase
     public static FirebaseApp firebaseapp;
     public static FirebaseDatabase firebasedatabase;
-    public static DatabaseReference databaserunners;
+    public static DatabaseReference databaseruns;
+
+    // utente loggato
+    public static Runner userlogged;
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
@@ -74,7 +77,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
-
             fm = getFragmentManager();
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(getTabSelectListener());
@@ -87,7 +89,8 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         if(firebaseapp==null) {
             firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.PARTICIPATION_API_KEY, RunnersDatabases.PARTICIPATION_APP_ID, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
             firebasedatabase = FirebaseUtils.connectToDatabase(firebaseapp);
-            databaserunners = FirebaseDatabase.getInstance().getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
+            databaseruns = firebasedatabase.getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
+            Log.i("Firebase",databaseruns.toString());
         }
     }
 

@@ -40,7 +40,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        runs = new ActiveRunDaoImpl().findActiveByRunnerWithoutMaster("paolo2796","data_inizio");
+        runs = new ActiveRunDaoImpl().findActiveByRunnerWithoutMaster(MainActivityPV.userlogged.getNickname(),"data_inizio");
 
     }
 
@@ -133,7 +133,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
     public void removeRunFirebase(Run run){
 
-        MainActivityPV.databaserunners.child(String.valueOf(run.getId())).removeValue();
+        MainActivityPV.databaseruns.child(String.valueOf(run.getId())).removeValue();
 
     }
 

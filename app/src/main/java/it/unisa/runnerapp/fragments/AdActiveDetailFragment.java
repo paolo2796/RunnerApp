@@ -62,6 +62,7 @@ import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
 import testapp.com.runnerapp.AdActiveDetailActivity;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.Manifest;
 import testapp.com.runnerapp.R;
 
@@ -112,6 +113,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         if (getArguments() != null) {
             run = (ActiveRun) getArguments().getSerializable(ARG_POSITION);
         }
+
+
 
     }
 

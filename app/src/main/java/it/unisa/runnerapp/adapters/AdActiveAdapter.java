@@ -131,10 +131,10 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 int tag = Integer.parseInt(v.getTag().toString());
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
                 Toast.makeText(getContext(),"Parteciperai a questa gara! Vai in sezione 'Programmate'",Toast.LENGTH_LONG).show();
-                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
+                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),MainActivityPV.userlogged.getNickname());
 
-                saveParticipationFirebase(activeruncurren,"paolo2796");
-                MainActivityPV.databaserunners.child(String.valueOf(activeruncurren.getId())).child("participation");
+                saveParticipationFirebase(activeruncurren,MainActivityPV.userlogged.getNickname());
+                MainActivityPV.databaseruns.child(String.valueOf(activeruncurren.getId())).child("participation");
                 AdActiveAdapter.this.remove(activeruncurren);
                 AdActiveAdapter.this.notifyDataSetChanged();
             }
@@ -216,7 +216,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
     public void saveParticipationFirebase(ActiveRun run, String nick){
 
-        DatabaseReference refrun = MainActivityPV.databaserunners.child(String.valueOf(run.getId())).child("participation");
+        DatabaseReference refrun = MainActivityPV.databaseruns.child(String.valueOf(run.getId())).child("participation");
         refrun.child(nick).setValue(nick);
     }
 

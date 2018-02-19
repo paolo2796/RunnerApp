@@ -246,7 +246,7 @@ public class RegistrationFragment extends Fragment {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!((EditText)v).getText().toString().equals(""))
+                if((((EditText)v).getText().toString().length())>=6)
                     checkfield.put("password",true);
                 else
                     checkfield.put("password",false);

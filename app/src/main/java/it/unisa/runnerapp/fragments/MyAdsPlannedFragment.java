@@ -61,7 +61,7 @@ import testapp.com.runnerapp.R;
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
             listview = (ListView) v.findViewById(R.id.listview);
-            runs = new PActiveRunDaoImpl().findRunActiveByRunner("paolo2796", "data_inizio");
+            runs = new PActiveRunDaoImpl().findRunActiveByRunner(MainActivityPV.userlogged.getNickname(), "data_inizio");
             arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
             arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);
@@ -120,7 +120,7 @@ import testapp.com.runnerapp.R;
 
     public static void removeParticipationFirebase(ActiveRun run, String nick){
 
-        DatabaseReference refrun = MainActivityPV.databaserunners.child(String.valueOf(run.getId())).child("participation");
+        DatabaseReference refrun = MainActivityPV.databaseruns.child(String.valueOf(run.getId())).child("participation");
         refrun.child(nick).removeValue();
 
     }

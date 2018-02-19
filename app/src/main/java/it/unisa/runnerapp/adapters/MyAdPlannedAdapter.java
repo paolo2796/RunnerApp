@@ -38,6 +38,7 @@ import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -127,15 +128,15 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
 
 
-                if(activeruncurren.getMaster().getNickname().equals("paolo2796")){
+                if(activeruncurren.getMaster().getNickname().equals(MainActivityPV.userlogged.getNickname())){
 
                     Toast.makeText(MyAdPlannedAdapter.this.getContext(), "Sei il proprietario di questo annuncio. Devi partecipare in quanto sei master!", Toast.LENGTH_SHORT).show();
 
 
                 }
                 else {
-                    new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(), "paolo2796");
-                    MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren, "paolo2796");
+                    new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(), MainActivityPV.userlogged.getNickname());
+                    MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren, MainActivityPV.userlogged.getNickname());
                     MyAdPlannedAdapter.this.remove(activeruncurren);
                     MyAdPlannedAdapter.this.notifyDataSetChanged();
                 }

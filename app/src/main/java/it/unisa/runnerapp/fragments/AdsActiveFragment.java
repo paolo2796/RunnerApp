@@ -87,6 +87,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         super.onCreate(savedInstanceState);
         runs = new ArrayList<ActiveRun>();
 
+
     }
 
 
@@ -104,7 +105,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
 
         locationmanager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        geofire = new GeoFire(MainActivityPV.databaserunners);
+        geofire = new GeoFire(MainActivityPV.databaseruns);
         mylocationlistener = getMyLocationListener();
         geoquerydataeventlistener = getGeoQueryDataEventListener();
 
@@ -199,7 +200,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                     while(iter.hasNext() && !istrue) {
                         Object key = iter.next();
                         String value = td.get(key);
-                        if(td.get(key).equals("paolo2796")){
+                        if(td.get(key).equals(MainActivityPV.userlogged.getNickname())){
                             istrue=true;
                             Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
                         }
@@ -234,7 +235,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                     while(iter.hasNext() && !istrue) {
                         Object key = iter.next();
                         String value = td.get(key);
-                        if(td.get(key).equals("paolo2796")){
+                        if(td.get(key).equals(MainActivityPV.userlogged.getNickname())){
                             istrue=true;
                             Log.i(MESSAGE_LOG,"STO PARTECIPANDO!");
                         }
@@ -302,6 +303,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         Log.i(MESSAGE_LOG + "mylistener",String.valueOf(mylocationlistener));
         Log.i(MESSAGE_LOG + "geolistener",String.valueOf(geoquerydataeventlistener));
         Log.i(MESSAGE_LOG + "geoquery",String.valueOf(geoquery));
+
     }
 
 

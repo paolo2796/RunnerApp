@@ -87,6 +87,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addnotice);
 
+
         datebtn = (Button) findViewById(R.id.date_btn);
         timebtn = (Button) findViewById(R.id.time_btn);
         addrun =  (Button) findViewById(R.id.addrun_btn);
@@ -140,12 +141,12 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         if(checkField()){
             addrun.setEnabled(false);
             java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
-            Runner runner = new RunnerDaoImpl().getByNick("paolo2796");
+            Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
             int estimatedkm = Integer.parseInt(estimatedkmet.getText().toString());
             String[] stringarray = estimatedtimebtn.getText().toString().split(":");
             int estimatedhour = Integer.parseInt(stringarray[0]);
             int estimatedmin = Integer.parseInt(stringarray[1]);
-            ActiveRun activeRun = new ActiveRun(myposition,date,runner,estimatedkm,estimatedhour,estimatedmin);
+            ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,estimatedhour,estimatedmin);
             new ActiveRunDaoImpl().createActiveRun(activeRun);
             new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
 
@@ -299,13 +300,13 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void saveRunFirebase(Run run){
 
-        MainActivityPV.databaserunners.child(String.valueOf(run.getId())).setValue(run);
-        geofire = new GeoFire(MainActivityPV.databaserunners);
+        MainActivityPV.databaseruns.child(String.valueOf(run.getId())).setValue(run);
+        geofire = new GeoFire(MainActivityPV.databaseruns);
         geofire.setLocation(String.valueOf(run.getId()), new GeoLocation(run.getMeetingPoint().latitude, run.getMeetingPoint().longitude));
         Map map = new HashMap();
         map.put("datestart",run.getStartDate().getTime());
-        MainActivityPV.databaserunners.child(String.valueOf(run.getId())).updateChildren(map);
-        DatabaseReference refrun = MainActivityPV.databaserunners.child(String.valueOf(run.getId())).child("participation");
+        MainActivityPV.databaseruns.child(String.valueOf(run.getId())).updateChildren(map);
+        DatabaseReference refrun = MainActivityPV.databaseruns.child(String.valueOf(run.getId())).child("participation");
         refrun.child(String.valueOf(run.getMaster().getNickname())).setValue(run.getMaster().getNickname());
 
     }

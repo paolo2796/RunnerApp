@@ -16,6 +16,7 @@ import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.adapters.AdFinishedAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.FinishedRun;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -34,7 +35,7 @@ public class MyAdsFinishedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        runs = new FinishedRunDaoImpl().findByRunnerWithoutMaster("paolo2796","data_inizio");
+        runs = new FinishedRunDaoImpl().findByRunnerWithoutMaster(MainActivityPV.userlogged.getNickname(),"data_inizio");
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
