@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "250939881412",
-    "firebase_url": "https://runners-participation.firebaseio.com",
-    "project_id": "runners-participation",
-    "storage_bucket": "runners-participation.appspot.com"
+    "project_number": "387433254417",
+    "firebase_url": "https://users-ed69e.firebaseio.com",
+    "project_id": "users-ed69e",
+    "storage_bucket": "users-ed69e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250939881412:android:6976f070661a5b9b",
+        "mobilesdk_app_id": "1:387433254417:android:6976f070661a5b9b",
         "android_client_info": {
           "package_name": "testapp.com.runnerapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250939881412-qqtugn908kcgs02901dhp5bvsfte41v2.apps.googleusercontent.com",
+          "client_id": "387433254417-q7r1qree99fl327tpbfo36rhqpdqr4fq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBw8L0JURZnzEjWGd6rIHRR6Q8Fa1CiU60"
+          "current_key": "AIzaSyAw340H1VNMRxpnGlv-1_uea_70GxpIzV0"
         }
       ],
       "services": {

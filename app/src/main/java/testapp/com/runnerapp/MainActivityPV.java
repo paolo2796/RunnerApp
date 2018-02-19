@@ -58,6 +58,8 @@ import it.unisa.runnerapp.utils.RunnersDatabases;
 public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
 
     // DB Firebase
+    public static FirebaseApp firebaseapp;
+    public static FirebaseDatabase firebasedatabase;
     public static DatabaseReference databaserunners;
 
     MyAdsFinishedFragment myadsfinishedfragment;
@@ -81,7 +83,12 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     }
 
     public void initFire(){
-        databaserunners = FirebaseDatabase.getInstance().getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
+
+        if(firebaseapp==null) {
+            firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.PARTICIPATION_API_KEY, RunnersDatabases.PARTICIPATION_APP_ID, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
+            firebasedatabase = FirebaseUtils.connectToDatabase(firebaseapp);
+            databaserunners = FirebaseDatabase.getInstance().getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
+        }
     }
 
 

@@ -25,8 +25,4 @@ public class FirebaseUtils
         return FirebaseDatabase.getInstance(app);
     }
 
-    public static FirebaseAuth connectToAuth(FirebaseApp app){
-
-        return FirebaseAuth.getInstance(app);
-    }
 }

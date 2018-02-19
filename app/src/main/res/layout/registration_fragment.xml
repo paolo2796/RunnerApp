@@ -100,7 +100,7 @@
                 android:layout_below="@id/surnamereg_et"
                 android:gravity="center"
                 android:hint="Peso"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textColorHint="@android:color/white"
                 android:textColor="@android:color/white"/>
 
