@@ -6,9 +6,7 @@
     android:orientation="vertical"
     android:background="#f1f1f1">
 
-
-
-        <FrameLayout
+    <FrameLayout
             android:id="@+id/containerfragment_frame"
             android:layout_weight="1"
             android:layout_width="match_parent"
@@ -20,5 +18,11 @@
         android:layout_height="40dp"
         app:bb_tabXmlResource="@xml/navigation_bar_menu"
         app:bb_behavior="underNavbar" />
+
+
+
+
+
+
 
 </LinearLayout>
