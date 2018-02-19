@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
@@ -70,7 +74,12 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     AdsActiveFragment adsactivefragment;
     MyAdsPlannedFragment myadsplannedfragment;
     FragmentManager fm;
+
+
+    //Component View
     BottomBar bottomBar;
+    CircleImageView myprofileimg;
+    Animation animscalingprofile;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -78,7 +87,18 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             setContentView(R.layout.activity_mainpv);
 
             fm = getFragmentManager();
+
+            //Set component view
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+            myprofileimg = (CircleImageView) findViewById(R.id.myprofileimg);
+
+            animscalingprofile = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.scaling_myprofile);
+
+            //Set listeners
+            myprofileimg.setOnClickListener(getClickMyProfileListener());
+
+
+
             bottomBar.setOnTabSelectListener(getTabSelectListener());
             initFire();
 
@@ -95,48 +115,15 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     }
 
 
+    public View.OnClickListener getClickMyProfileListener(){
 
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
-
-
-   /* PER ORA NON SERVE
-    @Override
-    public void respondAdsFinished(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",adsfinishedfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
+            }
+        };
     }
-
-    @Override
-    public void respondAdsActive(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",adsactivefragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
-    }
-
-    @Override
-    public void responMyAdsActiveDetailRun(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
-    }
-
-    @Override
-    public void responMyAdtiveDetailRun(int position) {
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",myadplannedfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-    } */
-
-
-
 
 
     public OnTabSelectListener getTabSelectListener() {
