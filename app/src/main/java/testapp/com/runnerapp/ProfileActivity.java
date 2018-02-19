@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wang.avi.AVLoadingIndicatorView;
+
+import it.unisa.runnerapp.utils.CheckUtils;
+
 public class ProfileActivity extends AppCompatActivity {
 
 

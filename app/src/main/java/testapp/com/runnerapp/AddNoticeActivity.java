@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.w3c.dom.Text;
 
@@ -72,6 +73,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng myposition;
     private TimePickerDialog dialogtime;
     private DatePickerDialog datepickerdialog;
+    private AVLoadingIndicatorView loadingmyposition;
 
     // DB Firebase
     private GeoFire geofire;
@@ -93,9 +95,13 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         addrun =  (Button) findViewById(R.id.addrun_btn);
         estimatedkmet = (EditText) findViewById(R.id.kmestimated_et);
         estimatedtimebtn = (Button) findViewById(R.id.estimatedtime_btn);
+        loadingmyposition = (AVLoadingIndicatorView) findViewById(R.id.loading_myposition);
         mapview = (MapView) findViewById(R.id.mapview);
         mapview.onCreate(null);
         mapview.getMapAsync(this);
+
+        // start loading
+        loadingmyposition.show();
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -276,6 +282,9 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
                 myposition = new LatLng(location.getLatitude(),location.getLongitude());
                 onMapReady(googlemap);
                 locationmanager.removeUpdates(locationlistener);
+                loadingmyposition.hide();
+                mapview.setVisibility(View.VISIBLE);
+
 
             }
 

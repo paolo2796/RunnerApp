@@ -119,6 +119,9 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(MainActivityPV.this,ProfileActivity.class);
+                startActivity(intent);
+
             }
         };
     }

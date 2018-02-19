@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -30,6 +31,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.wang.avi.AVLoadingIndicatorView;
+import com.wang.avi.Indicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +83,8 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
     //Component View
     private ListView listview;
     private Button addnoticebtn;
+    private AVLoadingIndicatorView loadingadsactive;
+    private TextView loading_adsactivetw;
 
 
     @Override
@@ -97,10 +102,21 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
 
         listview = (ListView) v.findViewById(R.id.listview);
         addnoticebtn = (Button) v.findViewById(R.id.addrun_btn);
+        loadingadsactive = (AVLoadingIndicatorView) v.findViewById(R.id.loading_adsactive);
+        loading_adsactivetw = (TextView) v.findViewById(R.id.loading_adsactive_tw);
+
+        //config adapter adsactive
         arrayadapter = new AdActiveAdapter(this.getActivity(), R.layout.row_adactive, runs);
         arrayadapter.setCommunicator(this);
         listview.setAdapter(arrayadapter);
+
+
+        //Set Listeners
         addnoticebtn.setOnClickListener(getOnClickAddNoticeListener());
+
+
+        //start loading
+        loadingadsactive.show();
 
 
 
@@ -155,9 +171,14 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
             public void onLocationChanged(Location location) {
                 Log.i(MESSAGE_LOG, String.valueOf(location.getLatitude() + "-" + location.getLongitude()));
                 myposition = location;
+                arrayadapter.clear();
                 geoquery = geofire.queryAtLocation(new GeoLocation(myposition.getLatitude(),myposition.getLongitude()),12);
                 geoquery.removeAllListeners();
                 geoquery.addGeoQueryDataEventListener(geoquerydataeventlistener);
+
+                //end loading
+                loadingadsactive.hide();
+                loading_adsactivetw.setVisibility(View.GONE);
             }
 
             @Override

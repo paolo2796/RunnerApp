@@ -18,10 +18,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import testapp.com.runnerapp.AuthActivity;
@@ -43,8 +45,8 @@ public class LoginFragment extends Fragment {
     EditText passet;
     Button loginbtn;
     Button registrationbtn;
-    RelativeLayout loginrl;
-    RelativeLayout registrationrl;
+    AVLoadingIndicatorView loadingsignin;
+
 
 
     Communicator communicator;
@@ -54,19 +56,59 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.login_fragment, container, false);
 
-        loginrl = (RelativeLayout) v.findViewById(R.id.login);
-        registrationrl = (RelativeLayout) v.findViewById(R.id.registration);
+        loadingsignin = (AVLoadingIndicatorView) v.findViewById(R.id.loading_signin);
 
         useret = (EditText) v.findViewById(R.id.user_tw);
         passet = (EditText) v.findViewById(R.id.pass_tw);
         loginbtn = (Button) v.findViewById(R.id.login_btn);
         registrationbtn = (Button) v.findViewById(R.id.registration_btn);
+
+
+        //init FirebaseAuth
+        firebaseauth = FirebaseAuth.getInstance();
+        FirebaseUser fireuser = firebaseauth.getCurrentUser();
+        if(fireuser!=null) {
+            AuthActivity.databaseusers.orderByChild("email").equalTo(fireuser.getEmail()).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    startHome(dataSnapshot.getKey());
+                    Intent intent = new Intent(getActivity(),MainActivityPV.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+
+
 
         //Set Listener
         registrationbtn.setOnClickListener(getRegistrationClickListener());
@@ -96,14 +138,15 @@ public class LoginFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String regexemail ="^[A-Za-z0-9+_.-]+@(.+)$";
                 final String email = useret.getText().toString().trim();
                 String password = passet.getText().toString().trim();
 
                 if(!password.equalsIgnoreCase("") && email.matches(regexemail)){
+                    AuthActivity.setAlphaAuthRL((float) 0.5);
+                    loadingsignin.show();
 
-
-                    firebaseauth = FirebaseAuth.getInstance();
                     firebaseauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -111,10 +154,9 @@ public class LoginFragment extends Fragment {
                                 AuthActivity.databaseusers.orderByChild("email").equalTo(email).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                                        MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(dataSnapshot.getKey());
-                                        Intent intent = new Intent(getActivity(), MainActivityPV.class);
-                                        startActivity(intent);
+                                        startHome(dataSnapshot.getKey());
+                                        AuthActivity.setAlphaAuthRL(1);
+                                        loadingsignin.hide();
                                     }
 
                                     @Override
@@ -146,7 +188,10 @@ public class LoginFragment extends Fragment {
                             else{
 
                                 Toast.makeText(getActivity(),"Email o Password errata/i!",Toast.LENGTH_LONG).show();
+                                AuthActivity.setAlphaAuthRL(1);
+                                loadingsignin.hide();
                             }
+
 
                         }
                     });
@@ -169,6 +214,13 @@ public class LoginFragment extends Fragment {
         };
 
 
+    }
+
+    private void startHome(String nickname){
+
+        MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(nickname);
+        Intent intent = new Intent(getActivity(), MainActivityPV.class);
+        startActivity(intent);
     }
 
 

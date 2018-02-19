@@ -4,10 +4,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import it.unisa.runnerapp.fragments.LoginFragment;
 import it.unisa.runnerapp.fragments.RegistrationFragment;
@@ -22,6 +24,11 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
     LoginFragment logfrag;
     FragmentManager fm;
 
+    static RelativeLayout authrl;
+
+
+
+
 
     // DB Firebase
     public static DatabaseReference databaseusers;
@@ -33,6 +40,10 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+
+        authrl = (RelativeLayout) findViewById(R.id.authrl);
+
+
 
         firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.USERS_API_KEY,RunnersDatabases.USERS_APP_ID,RunnersDatabases.USERS_DB_URL,RunnersDatabases.USERS_DB_NAME);
         firebasedatabase =  FirebaseUtils.connectToDatabase(firebaseapp);
@@ -70,5 +81,9 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.containerfragment_frame, logfrag);
         ft.commit();
+    }
+
+    public static void setAlphaAuthRL(float alpha){
+        authrl.setAlpha(alpha);
     }
 }
