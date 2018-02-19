@@ -20,28 +20,31 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".AdActiveDetailActivity" />
-        <activity android:name=".FirebaseTestActivity"></activity>
+        <activity android:name=".FirebaseTestActivity" />
         <activity android:name=".ErrorConnectionActivity" />
         <activity android:name=".CheckPermissionActivity" />
         <activity
             android:name=".MainActivityPV"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
-        </activity>
-
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity android:name=".AddNoticeActivity" />
+        <activity android:name=".MapsActivity" />
         <activity
-            android:name=".AddNoticeActivity">
-
-        </activity>
-
-        <activity android:name=".MapsActivity">
+            android:name=".AuthActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme">
+
         </activity>
     </application>
 

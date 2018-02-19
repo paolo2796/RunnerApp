@@ -75,15 +75,15 @@ public class FirebaseTestActivity extends AppCompatActivity{
         geofire = new GeoFire(databaserunners);
 
 
-       /*  List<Run> run = new RunDaoImpl().getAllRuns();
+       List<Run> run = new RunDaoImpl().getAllRuns();
         for(Run ru: run){
 
 
            List<Runner> runners = new PActiveRunDaoImpl().findRunnerByRun(ru.getId());
             saveRunFirebase(ru,runners);
-         } */
+         }
 
-
+/*
         geofire.queryAtLocation(new GeoLocation(40.6960004,14.710742100000061),12).addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
             @Override
             public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
@@ -150,7 +150,7 @@ public class FirebaseTestActivity extends AppCompatActivity{
             public void onGeoQueryError(DatabaseError error) {
 
             }
-        });
+        }); */
 
 
 
@@ -170,8 +170,6 @@ public class FirebaseTestActivity extends AppCompatActivity{
         for(Runner runner: runners){
             refrun.child(String.valueOf(runner.getNickname())).setValue(runner.getNickname());
         }
-
-
 
     }
 

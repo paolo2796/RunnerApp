@@ -13,9 +13,20 @@ public interface RunnersDatabases
 
 
     // CREDENTIAL FIREBASE RUNNERS PARTICIPATION
+    final String PARTICIPATION_APP_ID="1:250939881412:android:6976f070661a5b9b";
+    final String PARTICIPATION_API_KEY="AIzaSyBM26Quebi40coidiG1a0AA0cvtRkXG6yI";
     final String PARTICIPATION_DB_URL="https://runners-participation.firebaseio.com";
     final String PARTICIPATION_DB_NAME="runners-participation";
-    final String PARTICIPATION_DB_ROOT="runs";
+    final String PARTICIPATION_DB_ROOT="Runs";
+
+
+    // CREDENTIAL FIREBASE USERS
+    final String USERS_APP_ID="1:387433254417:android:6976f070661a5b9b";
+    final String USERS_API_KEY="AIzaSyD71qlyuRyl22IDMkoGfdRR2tWBAhVvQXU";
+    final String USERS_DB_URL="https://users-ed69e.firebaseio.com";
+    final String USERS_DB_NAME="users-ed69e";
+    final String USERS_DB_ROOT="Users";
+
 
 
     // CREDENTIAL DATABASE SERVER MYSQL

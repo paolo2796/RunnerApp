@@ -31,7 +31,7 @@ public interface ActiveRunDao {
     public List<ActiveRun> getAvailableByRunner(String nickname, String orderby);
 
 
-    public List<ActiveRun> findByRunnerWithin24hWithoutMaster(String nickname, String order);
+    public List<ActiveRun> findActiveByRunnerWithoutMaster(String nickname, String order);
 
 
 }

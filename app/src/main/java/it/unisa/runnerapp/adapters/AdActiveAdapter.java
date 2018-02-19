@@ -1,6 +1,9 @@
 package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -8,8 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +36,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
+import testapp.com.runnerapp.CheckPermissionActivity;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -86,7 +95,9 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             holder.timertw = (TextView) convertView.findViewById(R.id.timer);
             holder.participationbtn = (Button) convertView.findViewById(R.id.participationbtn);
             holder.delayparticipation = (Button) convertView.findViewById(R.id.delayparticipation_btn);
-            holder.mapview = (MapView) convertView.findViewById(R.id.pointmeetmap);
+            holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
+            holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
+            holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
             convertView.setTag(holder);
             synchronized (lstHolders) {
                 lstHolders.add(holder);
@@ -120,18 +131,30 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 int tag = Integer.parseInt(v.getTag().toString());
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
                 Toast.makeText(getContext(),"Parteciperai a questa gara! Vai in sezione 'Programmate'",Toast.LENGTH_LONG).show();
-                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),"paolo2796");
+                new PActiveRunDaoImpl().createParticipationRun(activeruncurren.getId(),MainActivityPV.userlogged.getNickname());
 
-                AdsActiveFragment.saveParticipationFirebase(activeruncurren,"paolo2796");
-                AdsActiveFragment.databaserunners.child(String.valueOf(activeruncurren.getId())).child("participation");
+                saveParticipationFirebase(activeruncurren,MainActivityPV.userlogged.getNickname());
+                MainActivityPV.databaseruns.child(String.valueOf(activeruncurren.getId())).child("participation");
                 AdActiveAdapter.this.remove(activeruncurren);
                 AdActiveAdapter.this.notifyDataSetChanged();
             }
         };
     }
 
+    public View.OnClickListener getClicklPointMeetingListener(){
 
-    private class ViewHolder implements OnMapReadyCallback {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag = Integer.parseInt(v.getTag().toString());
+                communicator.respondDetailRun(tag);
+            }
+        };
+
+    }
+
+
+    private class ViewHolder {
 
         TextView datestart;
         TextView starthour;
@@ -139,9 +162,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         Button participationbtn;
         Button delayparticipation;
         ActiveRun activerun;
-        MapView mapview;
         LatLng pointmeeting;
-        GoogleMap googlemap;
+        TextView estimatedkmtw;
+        TextView estimatedtimetw;
+        ImageView pointmeetingimg;
+
         int position;
 
         public void setData(ActiveRun item, int position) {
@@ -150,12 +175,16 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             this.position = position;
             participationbtn.setTag(position);
             delayparticipation.setTag(position);
+            pointmeetingimg.setTag(position);
             participationbtn.setOnClickListener(getRequestParicipation());
             starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
             pointmeeting = activerun.getMeetingPoint();
-            mapview.onCreate(null);
-            mapview.getMapAsync(this);
+            estimatedtimetw.setText(String.valueOf(item.getEstimatedHours() + " h " + item.getEstimatedMinutes() + "m"));
+            estimatedkmtw.setText(String.valueOf(item.getEstimatedKm()));
+            pointmeetingimg.setOnClickListener(getClicklPointMeetingListener());
+            Animation animation = AnimationUtils.loadAnimation(AdActiveAdapter.this.getContext(),R.anim.scaling);
+            pointmeetingimg.startAnimation(animation);
             updateTimeRemaining(System.currentTimeMillis());
         }
 
@@ -166,7 +195,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 participationbtn.setVisibility(View.VISIBLE);
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");
@@ -176,61 +205,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         }
 
 
-
-
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            this.googlemap = googleMap;
-            if(googlemap!=null) {
-                final LatLng pointmeet = new LatLng(pointmeeting.latitude, pointmeeting.longitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(pointmeet)
-                        .zoom(20)                   // Imposta lo zoom
-                        .bearing(90)                // Imposta l'orientamento della camera verso est
-                        .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
-                        .build();                   // Crea una CameraPosition dal Builder
-                googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
-                Marker marker = googlemap.addMarker(new MarkerOptions()
-                        .position(pointmeet)
-                        .title("Title")
-                        .snippet("Snippet"));
-
-                marker.showInfoWindow();
-
-
-                googlemap.setInfoWindowAdapter(new AdActiveAdapter.MyInfoWindowAdapter());
-                googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        communicator.respondDetailRun(position);
-                    }
-                });
-            }
-        }
     } // End Class View Holder
-
-    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private final View myContentsView;
-        MyInfoWindowAdapter(){
-            myContentsView = inflater.inflate(R.layout.custom_info_direction, null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return myContentsView;
-        }
-    } // end class MyInfoWindowAdapter
-
-
 
 
     public void setCommunicator(AdActiveAdapter.Communicator communicator) {this.communicator = communicator;}
@@ -239,9 +214,11 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
 
 
 
+    public void saveParticipationFirebase(ActiveRun run, String nick){
 
-
-
+        DatabaseReference refrun = MainActivityPV.databaseruns.child(String.valueOf(run.getId())).child("participation");
+        refrun.child(nick).setValue(nick);
+    }
 
     public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
 

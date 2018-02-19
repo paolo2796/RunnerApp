@@ -45,7 +45,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        directionfinder = new DirectionFinderImpl(getApplication(),googleMap, R.drawable.ic_datestart_24dp,R.drawable.ic_destination_35dp);
+
+        directionfinder = new DirectionFinderImpl(getApplication(),googleMap, R.drawable.ic_datestart_30dp,R.drawable.ic_destination_35dp);
+        directionfinder.clearMap();
+        directionfinder.clearMap();
 
         directionfinder.executeDraw(new LatLng(40.729631, 14.705216), new LatLng(40.743340, 14.682257));
     }
@@ -54,10 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onBackPressed(){
 
-
-        directionfinder.clearMap();
         directionfinder.executeDraw(new LatLng(40.7289515,14.705428799999936), new LatLng(40.7035379,14.708282000000054));
-
 
     }
 }

@@ -2,6 +2,7 @@ package it.unisa.runnerapp.adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -10,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -88,8 +92,10 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             holder.delayparticipation = (Button) convertView.findViewById(R.id.delayparticipation_btn);
             holder.timertw = (TextView) convertView.findViewById(R.id.timer);
             holder.deleterunbtn = (Button) convertView.findViewById(R.id.deleterun_btn);
-            holder.editrunbtn = (Button) convertView.findViewById(R.id.editrun_btn);
-            holder.mapview = (MapView) convertView.findViewById(R.id.pointmeetmap);
+           // holder.editrunbtn = (Button) convertView.findViewById(R.id.editrun_btn);
+            holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
+            holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
+            holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
             convertView.setTag(holder);
             synchronized (lstHolders) {
                 lstHolders.add(holder);
@@ -119,33 +125,20 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
     }
 
 
+    public View.OnClickListener getClicklPointMeetingListener(){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag = Integer.parseInt(v.getTag().toString());
+                communicator.respondDetailRun(tag);
+            }
+        };
+
+    }
 
 
-
-    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private final View myContentsView;
-        MyInfoWindowAdapter(){
-            myContentsView = inflater.inflate(R.layout.custom_info_direction, null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return myContentsView;
-        }
-    } // end class MyInfoWindowAdapter
-
-
-
-
-
-
-    private class ViewHolder implements OnMapReadyCallback {
+    private class ViewHolder {
 
         TextView datestart;
         TextView starthour;
@@ -154,23 +147,29 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
         Button deleterunbtn;
         Button delayparticipation;
         ActiveRun activerun;
-        MapView mapview;
         LatLng pointmeeting;
-        GoogleMap googlemap;
+        TextView estimatedkmtw;
+        TextView estimatedtimetw;
+        ImageView pointmeetingimg;
         int position;
 
         public void setData(ActiveRun item, int position) {
             activerun = item;
             this.position = position;
             deleterunbtn.setTag(position);
+            pointmeetingimg.setTag(position);
+
             deleterunbtn.setOnTouchListener(getOnTouchListenerDelete(editrunbtn));
-            editrunbtn.setOnTouchListener(getOnTouchListnerEdit(deleterunbtn));
-            editrunbtn.setTag(position);
+          //  editrunbtn.setOnTouchListener(getOnTouchListnerEdit(deleterunbtn));
+          //  editrunbtn.setTag(position);
             starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
             pointmeeting = activerun.getMeetingPoint();
-            mapview.onCreate(null);
-            mapview.getMapAsync(this);
+            estimatedtimetw.setText(String.valueOf(item.getEstimatedHours() + " h " + item.getEstimatedMinutes() + "m"));
+            estimatedkmtw.setText(String.valueOf(item.getEstimatedKm())  + " km");
+            pointmeetingimg.setOnClickListener(getClicklPointMeetingListener());
+            Animation animation = AnimationUtils.loadAnimation(MyAdsAdapater.this.getContext(),R.anim.scaling);
+            pointmeetingimg.startAnimation(animation);
             updateTimeRemaining(System.currentTimeMillis());
         }
 
@@ -179,50 +178,16 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             if (timeDiff > 0) {
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");
                 deleterunbtn.setVisibility(View.GONE);
-                editrunbtn.setVisibility(View.GONE);
+                //editrunbtn.setVisibility(View.GONE);
                 delayparticipation.setVisibility(View.VISIBLE);
             }
         }
 
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            this.googlemap = googleMap;
-            if(googlemap!=null) {
-                final LatLng pointmeet = new LatLng(pointmeeting.latitude, pointmeeting.longitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(pointmeet)
-                        .zoom(20)                   // Imposta lo zoom
-                        .bearing(90)                // Imposta l'orientamento della camera verso est
-                        .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
-                        .build();                   // Crea una CameraPosition dal Builder
-                googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                // Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(AdActiveAdapter.this.getContext(),R.drawable.ic_info_marker_54dp);
-                // marker.icon(BitmapDescriptorFactory.fromBitmap(bitmapicon));
-
-                Marker marker = googlemap.addMarker(new MarkerOptions()
-                        .position(pointmeet)
-                        .title("Title")
-                        .snippet("Snippet"));
-
-                marker.showInfoWindow();
-
-
-                googlemap.setInfoWindowAdapter(new MyAdsAdapater.MyInfoWindowAdapter());
-                googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-
-                        communicator.respondDetailRun(position);
-                    }
-                });
-            }
-        }
     } // End Class View Holder
 
 
@@ -234,7 +199,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 10.0f));
-                    editrunbtn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    //editrunbtn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     int tag = Integer.valueOf((v.getTag().toString()));

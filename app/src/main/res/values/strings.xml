@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
     <string name="app_name">RunnerApp</string>
     <string name="adactive_participation">Partecipa</string>
     <string name="adactive_cancel">Annulla</string>
@@ -19,5 +19,7 @@
     <string name="ads_followers">Followers</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_add_notice">AddNoticeActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>
