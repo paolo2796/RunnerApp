@@ -100,8 +100,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         mapview.onCreate(null);
         mapview.getMapAsync(this);
 
-        // start loading
-        loadingmyposition.show();
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -110,6 +108,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
         double mylatitude = getIntent().getDoubleExtra("mylatitude",0);
         double mylongitude = getIntent().getDoubleExtra("mylongitude",0);
+
         if(mylatitude!=0 && mylongitude!=0){
             myposition = new LatLng(mylatitude,mylongitude);
 
@@ -117,9 +116,12 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
         else{
 
+            // start loading
+            loadingmyposition.show();
             locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationlistener = getLocationListener();
             locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationlistener);
+
 
         }
 
@@ -209,7 +211,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
                 mdateandtime.set(Calendar.MONTH, monthOfYear);
                 mdateandtime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateDateAndTimeDisplay();
-                //Toast.makeText(AddNoticeActivity.this,"HO SETTATO LA DATA",Toast.LENGTH_LONG).show();
             }
         };
 
