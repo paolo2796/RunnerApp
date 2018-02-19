@@ -92,8 +92,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
             myprofileimg = (CircleImageView) findViewById(R.id.myprofileimg);
 
-            animscalingprofile = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.scaling_myprofile);
-
             //Set listeners
             myprofileimg.setOnClickListener(getClickMyProfileListener());
 
