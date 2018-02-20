@@ -111,12 +111,14 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
         if(mylatitude!=0 && mylongitude!=0){
             myposition = new LatLng(mylatitude,mylongitude);
+            mapview.setVisibility(View.VISIBLE);
 
         }
 
         else{
 
             // start loading
+            loadingmyposition.setVisibility(View.VISIBLE);
             loadingmyposition.show();
             locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationlistener = getLocationListener();

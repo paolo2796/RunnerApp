@@ -20,7 +20,7 @@
             android:layout_height="300dp"
             android:minHeight="60dp"
             android:minWidth="60dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_centerInParent="true"
             app:indicatorName="BallScaleMultipleIndicator"
             app:indicatorColor="@color/tempv_celestial" />
