@@ -122,7 +122,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             loadingmyposition.show();
             locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationlistener = getLocationListener();
-            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationlistener);
+            locationmanager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationlistener);
 
 
         }

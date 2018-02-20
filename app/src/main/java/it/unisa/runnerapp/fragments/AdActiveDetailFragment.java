@@ -341,7 +341,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         providerid = null;
 
         if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))){
-            providerid = LocationManager.GPS_PROVIDER;
+            providerid = LocationManager.NETWORK_PROVIDER;
             locationlistener = getLocationListener();
             locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
         }
