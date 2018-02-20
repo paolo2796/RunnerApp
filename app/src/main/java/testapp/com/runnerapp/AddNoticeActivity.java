@@ -149,6 +149,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClickAddRun(View v){
         if(checkField()){
+            addrun.setText("Attendi...");
             addrun.setEnabled(false);
             java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
             Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
@@ -168,6 +169,8 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.show();
 
+
+            addrun.setText("Registrati...");
 
             addrun.setEnabled(true);
 

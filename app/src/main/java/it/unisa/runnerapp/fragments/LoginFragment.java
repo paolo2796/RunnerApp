@@ -46,8 +46,8 @@ public class LoginFragment extends Fragment {
     Button registrationbtn;
     AVLoadingIndicatorView loadingsignin;
 
-     FirebaseAuth firebaseauth;
-     FirebaseUser firebaseuser;
+    FirebaseAuth firebaseauth;
+    FirebaseUser firebaseuser;
 
 
 

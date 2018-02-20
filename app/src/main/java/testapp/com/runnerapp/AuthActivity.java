@@ -48,9 +48,11 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
         setContentView(R.layout.activity_auth);
 
         authrl = (RelativeLayout) findViewById(R.id.authrl);
-        firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.USERS_API_KEY,RunnersDatabases.USERS_APP_ID,RunnersDatabases.USERS_DB_URL,RunnersDatabases.USERS_DB_NAME);
-        firebasedatabase =  FirebaseUtils.connectToDatabase(firebaseapp);
-        databaseusers = firebasedatabase.getReference("Users");
+        if (firebaseapp == null){
+            firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.USERS_API_KEY, RunnersDatabases.USERS_APP_ID, RunnersDatabases.USERS_DB_URL, RunnersDatabases.USERS_DB_NAME);
+            firebasedatabase = FirebaseUtils.connectToDatabase(firebaseapp);
+            databaseusers = firebasedatabase.getReference("Users");
+        }
 
         fm = getFragmentManager();
 
@@ -88,12 +90,9 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
 
     @Override
     public void goHome(String nickname){
-
-
         MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(nickname);
         Intent intent = new Intent(this, MainActivityPV.class);
         startActivity(intent);
-        finish();
     }
 
     public static void setAlphaAuthRL(float alpha){

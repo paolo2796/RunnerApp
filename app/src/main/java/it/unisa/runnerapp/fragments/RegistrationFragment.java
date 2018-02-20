@@ -174,53 +174,55 @@ public class RegistrationFragment extends Fragment {
 
 
         return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                sendregistration.requestFocus();
-                Log.i("Messaggio",String.valueOf(sendregistration.isFocusable()));
-                Log.i("Messaggio bol", checkfield.get("email").toString());
-                Log.i("Messaggio bol", checkfield.get("nickname").toString());
-                Log.i("Messaggio bol", checkfield.get("password").toString());
-                Log.i("Messaggio bol", checkfield.get("name").toString());
-                Log.i("Messaggio bol", checkfield.get("surname").toString());
-                Log.i("Messaggio bol", checkfield.get("datebirth").toString());
-                Log.i("Messaggio bol", checkfield.get("weight").toString());
-                Log.i("Messaggio bol", checkfield.get("imageprofile").toString());
-                Log.i("Messaggio bol", checkfield.get("level").toString());
-
-
-                    if(checkfield.get("email") && checkfield.get("nickname") && checkfield.get("password") && checkfield.get("name")
-                            && checkfield.get("surname") && checkfield.get("datebirth") && checkfield.get("weight")
-                            && checkfield.get("level") && checkfield.get("imageprofile")){
-
-                        Runner runner = new Runner(nicket.getText().toString(),paswet.getText().toString(),name_et.getText().toString(),
-                                surname_et.getText().toString(),imageprofile,new Date(mdate.getTimeInMillis()),Double.parseDouble(weight_et.getText().toString()),
-                                0, CheckUtils.convertLevelFromStringToShort((String)level_sp.getSelectedItem()));
-
-                        new RunnerDaoImpl().createRunner(runner);
-                        saveUserFirebase(runner.getNickname(),emailet.getText().toString(),runner.getPassword());
+                    sendregistration.requestFocus();
+                   /* Log.i("Messaggio",String.valueOf(sendregistration.isFocusable()));
+                    Log.i("Messaggio bol", checkfield.get("email").toString());
+                    Log.i("Messaggio bol", checkfield.get("nickname").toString());
+                    Log.i("Messaggio bol", checkfield.get("password").toString());
+                    Log.i("Messaggio bol", checkfield.get("name").toString());
+                    Log.i("Messaggio bol", checkfield.get("surname").toString());
+                    Log.i("Messaggio bol", checkfield.get("datebirth").toString());
+                    Log.i("Messaggio bol", checkfield.get("weight").toString());
+                    Log.i("Messaggio bol", checkfield.get("imageprofile").toString());
+                    Log.i("Messaggio bol", checkfield.get("level").toString()); */
 
 
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        if(checkfield.get("email") && checkfield.get("nickname") && checkfield.get("password") && checkfield.get("name")
+                                && checkfield.get("surname") && checkfield.get("datebirth") && checkfield.get("weight")
+                                && checkfield.get("level") && checkfield.get("imageprofile")){
 
-                        // set title
-                        alertDialogBuilder.setTitle("Registrazione Completata!");
+                            sendregistration.setText("Attendi...");
 
-                        // set dialog message
-                        alertDialogBuilder
-                                .setMessage("Accedi")
-                                .setCancelable(false)
-                                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        communicator.sendLogin();
-                                    }
-                                });
 
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
-                    }
+                            Runner runner = new Runner(nicket.getText().toString(),paswet.getText().toString(),name_et.getText().toString(),
+                                    surname_et.getText().toString(),imageprofile,new Date(mdate.getTimeInMillis()),Double.parseDouble(weight_et.getText().toString()),
+                                    0, CheckUtils.convertLevelFromStringToShort((String)level_sp.getSelectedItem()));
 
+                            new RunnerDaoImpl().createRunner(runner);
+                            saveUserFirebase(runner.getNickname(),emailet.getText().toString(),runner.getPassword());
+
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+                            // set title
+                            alertDialogBuilder.setTitle("Registrazione Completata!");
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage("Accedi")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            communicator.sendLogin();
+                                        }
+                                    });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
+                        }
 
                 }
             };
