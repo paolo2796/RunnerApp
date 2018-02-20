@@ -36,8 +36,7 @@ import testapp.com.runnerapp.R;
 
 public class LoginFragment extends Fragment {
 
-    //Firebase
-    FirebaseAuth firebaseauth;
+
 
 
     //Component View
@@ -72,16 +71,11 @@ public class LoginFragment extends Fragment {
         registrationbtn = (Button) v.findViewById(R.id.registration_btn);
 
 
-        //init FirebaseAuth
-        firebaseauth = FirebaseAuth.getInstance();
-        FirebaseUser fireuser = firebaseauth.getCurrentUser();
-        if(fireuser!=null) {
-            AuthActivity.databaseusers.orderByChild("email").equalTo(fireuser.getEmail()).addChildEventListener(new ChildEventListener() {
+        if(AuthActivity.firebaseuser !=null) {
+            AuthActivity.databaseusers.orderByChild("email").equalTo(AuthActivity.firebaseuser.getEmail()).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    startHome(dataSnapshot.getKey());
-                    Intent intent = new Intent(getActivity(),MainActivityPV.class);
-                    startActivity(intent);
+                    communicator.goHome(dataSnapshot.getKey());
                 }
 
                 @Override
@@ -106,6 +100,7 @@ public class LoginFragment extends Fragment {
             });
 
         }
+
 
 
 
@@ -147,16 +142,16 @@ public class LoginFragment extends Fragment {
                     AuthActivity.setAlphaAuthRL((float) 0.5);
                     loadingsignin.show();
 
-                    firebaseauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    AuthActivity.firebaseauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 AuthActivity.databaseusers.orderByChild("email").equalTo(email).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                        startHome(dataSnapshot.getKey());
                                         AuthActivity.setAlphaAuthRL(1);
                                         loadingsignin.hide();
+                                        communicator.goHome(dataSnapshot.getKey());
                                     }
 
                                     @Override
@@ -182,8 +177,6 @@ public class LoginFragment extends Fragment {
 
                                     }
                                 });
-
-
                             }
                             else{
 
@@ -195,14 +188,6 @@ public class LoginFragment extends Fragment {
 
                         }
                     });
-
-
-
-
-
-
-
-
                 }
 
                 else{
@@ -216,17 +201,11 @@ public class LoginFragment extends Fragment {
 
     }
 
-    private void startHome(String nickname){
-
-        MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(nickname);
-        Intent intent = new Intent(getActivity(), MainActivityPV.class);
-        startActivity(intent);
-    }
-
 
     public interface Communicator{
 
         public void goRegistration();
+        public void goHome(String nickname);
     }
 
 

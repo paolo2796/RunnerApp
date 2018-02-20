@@ -77,15 +77,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/loading_direction"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:minHeight="60dp"
             android:minWidth="60dp"
             android:visibility="visible"
             android:layout_centerInParent="true"
-            app:indicatorName="BallScaleMultipleIndicator"
+            app:indicatorName="BallPulseIndicator"
             app:indicatorColor="@color/tempv_celestial" />
 
         <it.unisa.runnerapp.customwidgets.CustomMap
