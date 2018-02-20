@@ -57,12 +57,11 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     @Override
     public void respondDetailRun(int position) {
         communicatoractivity.respondMyAdsDetailRun(position);
-
     }
 
     @Override
     public void respondEdit(int position) {
-
+        communicatoractivity.respondMyAdsEditRun(position);
     }
 
     @Override
@@ -82,13 +81,6 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
         dialog.show();
 
     }
-
-
-
-
-
-
-
 
 
     class ClickConfirmedRunDialog implements View.OnClickListener{
@@ -126,15 +118,13 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
 
     public interface CommunicatorActivity{
-
         public void respondMyAdsDetailRun(int index);
+        public void respondMyAdsEditRun(int index);
     }
 
 
     public void removeRunFirebase(Run run){
-
         MainActivityPV.databaseruns.child(String.valueOf(run.getId())).removeValue();
-
     }
 
 

@@ -93,6 +93,7 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
         MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(nickname);
         Intent intent = new Intent(this, MainActivityPV.class);
         startActivity(intent);
+        finish();
     }
 
     public static void setAlphaAuthRL(float alpha){

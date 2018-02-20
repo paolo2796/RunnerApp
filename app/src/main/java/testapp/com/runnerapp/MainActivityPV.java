@@ -41,6 +41,7 @@ import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
+import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.RequestLive;
 import it.unisa.runnerapp.beans.Runner;
@@ -183,6 +184,15 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         startActivity(intent);
     }
 
+    @Override
+    public void respondMyAdsEditRun(int index) {
+
+        Intent intent = new Intent(this,EditRunActivity.class);
+        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(index).getId());
+        Log.i("Messaggio",String.valueOf(intent.getIntExtra("codrun",-1)));
+        startActivity(intent);
+    }
+
 
     /* Communicator MyAdsPlannedFragment */
    @Override
@@ -196,7 +206,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
    @Override
     public void respondStartLiveActivity(int codrun) {
-        Log.i("Messaggio",String.valueOf(codrun));
+
         Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
     }
 
@@ -223,8 +233,8 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         }
 
         else{
-           startActivity(intent);
 
+            startActivity(intent);
        }
 
     }

@@ -39,11 +39,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
         <activity android:name=".AddNoticeActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".EditRunActivity"
+            android:screenOrientation="portrait"></activity>
+
         <activity android:name=".MapsActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AuthActivity"
             android:screenOrientation="portrait"

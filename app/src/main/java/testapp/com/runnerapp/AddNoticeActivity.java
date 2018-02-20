@@ -138,7 +138,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         this.googlemap = googleMap;
         if(myposition!=null) {
-            googleMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(myposition).draggable(true));
+            googleMap.addMarker(new MarkerOptions().title("Punto Incontro").position(myposition).draggable(true));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 13));
             googleMap.setOnMarkerDragListener(getOnMarkerDrag());
 
@@ -153,11 +153,17 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             addrun.setEnabled(false);
             java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
             Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
-            int estimatedkm = Integer.parseInt(estimatedkmet.getText().toString());
+
+
+            double estimatedkm = Double.parseDouble(estimatedkmet.getEditableText().toString());
+
+
             String[] stringarray = estimatedtimebtn.getText().toString().split(":");
             int estimatedhour = Integer.parseInt(stringarray[0]);
             int estimatedmin = Integer.parseInt(stringarray[1]);
             ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,estimatedhour,estimatedmin);
+
+
             new ActiveRunDaoImpl().createActiveRun(activeRun);
             new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
 
@@ -169,9 +175,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.show();
 
-
-            addrun.setText("Registrati...");
-
+            addrun.setText("Aggiungi");
             addrun.setEnabled(true);
 
 

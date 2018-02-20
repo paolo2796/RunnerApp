@@ -15,41 +15,20 @@
         android:gravity="center_horizontal"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:text="Inserimento Annuncio"/>
+        android:text="Modifica Annuncio"/>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-
-
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/loading_myposition"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:minHeight="60dp"
-            android:minWidth="60dp"
-            android:visibility="gone"
-            app:indicatorName="BallPulseIndicator"
-            app:indicatorColor="@color/tempv_celestial" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
+            android:layout_height="200dp" />
 
 
     <TextView
         android:id="@+id/pointmeeting_tw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tieni premuto il marker per muoverlo." />
-
+        android:text="Tieni premuto il marker per modificare il punto di incontro." />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -64,40 +43,56 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
+                    android:shrinkColumns="*">
+
+                    <TableRow
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/datestart_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textColor="@color/tempv_celestial"
+                            android:textStyle="italic"
+                            android:text="data" />
+
+                        <TextView
+                            android:id="@+id/starthour_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textColor="@color/tempv_celestial"
+                            android:textStyle="italic"
+                            android:text="20:30"/>
+                    </TableRow>
 
 
-            <Button
-                android:id="@+id/date_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_datestart_48dp"
-                android:paddingLeft="10dp"
-                android:textColorHint="#dedede"
-                android:textColor="#dedede"
-                android:background="@drawable/rectangle_corner"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:hint="Giorno"
-                android:onClick="onDateClicked" />
+                    <TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:text="Giorno"
+                            android:textStyle="bold"/>
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:text="Ora"
+                            android:textStyle="bold"/>
+                    </TableRow>
 
-
-            <Button
-                android:id="@+id/time_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/rectangle_corner"
-                android:drawableTop="@drawable/ic_starthour_48dp"
-                android:textColorHint="#dedede"
-                android:textColor="#dedede"
-                android:hint="Ora"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:onClick="onTimeClicked">
-            </Button>
-
+                </TableLayout>
 
 
             <EditText
@@ -140,7 +135,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="50dp"
         android:layout_weight="1"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
@@ -154,11 +149,11 @@
             android:background="@null"
             android:drawableLeft="@drawable/ic_runer_30dp"
             android:gravity="center"
-            android:hint="Aggiungi"
+            android:hint="Modifica"
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:onClick="onClickAddRun"/>
+            android:onClick="onClickEditRun"/>
 
     </FrameLayout>
 
