@@ -41,9 +41,6 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
     public static DatabaseReference databaseusers;
     public static FirebaseApp firebaseapp;
     public static FirebaseDatabase firebasedatabase;
-    public static FirebaseAuth firebaseauth = FirebaseAuth.getInstance();
-    public static FirebaseUser firebaseuser = firebaseauth.getCurrentUser();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

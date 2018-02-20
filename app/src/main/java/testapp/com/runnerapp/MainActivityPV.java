@@ -60,7 +60,7 @@ import it.unisa.runnerapp.utils.RunnersDatabases;
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
+public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity, MyAdsFinishedFragment.CommunicatorActivity{
 
     // DB Firebase
     public static FirebaseApp firebaseapp;
@@ -159,7 +159,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfinishedfragment);
                     ft.commit();
-                 // Per ora non serve   adsfinishedfragment.setCommunicator(MainActivityPV.this);
+                    myadsfinishedfragment.setCommunicatoractivity(MainActivityPV.this);
                 }
                 else if(tabId == R.id.myplanned_tab){
                     myadsplannedfragment = new MyAdsPlannedFragment();
@@ -229,4 +229,12 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
     }
 
+    @Override
+    public void responMyFinishedDetailRun(int index) {
+
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsfinishedfragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+
+    }
 }

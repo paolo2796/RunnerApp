@@ -46,6 +46,9 @@ public class LoginFragment extends Fragment {
     Button registrationbtn;
     AVLoadingIndicatorView loadingsignin;
 
+     FirebaseAuth firebaseauth;
+     FirebaseUser firebaseuser;
+
 
 
     Communicator communicator;
@@ -63,6 +66,8 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.login_fragment, container, false);
 
+        firebaseauth = FirebaseAuth.getInstance();
+        firebaseuser = firebaseauth.getCurrentUser();
         loadingsignin = (AVLoadingIndicatorView) v.findViewById(R.id.loading_signin);
 
         useret = (EditText) v.findViewById(R.id.user_tw);
@@ -71,8 +76,9 @@ public class LoginFragment extends Fragment {
         registrationbtn = (Button) v.findViewById(R.id.registration_btn);
 
 
-        if(AuthActivity.firebaseuser !=null) {
-            AuthActivity.databaseusers.orderByChild("email").equalTo(AuthActivity.firebaseuser.getEmail()).addChildEventListener(new ChildEventListener() {
+        if(firebaseuser !=null) {
+
+            AuthActivity.databaseusers.orderByChild("email").equalTo(firebaseuser.getEmail()).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     communicator.goHome(dataSnapshot.getKey());
@@ -100,8 +106,6 @@ public class LoginFragment extends Fragment {
             });
 
         }
-
-
 
 
 
@@ -142,7 +146,7 @@ public class LoginFragment extends Fragment {
                     AuthActivity.setAlphaAuthRL((float) 0.5);
                     loadingsignin.show();
 
-                    AuthActivity.firebaseauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    firebaseauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
