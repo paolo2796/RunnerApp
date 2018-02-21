@@ -183,7 +183,7 @@ public class LiveRunActivity extends AppCompatActivity
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.clear();
                 editor.commit();
-                //Memorizzazione dati nel db mysql
+                //Memorizzazione dei dati nel db mysql
                 FinishedRun finishedRun=new FinishedRun();
                 Runner runner=new Runner();
                 runner.setNickname(user.getNickname());
