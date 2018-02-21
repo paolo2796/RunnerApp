@@ -264,7 +264,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         if (requestCode == ACTIVE_RUN_CODEREQ) {
             if (resultCode == RESULT_OK) {
 
-                int codrun = data.getIntExtra("codrun",-1);
+                int codrun = data.getIntExtra(LiveRunActivity.LIVERUN_RUNCODE_KEY,-1);
                 int position = myadsplannedfragment.arrayadapter.getMapRunPos().get(codrun);
                 ActiveRun activerun = myadsplannedfragment.arrayadapter.getItem(position);
                 myadsplannedfragment.arrayadapter.remove(activerun);
