@@ -3,6 +3,6 @@
     android:dither="true"
     android:shape="oval">
 
-    <solid android:color="@color/tempv_celestial"/>
+    <solid android:color="@color/colorAccent"/>
 
 </shape>

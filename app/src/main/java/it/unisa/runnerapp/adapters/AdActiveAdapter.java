@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +98,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             holder.delayparticipation = (Button) convertView.findViewById(R.id.delayparticipation_btn);
             holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
             holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
-            holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
+            holder.pointmeetingimg = (ImageButton) convertView.findViewById(R.id.gowaypoint_btn);
             convertView.setTag(holder);
             synchronized (lstHolders) {
                 lstHolders.add(holder);
@@ -165,7 +166,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         LatLng pointmeeting;
         TextView estimatedkmtw;
         TextView estimatedtimetw;
-        ImageView pointmeetingimg;
+        ImageButton pointmeetingimg;
 
         int position;
 

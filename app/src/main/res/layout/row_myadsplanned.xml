@@ -27,8 +27,10 @@
             android:id="@+id/cancelbtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/oval_button"
+            android:background="@color/colorPrimaryLight"
+            android:layout_marginTop="5dp"
             android:text="@string/adactive_cancel"
+            android:textColor="@android:color/white"
             android:onClick="cancelParticipation"
             android:visibility="visible" />
 
@@ -36,8 +38,10 @@
             android:id="@+id/startlive_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/btn_startlive"
+            android:layout_marginTop="5dp"
             android:text="@string/adsactive_startlive"
+            android:textColor="@android:color/white"
             android:visibility="gone" />
 
 

@@ -14,10 +14,10 @@
             android:id="@+id/loading_adsactive_tw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ricerca entro 12 km da te"
-            android:layout_marginTop="15dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textColor="@color/foreground_sliding_panel"
+            android:text="12 Km"
+            android:textSize="40sp"
             android:layout_centerHorizontal="true"/>
 
 
@@ -30,7 +30,7 @@
             android:visibility="visible"
             android:layout_centerInParent="true"
             app:indicatorName="BallScaleMultipleIndicator"
-            app:indicatorColor="@color/tempv_celestial" />
+            app:indicatorColor="@color/colorAccentDark" />
 
 
 
@@ -41,10 +41,11 @@
         android:background="@drawable/oval_shape"
         android:text="+"
         android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp"/>
 
     <include layout="@layout/adsgen_fragment"></include>
 

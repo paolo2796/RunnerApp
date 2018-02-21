@@ -55,7 +55,8 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
             ft.add(R.id.containerfragment_frame, logfrag);
             ft.commit();
 
-            logfrag.setCommunicator(this);
+
+        logfrag.setCommunicator(this);
 
 
     }
@@ -84,6 +85,7 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
 
     @Override
     public void goHome(String nickname){
+        Log.i("NICKNAME",nickname);
         MainActivityPV.userlogged = new RunnerDaoImpl().getByNick(nickname);
         Intent intent = new Intent(this, MainActivityPV.class);
         startActivity(intent);

@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profilerunner_img"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFF"/>
 
     <TextView
         android:id="@+id/nick_tw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
-        android:layout_toLeftOf="@id/profilerunner_img"
+        android:layout_toRightOf="@id/profilerunner_img"
         android:layout_centerVertical="true"
         android:textSize="15sp" />
-
-
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profilerunner_img"
-        android:layout_centerHorizontal="true"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FFFFFF"/>
-
 
 
     <TextView
         android:id="@+id/level_tw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/nick_tw"
         android:layout_toRightOf="@id/profilerunner_img"
         android:textColor="@android:color/white"
         android:layout_centerVertical="true"
