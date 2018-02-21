@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
                 startActivity(intent);
-                onDestroy();
+                //onDestroy();
             }
         };
 
@@ -96,7 +96,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void signOut() {
         // Firebase sign out
-        firebaseauth.signOut();
         firebaseuser.unlink(firebaseuser.getProviderId());
         firebaseauth.signOut();
     }

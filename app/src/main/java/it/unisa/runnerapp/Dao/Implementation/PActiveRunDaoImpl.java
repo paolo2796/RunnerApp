@@ -10,7 +10,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Interf.PActiveRunDao;
@@ -201,7 +204,7 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
 
 
     @Override
-    public List<ActiveRun> findRunActiveByRunner(final String nickuser, final String order) {
+    public List<ActiveRun> findRunActiveByRunner(final String nickuser, final String order, final Timestamp currentmillis) {
 
         try {
 
@@ -214,8 +217,9 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and  pca.partecipante = ? ORDER BY " + order);
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_time(),data_inizio))>-1 and  pca.partecipante = ? ORDER BY " + order);
                         ps.setString(1,nickuser);
+
                         rs = ps.executeQuery();
 
 

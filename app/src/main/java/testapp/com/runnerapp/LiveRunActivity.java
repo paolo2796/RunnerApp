@@ -42,7 +42,7 @@ import it.unisa.runnerapp.fragments.MapFragment;
 import it.unisa.runnerapp.fragments.ReceivedRequestsListFragment;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 
-public class LiveRunActivity extends AppCompatActivity
+public class LiveRunActivity extends CheckPermissionActivity
 {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -62,8 +62,6 @@ public class LiveRunActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         setContentView(R.layout.live_run_panel);
 
         //Recupero codice corsa e request code dall'intent

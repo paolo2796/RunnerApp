@@ -133,7 +133,13 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         lProvider = GeoUtils.getBestProvider(lManager);
 
         //Connessione al db firebase per le posizioni
-        locationsDB=FirebaseDatabase.getInstance();
+        FirebaseApp locationsApp=FirebaseUtils.getFirebaseApp(getContext(),
+                RunnersDatabases.USER_LOCATIONS_APP_ID,
+                RunnersDatabases.USER_LOCATIONS_API_KEY,
+                RunnersDatabases.USER_LOCATIONS_DB_URL,
+                RunnersDatabases.USER_LOCATIONS_DB_NAME);
+        locationsDB=FirebaseUtils.connectToDatabase(locationsApp);
+        //Connessione al db per le richieste in live
         FirebaseApp liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
                 RunnersDatabases.LIVE_REQUEST_APP_ID,
                 RunnersDatabases.LIVE_REQUEST_API_KEY,
@@ -311,6 +317,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     GeoQuery gSearch=gFire.queryAtLocation(new GeoLocation(location.getLatitude(),location.getLongitude()),RUNNERS_RESEARCH_RADIUS);
                     if(nearbyRunnersListener==null)
                         nearbyRunnersListener=getGeoQueryEventListener();
+
                     gSearch.addGeoQueryEventListener(nearbyRunnersListener);
 
                     //Aggiornamento posizione utente in locale
@@ -383,6 +390,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 {
                     Marker marker=nearbyRunners.get(key);
                     marker.setPosition(new LatLng(location.latitude,location.longitude));
+                    marker.setTag(key);
                 }
             }
 

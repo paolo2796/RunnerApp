@@ -3,6 +3,10 @@ package it.unisa.runnerapp.utils;
 public interface RunnersDatabases
 {
     final String USER_LOCATIONS_DB_ROOT="runners";
+    final String USER_LOCATIONS_APP_ID="1:391686926440:android:6976f070661a5b9b";
+    final String USER_LOCATIONS_API_KEY="AIzaSyBzEdJYYOJbVr7zJx8anNdduseFtknVorU";
+    final String USER_LOCATIONS_DB_URL="https://it-unisa-runners.firebaseio.com/";
+    final String USER_LOCATIONS_DB_NAME="it-unisa-runners";
 
     final String LIVE_REQUEST_APP_ID="1:656868987746:android:6976f070661a5b9b";
     final String LIVE_REQUEST_API_KEY="AIzaSyBxHHrG6wmqgSccoTcncDxUO1jW6fSXYHc";

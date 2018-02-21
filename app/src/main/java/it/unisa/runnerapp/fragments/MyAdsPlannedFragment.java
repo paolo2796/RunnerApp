@@ -3,11 +3,14 @@ package it.unisa.runnerapp.fragments;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.google.firebase.database.DatabaseReference;
+
+import java.sql.Timestamp;
 import java.util.List;
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
@@ -41,7 +44,9 @@ import testapp.com.runnerapp.R;
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
             listview = (ListView) v.findViewById(R.id.listview);
-            runs = new PActiveRunDaoImpl().findRunActiveByRunner(MainActivityPV.userlogged.getNickname(), "data_inizio");
+            Log.i("CurrentTime",String.valueOf(new Timestamp(System.currentTimeMillis()).getTime()));
+            runs = new PActiveRunDaoImpl().findRunActiveByRunner(MainActivityPV.userlogged.getNickname(), "data_inizio",new Timestamp(System.currentTimeMillis()));
+            Log.i("Query size",String.valueOf(runs.size()));
             arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
             arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);

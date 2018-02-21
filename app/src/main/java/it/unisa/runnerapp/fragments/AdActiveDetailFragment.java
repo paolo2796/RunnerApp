@@ -109,6 +109,9 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private List<Polyline> polylinePaths = new ArrayList<>();
     private static final int COLOR_POLYLINE = Color.YELLOW;
 
+
+    private static String PROVIDER_ID=LocationManager.GPS_PROVIDER;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -334,16 +337,17 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
     private void checkPermission(){
 
+
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
         providerid = null;
 
-        if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))){
+        if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER))){
             providerid = LocationManager.NETWORK_PROVIDER;
             locationlistener = getLocationListener();
-            locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
+            locationmanager.requestLocationUpdates(PROVIDER_ID, MIN_PERIOD, MIN_DIST, locationlistener);
         }
         else{
             Intent gpsoptionintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -390,7 +394,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     public void onPause() {
         super.onPause();
         mapview.onPause();
-        locationmanager.removeUpdates(locationlistener);
+        if(locationlistener!=null)
+            locationmanager.removeUpdates(locationlistener);
     }
 
     @Override

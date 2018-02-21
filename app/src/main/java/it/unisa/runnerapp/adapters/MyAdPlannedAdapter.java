@@ -202,7 +202,6 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
 
             Animation animation = AnimationUtils.loadAnimation(MyAdPlannedAdapter.this.getContext(),R.anim.scaling);
             pointmeetingimg.startAnimation(animation);
-
             updateTimeRemaining(System.currentTimeMillis());
         }
 

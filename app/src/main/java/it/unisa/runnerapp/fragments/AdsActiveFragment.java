@@ -319,7 +319,7 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
     public void onStart(){
         super.onStart();
         ((MainActivityPV) getActivity()).checkManifestPermission();
-        locationmanager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
+        locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINTIME, MINDISTANCE, mylocationlistener);
         Log.i(MESSAGE_LOG + "locationmanager",String.valueOf(locationmanager));
         Log.i(MESSAGE_LOG + "mylistener",String.valueOf(mylocationlistener));
         Log.i(MESSAGE_LOG + "geolistener",String.valueOf(geoquerydataeventlistener));
