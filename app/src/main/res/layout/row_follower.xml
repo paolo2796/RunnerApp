@@ -9,7 +9,7 @@
         android:id="@+id/profilerunner_img"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:layout_marginLeft="5dp"
         app:civ_border_width="2dp"
         app:civ_border_color="#FFFFFF"/>
@@ -19,10 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
         android:layout_toRightOf="@id/profilerunner_img"
-        android:layout_centerVertical="true"
         android:textSize="15sp" />
 
 
@@ -33,7 +31,6 @@
         android:layout_below="@id/nick_tw"
         android:layout_toRightOf="@id/profilerunner_img"
         android:textColor="@android:color/white"
-        android:layout_centerVertical="true"
         android:textSize="15sp">
 
     </TextView>
@@ -42,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="2dp"
+        android:layout_alignParentBottom="@id/profilerunner_img"
         android:background="@android:color/white"></LinearLayout>
 
 </RelativeLayout>

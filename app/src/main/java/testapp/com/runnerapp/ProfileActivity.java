@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.text.DecimalFormat;
+
 import it.unisa.runnerapp.utils.CheckUtils;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -61,7 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
         surnametw.setText(MainActivityPV.userlogged.getSurname());
         nicknametw.setText(MainActivityPV.userlogged.getNickname());
         leveltw.setText(String.valueOf(MainActivityPV.userlogged.getLevel()));
-        travelledkmtw.setText(String.valueOf(MainActivityPV.userlogged.getTraveledKilometers()));
+        DecimalFormat formatter=new DecimalFormat("##.##");
+        travelledkmtw.setText(formatter.format(MainActivityPV.userlogged.getTraveledKilometers()));
 
 
         //Set Listeners

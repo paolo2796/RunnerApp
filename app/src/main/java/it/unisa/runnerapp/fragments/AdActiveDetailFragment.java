@@ -1,6 +1,5 @@
 package it.unisa.runnerapp.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -12,11 +11,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,14 +23,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -43,28 +37,20 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import org.w3c.dom.Text;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
-import it.unisa.runnerapp.adapters.AdActiveAdapter;
 import it.unisa.runnerapp.adapters.FollowersAdapter;
 import it.unisa.runnerapp.beans.ActiveRun;
-import it.unisa.runnerapp.beans.FinishedRun;
 import it.unisa.runnerapp.beans.Runner;
-import it.unisa.runnerapp.customwidgets.CustomMap;
 import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.DirectionFinder;
-import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
 import testapp.com.runnerapp.AdActiveDetailActivity;
-import testapp.com.runnerapp.MainActivityPV;
-import testapp.com.runnerapp.Manifest;
 import testapp.com.runnerapp.R;
 
 /**
@@ -86,7 +72,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     // Views Component
     private TextView nickmastertw;
     private ImageView masterprofileimg;
-    private CustomMap mapview;
+    private MapView mapview;
     private TextView starthourtw;
     private TextView datestarttw;
     private TextView estimatedkmtw;
@@ -129,7 +115,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
 
         //initialize
-        mapview = (CustomMap) v.findViewById(R.id.mapview);
+        mapview = (MapView) v.findViewById(R.id.mapview);
         datestarttw = (TextView) v.findViewById(R.id.datestart);
         starthourtw = (TextView) v.findViewById(R.id.starthour);
         estimatedkmtw = (TextView) v.findViewById(R.id.estimatedkm_tw);

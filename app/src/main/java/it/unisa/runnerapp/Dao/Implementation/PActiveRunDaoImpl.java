@@ -264,8 +264,73 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         return null;
     }
 
+    @Override
+    public ActiveRun checkAvailableByRunner(final int codrun, final String nickname) {
 
 
+
+        try {
+
+            return  new AsyncTask<Void, Void, ActiveRun>() {
+                @Override
+                protected ActiveRun doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+                    ResultSet rsmaster = null;
+                    PreparedStatement ps = null;
+                    ActiveRun run = null;
+                    try {
+
+                        String query1 ="SELECT * FROM Corse  JOIN Corse_Attive ca ON ca.corsa = Corse.id JOIN Partecipazioni_Corse_Attive pca ON pca.corsa=Corse.id WHERE Corse.id =? and Corse.id NOT IN ";
+                        String query2 = "(SELECT Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_time(),data_inizio))>-1 and  pca.partecipante = ? and pca.corsa = ? )";
+                        ps = ConnectionUtil.getConnection().prepareStatement(query1 + query2);
+                        ps.setInt(1,codrun);
+                        ps.setString(2,nickname);
+                        ps.setInt(3,codrun);
+
+                        rs = ps.executeQuery();
+                        if(rs.next()){
+                            run = new ActiveRun();
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"),rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+                            run.setEstimatedKm(rs.getDouble("km_previsti"));
+                            run.setEstimatedHours(rs.getInt("ore_previste"));
+                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+                            Runner runner = new Runner();
+                            runner.setNickname(rs.getString("Corse.master"));
+                            run.setMaster(runner);
+
+                        }
+
+
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return run;
+                }
+
+                @Override
+                protected void onPostExecute( ActiveRun result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
+
+
+
+
+
+
+    }
 
 
     @Override

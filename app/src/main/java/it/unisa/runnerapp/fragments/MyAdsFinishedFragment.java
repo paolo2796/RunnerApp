@@ -32,7 +32,6 @@ public class MyAdsFinishedFragment extends Fragment implements AdFinishedAdapter
     ListView listview;
     public AdFinishedAdapter arrayadapter;
     List<FinishedRun> runs = null;
-
     CommunicatorActivity communicatoractivity;
 
 
