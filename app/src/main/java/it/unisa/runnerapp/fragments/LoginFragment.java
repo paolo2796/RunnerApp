@@ -75,7 +75,6 @@ public class LoginFragment extends Fragment {
         loginbtn = (Button) v.findViewById(R.id.login_btn);
         registrationbtn = (Button) v.findViewById(R.id.registration_btn);
 
-
         if(firebaseuser !=null) {
 
             AuthActivity.databaseusers.orderByChild("email").equalTo(firebaseuser.getEmail()).addChildEventListener(new ChildEventListener() {

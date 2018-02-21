@@ -84,7 +84,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
     //Component View
     private BottomBar bottomBar;
-    private CircleImageView myprofileimg;
     private Animation animscalingprofile;
 
     @Override
@@ -96,11 +95,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
             //Set component view
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-            myprofileimg = (CircleImageView) findViewById(R.id.myprofileimg);
-
-            //Set listeners
-            myprofileimg.setOnClickListener(getClickMyProfileListener());
-
 
 
             bottomBar.setOnTabSelectListener(getTabSelectListener());
@@ -116,20 +110,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             databaseruns = firebasedatabase.getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
             Log.i("Firebase",databaseruns.toString());
         }
-    }
-
-
-    public View.OnClickListener getClickMyProfileListener(){
-
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivityPV.this,ProfileActivity.class);
-                startActivity(intent);
-
-            }
-        };
     }
 
 
@@ -172,6 +152,13 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     ft.replace(R.id.containerfragment_frame, myadsplannedfragment);
                     ft.commit();
                     myadsplannedfragment.setCommunicator(MainActivityPV.this);
+
+                }
+
+                else{
+
+                    Intent intent = new Intent(MainActivityPV.this,ProfileActivity.class);
+                    startActivity(intent);
 
                 }
             }

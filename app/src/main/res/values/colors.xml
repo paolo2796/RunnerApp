@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#78909c</color>
+    <color name="colorPrimaryDark">#4b636e</color>
+    <color name="colorPrimaryLight">#a7c0cd</color>
+    <color name="colorAccent">#d50000</color>
+    <color name="colorAccentLight">#ff5131</color>
+    <color name="colorAccentDark">#9b0000</color>
 
     <color name="infowindow_custom_cloud_background">#EEEEEE</color>
     <color name="infowindow_icons">#D84315</color>
@@ -14,6 +17,10 @@
     <color name="background_list">#EEEEEE</color>
     <color name="delay_participation">#E10000</color>
     <color name="tempv_celestial">#1bb4c6</color>
+    <color name="text_inforun">#dedede</color>
+    <color name="icon_inforun">#AFB42B</color>
+    <color name="btn_inforun">#9E9D24</color>
+    <color name="btn_startlive">#AFB42B</color>
 
     <color name="foreground_sliding_panel">#EEEEEE</color>
     <color name="background_sliding_panel">#212121</color>

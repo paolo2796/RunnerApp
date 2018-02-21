@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,7 +87,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
             holder.startlivebtn = (Button) convertView.findViewById(R.id.startlive_btn);
             holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
             holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
-            holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
+            holder.pointmeetingimg = (ImageButton) convertView.findViewById(R.id.gowaypoint_btn);
 
             convertView.setTag(holder);
             synchronized (lstHolders) {
@@ -181,7 +182,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         LatLng pointmeeting;
         TextView estimatedkmtw;
         TextView estimatedtimetw;
-        ImageView pointmeetingimg;
+        ImageButton pointmeetingimg;
         int position;
 
         public void setData(ActiveRun item, int position) {

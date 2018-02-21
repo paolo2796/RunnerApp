@@ -58,8 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:textSize="20sp"
-                        android:text="Giorno"
-                        android:textStyle="bold"/>
+                        android:text="Giorno" />
 
                     <TextView
                         android:id="@+id/starthour"
@@ -67,8 +66,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:textSize="20sp"
-                        android:text="Ora"
-                        android:textStyle="bold"/>
+                        android:text="Ora" />
 
                     <TextView
                         android:id="@+id/burnedkal"
@@ -76,8 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:textSize="20sp"
-                        android:text="Kal bruciate"
-                        android:textStyle="bold"/>
+                        android:text="Kal bruciate" />
 
 
                     <TextView
@@ -87,7 +84,7 @@
                         android:layout_gravity="center_horizontal"
                         android:textSize="20sp"
                         android:text="Km percorsi"
-                        android:textStyle="bold"/>
+                        />
                 </TableRow>
 
             </TableLayout>
@@ -96,9 +93,9 @@
                 android:id="@+id/detailrun_btnfinished"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#dedede"
+                android:background="@color/btn_inforun"
                 android:text="Dettagli"
-                android:textStyle="bold"/>
+                android:textColor="@android:color/white"/>
 
         </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -8,8 +8,6 @@
     android:layout_marginTop="5dp"
     android:orientation="vertical">
 
-
-
     <RelativeLayout
         android:id="@+id/info_how_reach"
         android:layout_width="match_parent"
@@ -36,7 +34,8 @@
                 android:id="@+id/distance_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_distance_30dp"/>
+                android:background="@drawable/ic_distance_30dp"
+                android:tint="@color/colorPrimaryLight"/>
 
             <TextView
                 android:id="@+id/duration_tw"
@@ -86,7 +85,7 @@
             android:visibility="visible"
             android:layout_centerInParent="true"
             app:indicatorName="BallPulseIndicator"
-            app:indicatorColor="@color/tempv_celestial" />
+            app:indicatorColor="@color/colorAccent" />
 
         <it.unisa.runnerapp.customwidgets.CustomMap
             android:id="@+id/mapview"
@@ -114,18 +113,6 @@
         android:shrinkColumns="*">
 
         <TableRow
-            android:gravity="center_horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Priorità del master"
-                android:textSize="15sp"
-                android:textStyle="bold"/>
-
-        </TableRow>
-
-
-        <TableRow
             android:gravity="center">
             <TextView
                 android:id="@+id/datestart"
@@ -133,8 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
-                android:textColor="@color/tempv_celestial"
-                android:textStyle="italic"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="data" />
 
             <TextView
@@ -143,8 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
-                android:textColor="@color/tempv_celestial"
-                android:textStyle="italic"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="20:30"/>
         </TableRow>
 
@@ -156,7 +141,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:text="Giorno"
-                android:textStyle="bold"/>
+                android:textColor="@color/colorAccentDark"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,7 +149,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:text="Ora"
-                android:textStyle="bold"/>
+                android:textColor="@color/colorAccentDark"/>
         </TableRow>
 
 
@@ -175,8 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
-                android:textColor="@color/tempv_celestial"
-                android:textStyle="italic"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="km previsti" />
 
             <TextView
@@ -185,8 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
-                android:textColor="@color/tempv_celestial"
-                android:textStyle="italic"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="20h e 1m"/>
 
 
@@ -202,7 +185,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:text="KM Previsti"
-                android:textStyle="bold"/>
+                android:textColor="@color/colorAccentDark"/>
 
 
             <TextView
@@ -211,7 +194,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:text="Tempo Completamento"
-                android:textStyle="bold"/>
+                android:textColor="@color/colorAccentDark"/>
 
 
         </TableRow>
@@ -233,7 +216,8 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:background="@drawable/oval_button"
+                android:textColor="@android:color/white"
+                android:background="@color/colorAccent"
                 android:text="Followers"/>
 
 
