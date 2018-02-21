@@ -39,6 +39,7 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
     private GoogleMap            gMap;
     private DirectionFinderImpl  directionFinder;
     private FloatingActionButton clearButton;
+    private ViewGroup            rootListView;
 
     public AcceptedRequestsAdapter(Context ctx, int resId, List<Runner> list)
     {
@@ -103,10 +104,10 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
                 try
                 {
                     //Deattivazione altri pulsanti che mostrano altri percorsi
-                    ViewGroup root=(ViewGroup)view.getParent().getParent();
-                    for(int index=0;index<root.getChildCount();index++)
+                    rootListView=(ViewGroup)view.getParent().getParent();
+                    for(int index=0;index<rootListView.getChildCount();index++)
                     {
-                        View row=root.getChildAt(index);
+                        View row=rootListView.getChildAt(index);
                         ImageButton pathButton=(ImageButton)row.findViewById(R.id.pathButton);
                         pathButton.setClickable(false);
                     }
@@ -136,14 +137,6 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
                         //Viene mostrato il bottone per la pulizia della mappa
                         clearButton.setVisibility(View.VISIBLE);
                     }
-
-                    //Attivazione altri pulsanti che mostrano altri percorsi
-                    for(int index=0;index<root.getChildCount();index++)
-                    {
-                        View row=root.getChildAt(index);
-                        ImageButton pathButton=(ImageButton)row.findViewById(R.id.pathButton);
-                        pathButton.setClickable(true);
-                    }
                 }
                 catch (SecurityException ex)
                 {
@@ -164,6 +157,14 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
                 directionFinder.clearMap();
                 //il fab diviene invisibile
                 clearButton.setVisibility(View.INVISIBLE);
+
+                //Attivazione altri pulsanti che mostrano altri percorsi
+                for(int index=0;index<rootListView.getChildCount();index++)
+                {
+                    View row=rootListView.getChildAt(index);
+                    ImageButton pathButton=(ImageButton)row.findViewById(R.id.pathButton);
+                    pathButton.setClickable(true);
+                }
             }
         };
     }

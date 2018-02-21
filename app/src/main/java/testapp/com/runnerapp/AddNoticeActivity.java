@@ -111,8 +111,8 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
         if(mylatitude!=0 && mylongitude!=0){
             myposition = new LatLng(mylatitude,mylongitude);
+            waypoint = myposition;
             mapview.setVisibility(View.VISIBLE);
-
         }
 
         else{
@@ -122,7 +122,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             loadingmyposition.show();
             locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationlistener = getLocationListener();
-            locationmanager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationlistener);
+            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationlistener);
 
 
         }
@@ -156,12 +156,9 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
 
             double estimatedkm = Double.parseDouble(estimatedkmet.getEditableText().toString());
-
-
-            String[] stringarray = estimatedtimebtn.getText().toString().split(":");
-            int estimatedhour = Integer.parseInt(stringarray[0]);
-            int estimatedmin = Integer.parseInt(stringarray[1]);
-            ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,estimatedhour,estimatedmin);
+            int hourcale = estimatedtim.get(Calendar.HOUR_OF_DAY);
+            int mincale = estimatedtim.get(Calendar.MINUTE);
+            ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,hourcale,mincale);
 
 
             new ActiveRunDaoImpl().createActiveRun(activeRun);
@@ -258,10 +255,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
 
 
-
-
-
-
     private GoogleMap.OnMarkerDragListener getOnMarkerDrag(){
 
         return new GoogleMap.OnMarkerDragListener() {
@@ -290,6 +283,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onLocationChanged(Location location) {
                 myposition = new LatLng(location.getLatitude(),location.getLongitude());
+                waypoint = myposition;
                 onMapReady(googlemap);
                 locationmanager.removeUpdates(locationlistener);
                 loadingmyposition.hide();

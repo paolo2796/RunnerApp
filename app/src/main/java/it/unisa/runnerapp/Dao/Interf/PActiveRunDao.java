@@ -1,5 +1,6 @@
 package it.unisa.runnerapp.Dao.Interf;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import it.unisa.runnerapp.beans.ActiveRun;
@@ -21,7 +22,7 @@ public interface PActiveRunDao {
 
 
     // Ricerca tutte le corse attive di un runner (carica solo id master)
-    public List<ActiveRun> findRunActiveByRunner(String nickuser, String order);
+    public List<ActiveRun> findRunActiveByRunner(String nickuser, String order, Timestamp currentimillis);
 
 
 
