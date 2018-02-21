@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
     android:orientation="vertical">
+
 
 
     <RelativeLayout
@@ -76,12 +77,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading_direction"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            app:indicatorName="BallPulseIndicator"
+            app:indicatorColor="@color/tempv_celestial" />
+
         <it.unisa.runnerapp.customwidgets.CustomMap
             android:id="@+id/mapview"
             android:layout_width="match_parent"
             android:layout_height="317dp"
             android:minWidth="350dp"
-            android:minHeight="317dp" />
+            android:minHeight="317dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

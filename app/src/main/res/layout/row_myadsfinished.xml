@@ -1,90 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_margin="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="3dp">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*"
-        android:shrinkColumns="*">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
 
-        <TableRow
-            android:gravity="center">
-            <ImageView
-                android:id="@+id/icondatestart"
-                android:layout_width="wrap_content"
+            <TableLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_datestart_30dp"/>
+                android:stretchColumns="*"
+                android:shrinkColumns="*">
 
-            <ImageView
-                android:id="@+id/iconstart"
-                android:layout_width="wrap_content"
+                <TableRow
+                    android:gravity="center">
+                    <ImageView
+                        android:id="@+id/icondatestart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_datestart_30dp"/>
+
+                    <ImageView
+                        android:id="@+id/iconstart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_starthour_30dp"/>
+
+                    <ImageView
+                        android:id="@+id/iconburnedcal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_calories_24dp"/>
+
+                    <ImageView
+                        android:id="@+id/icontraveledkm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_traveled_km"/>
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/datestart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:text="Giorno"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/starthour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:text="Ora"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/burnedkal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:text="Kal bruciate"
+                        android:textStyle="bold"/>
+
+
+                    <TextView
+                        android:id="@+id/traveledkm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:text="Km percorsi"
+                        android:textStyle="bold"/>
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/detailrun_btnfinished"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_starthour_30dp"/>
-
-            <ImageView
-                android:id="@+id/iconburnedcal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_calories_24dp"/>
-
-            <ImageView
-                android:id="@+id/icontraveledkm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_traveled_km"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/datestart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="Giorno"
+                android:background="#dedede"
+                android:text="Dettagli"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/starthour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="Ora"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/burnedkal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="Kal bruciate"
-                android:textStyle="bold"/>
-
-
-            <TextView
-                android:id="@+id/traveledkm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="Km percorsi"
-                android:textStyle="bold"/>
-        </TableRow>
-
-    </TableLayout>
-
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/pointmeetmap"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        map:liteMode="true" />
-    
-</LinearLayout>
+        </LinearLayout>
+</android.support.v7.widget.CardView>

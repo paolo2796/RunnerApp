@@ -220,6 +220,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
         refrun.child(nick).setValue(nick);
     }
 
+
     public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
 
 }

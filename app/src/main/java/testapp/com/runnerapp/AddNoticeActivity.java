@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.w3c.dom.Text;
 
@@ -72,6 +73,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng myposition;
     private TimePickerDialog dialogtime;
     private DatePickerDialog datepickerdialog;
+    private AVLoadingIndicatorView loadingmyposition;
 
     // DB Firebase
     private GeoFire geofire;
@@ -93,9 +95,11 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         addrun =  (Button) findViewById(R.id.addrun_btn);
         estimatedkmet = (EditText) findViewById(R.id.kmestimated_et);
         estimatedtimebtn = (Button) findViewById(R.id.estimatedtime_btn);
+        loadingmyposition = (AVLoadingIndicatorView) findViewById(R.id.loading_myposition);
         mapview = (MapView) findViewById(R.id.mapview);
         mapview.onCreate(null);
         mapview.getMapAsync(this);
+
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -104,16 +108,22 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
         double mylatitude = getIntent().getDoubleExtra("mylatitude",0);
         double mylongitude = getIntent().getDoubleExtra("mylongitude",0);
+
         if(mylatitude!=0 && mylongitude!=0){
             myposition = new LatLng(mylatitude,mylongitude);
+            mapview.setVisibility(View.VISIBLE);
 
         }
 
         else{
 
+            // start loading
+            loadingmyposition.setVisibility(View.VISIBLE);
+            loadingmyposition.show();
             locationmanager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationlistener = getLocationListener();
-            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationlistener);
+            locationmanager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationlistener);
+
 
         }
 
@@ -128,7 +138,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         this.googlemap = googleMap;
         if(myposition!=null) {
-            googleMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(myposition).draggable(true));
+            googleMap.addMarker(new MarkerOptions().title("Punto Incontro").position(myposition).draggable(true));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 13));
             googleMap.setOnMarkerDragListener(getOnMarkerDrag());
 
@@ -139,14 +149,21 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClickAddRun(View v){
         if(checkField()){
+            addrun.setText("Attendi...");
             addrun.setEnabled(false);
             java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
             Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
-            int estimatedkm = Integer.parseInt(estimatedkmet.getText().toString());
+
+
+            double estimatedkm = Double.parseDouble(estimatedkmet.getEditableText().toString());
+
+
             String[] stringarray = estimatedtimebtn.getText().toString().split(":");
             int estimatedhour = Integer.parseInt(stringarray[0]);
             int estimatedmin = Integer.parseInt(stringarray[1]);
             ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,estimatedhour,estimatedmin);
+
+
             new ActiveRunDaoImpl().createActiveRun(activeRun);
             new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
 
@@ -158,7 +175,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.show();
 
-
+            addrun.setText("Aggiungi");
             addrun.setEnabled(true);
 
 
@@ -203,7 +220,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
                 mdateandtime.set(Calendar.MONTH, monthOfYear);
                 mdateandtime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateDateAndTimeDisplay();
-                //Toast.makeText(AddNoticeActivity.this,"HO SETTATO LA DATA",Toast.LENGTH_LONG).show();
             }
         };
 
@@ -276,6 +292,9 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
                 myposition = new LatLng(location.getLatitude(),location.getLongitude());
                 onMapReady(googlemap);
                 locationmanager.removeUpdates(locationlistener);
+                loadingmyposition.hide();
+                mapview.setVisibility(View.VISIBLE);
+
 
             }
 

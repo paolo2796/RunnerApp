@@ -2,6 +2,7 @@ package it.unisa.runnerapp.adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -46,6 +47,8 @@ import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.fragments.AdsActiveFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
+import testapp.com.runnerapp.EditRunActivity;
+import testapp.com.runnerapp.MainActivity;
 import testapp.com.runnerapp.R;
 
 /**
@@ -92,7 +95,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             holder.delayparticipation = (Button) convertView.findViewById(R.id.delayparticipation_btn);
             holder.timertw = (TextView) convertView.findViewById(R.id.timer);
             holder.deleterunbtn = (Button) convertView.findViewById(R.id.deleterun_btn);
-           // holder.editrunbtn = (Button) convertView.findViewById(R.id.editrun_btn);
+            holder.editrunbtn = (Button) convertView.findViewById(R.id.editrun_btn);
             holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
             holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
             holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
@@ -160,8 +163,8 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             pointmeetingimg.setTag(position);
 
             deleterunbtn.setOnTouchListener(getOnTouchListenerDelete(editrunbtn));
-          //  editrunbtn.setOnTouchListener(getOnTouchListnerEdit(deleterunbtn));
-          //  editrunbtn.setTag(position);
+            editrunbtn.setOnTouchListener(getOnTouchListnerEdit(deleterunbtn));
+            editrunbtn.setTag(position);
             starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
             pointmeeting = activerun.getMeetingPoint();
@@ -183,7 +186,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
             } else {
                 timertw.setText("Tempo Scaduto!");
                 deleterunbtn.setVisibility(View.GONE);
-                //editrunbtn.setVisibility(View.GONE);
+                editrunbtn.setVisibility(View.GONE);
                 delayparticipation.setVisibility(View.VISIBLE);
             }
         }
@@ -199,7 +202,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 10.0f));
-                    //editrunbtn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    editrunbtn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     int tag = Integer.valueOf((v.getTag().toString()));
@@ -224,8 +227,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
                     v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 10.0f));
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
-
-
+                    communicator.respondEdit(Integer.valueOf(v.getTag().toString()));
                 }
                 return true;
             }

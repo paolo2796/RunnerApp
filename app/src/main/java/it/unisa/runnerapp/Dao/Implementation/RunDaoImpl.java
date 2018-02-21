@@ -83,7 +83,7 @@ public class RunDaoImpl implements RunDao {
                 @Override
                 protected Void doInBackground( final Void ... params ) {
                     PreparedStatement ps = null;
-                    String sql = "UPDATE Utenti SET Corse.punto_ritrovo_lat = ?, Corse.punto_ritrovo_lng= ? , Corse.data_inizio= ?";
+                    String sql = "UPDATE Corse SET Corse.punto_ritrovo_lat = ?, Corse.punto_ritrovo_lng= ? , Corse.data_inizio= ?";
 
                     try {
 

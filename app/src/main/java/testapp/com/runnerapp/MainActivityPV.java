@@ -25,6 +25,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
@@ -40,6 +41,7 @@ import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
+import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.RequestLive;
 import it.unisa.runnerapp.beans.Runner;
@@ -59,7 +61,7 @@ import it.unisa.runnerapp.utils.RunnersDatabases;
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
+public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity, MyAdsFinishedFragment.CommunicatorActivity{
 
     // DB Firebase
     public static FirebaseApp firebaseapp;
@@ -119,6 +121,9 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(MainActivityPV.this,ProfileActivity.class);
+                startActivity(intent);
+
             }
         };
     }
@@ -155,7 +160,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfinishedfragment);
                     ft.commit();
-                 // Per ora non serve   adsfinishedfragment.setCommunicator(MainActivityPV.this);
+                    myadsfinishedfragment.setCommunicatoractivity(MainActivityPV.this);
                 }
                 else if(tabId == R.id.myplanned_tab){
                     myadsplannedfragment = new MyAdsPlannedFragment();
@@ -179,6 +184,15 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         startActivity(intent);
     }
 
+    @Override
+    public void respondMyAdsEditRun(int index) {
+
+        Intent intent = new Intent(this,EditRunActivity.class);
+        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(index).getId());
+        Log.i("Messaggio",String.valueOf(intent.getIntExtra("codrun",-1)));
+        startActivity(intent);
+    }
+
 
     /* Communicator MyAdsPlannedFragment */
    @Override
@@ -192,7 +206,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
    @Override
     public void respondStartLiveActivity(int codrun) {
-        Log.i("Messaggio",String.valueOf(codrun));
+
         Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
     }
 
@@ -219,10 +233,18 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         }
 
         else{
-           startActivity(intent);
 
+            startActivity(intent);
        }
 
     }
 
+    @Override
+    public void responMyFinishedDetailRun(int index) {
+
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsfinishedfragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+
+    }
 }
