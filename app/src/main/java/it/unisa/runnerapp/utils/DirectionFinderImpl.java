@@ -9,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -25,12 +26,14 @@ import testapp.com.runnerapp.R;
 
 public class DirectionFinderImpl implements DirectionFinderListener {
 
-    GoogleMap mMap = null;
-    List<Polyline> polylinePaths = new ArrayList<>();
-    Context cx;
+    private GoogleMap mMap = null;
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private Context cx;
     int iconorigin;
     int icondestination;
     private LatLng waypoint;
+    private ArrayList<Marker> markers;
+
 
 
     public DirectionFinderImpl(Context cx, GoogleMap googleMap, int iconorigin, int icondestination){
@@ -38,6 +41,8 @@ public class DirectionFinderImpl implements DirectionFinderListener {
         this.cx = cx;
         this.iconorigin = iconorigin;
         this.icondestination = icondestination;
+
+        markers = new ArrayList<Marker>();
 
     }
 
@@ -85,14 +90,14 @@ public class DirectionFinderImpl implements DirectionFinderListener {
         polylinePaths = new ArrayList<>();
         for (Route route : routes) {
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 13));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 17));
             Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(cx,iconorigin);
             MarkerOptions originoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.startAddress).position(route.startLocation);
-            mMap.addMarker(originoptionmarker);
+            markers.add(mMap.addMarker(originoptionmarker));
 
             bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(cx,icondestination);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
-            mMap.addMarker(destinationoptionmarker);
+            markers.add(mMap.addMarker(destinationoptionmarker));
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(cx.getResources().getColor(R.color.tempv_celestial)).
@@ -113,7 +118,14 @@ public class DirectionFinderImpl implements DirectionFinderListener {
             }
         }
 
+        for(Marker marker: markers){
+
+            marker.remove();
+        }
+
     }
+
+
 
 
 }
