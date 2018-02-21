@@ -1,14 +1,9 @@
 package it.unisa.runnerapp.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.CountDownTimer;
+
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +66,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         lstHolders = new ArrayList<ViewHolder>();
         startUpdateTimer();
+        maprunpos = new HashMap<>();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -80,6 +75,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         MyAdPlannedAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+
             maprunpos.put(activeruncurrent.getId(),position);
             holder = new MyAdPlannedAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_myadsplanned, parent, false);

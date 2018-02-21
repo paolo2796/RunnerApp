@@ -2,39 +2,18 @@ package it.unisa.runnerapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoQuery;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
-import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
-import it.unisa.runnerapp.beans.Run;
-import it.unisa.runnerapp.utils.ConnectionUtil;
-import it.unisa.runnerapp.utils.FirebaseUtils;
-import it.unisa.runnerapp.utils.RunnersDatabases;
-import testapp.com.runnerapp.CheckPermissionActivity;
 import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
