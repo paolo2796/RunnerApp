@@ -20,7 +20,7 @@ public interface PActiveRunDao {
     public List<ActiveRun> findRunByRunner(String nickuser, String order);
 
 
-    // Ricerca tutte le corse attive (circa) di un runner (carica solo id master)
+    // Ricerca tutte le corse attive di un runner (carica solo id master)
     public List<ActiveRun> findRunActiveByRunner(String nickuser, String order);
 
 
