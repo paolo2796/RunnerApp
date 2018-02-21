@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,6 +52,8 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     Communicator communicator;
     private List<MyAdPlannedAdapter.ViewHolder> lstHolders;
     private Handler mHandler = new Handler();
+    HashMap<Integer,Integer> maprunpos;
+
 
     private Runnable updateRemainingTimeRunnable = new Runnable() {
         @Override
@@ -77,6 +80,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         MyAdPlannedAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+            maprunpos.put(activeruncurrent.getId(),position);
             holder = new MyAdPlannedAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_myadsplanned, parent, false);
             holder.starthour = (TextView) convertView.findViewById(R.id.starthour);
@@ -223,6 +227,10 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         }
 
     } // End Class View Holder
+
+
+    public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
+
 
     public interface Communicator{
         public void respondDetailRun(int position);

@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
@@ -65,6 +66,7 @@ import testapp.com.runnerapp.R;
             arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
             arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);
+
 
             return v;
         }

@@ -1,5 +1,6 @@
 package testapp.com.runnerapp;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
@@ -67,6 +70,10 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     public static FirebaseApp firebaseapp;
     public static FirebaseDatabase firebasedatabase;
     public static DatabaseReference databaseruns;
+
+    public static int ACTIVE_RUN_CODEREQ = 1;
+
+
 
     // utente loggato
     public static Runner userlogged;
@@ -204,10 +211,14 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     }
 
 
+   @SuppressLint("RestrictedApi")
    @Override
     public void respondStartLiveActivity(int codrun) {
 
         Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivityPV.this,MapsActivity.class);
+        intent.putExtra("codrun",myadsplannedfragment.arrayadapter.getItem(codrun).getId());
+        startActivityForResult(intent,ACTIVE_RUN_CODEREQ);
     }
 
 
@@ -246,5 +257,22 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         intent.putExtra("codrun",myadsfinishedfragment.arrayadapter.getItem(index).getId());
         startActivity(intent);
 
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == ACTIVE_RUN_CODEREQ) {
+            if (resultCode == RESULT_OK) {
+
+                int codrun = data.getIntExtra("codrun",-1);
+                int position = myadsplannedfragment.arrayadapter.getMapRunPos().get(codrun);
+                ActiveRun activerun = myadsplannedfragment.arrayadapter.getItem(position);
+                myadsplannedfragment.arrayadapter.remove(activerun);
+
+            }
+        }
     }
 }
