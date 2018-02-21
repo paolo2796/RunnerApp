@@ -270,6 +270,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                 int position = myadsplannedfragment.arrayadapter.getMapRunPos().get(codrun);
                 ActiveRun activerun = myadsplannedfragment.arrayadapter.getItem(position);
                 myadsplannedfragment.arrayadapter.remove(activerun);
+                myadsplannedfragment.arrayadapter.notifyDataSetChanged();
 
             }
         }
