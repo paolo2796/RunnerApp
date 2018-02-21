@@ -214,7 +214,7 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_timestamp(),data_inizio))>-2 and  pca.partecipante = ? ORDER BY " + order);
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_timestamp(),data_inizio))>-1 and  pca.partecipante = ? ORDER BY " + order);
                         ps.setString(1,nickuser);
                         rs = ps.executeQuery();
 
