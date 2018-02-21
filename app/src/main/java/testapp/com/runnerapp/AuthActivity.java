@@ -30,13 +30,6 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
 
     static RelativeLayout authrl;
 
-    //Firebase
-
-
-
-
-
-
     // DB Firebase
     public static DatabaseReference databaseusers;
     public static FirebaseApp firebaseapp;
