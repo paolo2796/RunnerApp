@@ -16,6 +16,7 @@ public class Runner extends GeoUser
     private double   weight;
     private double   traveledKm;
     private short    level;
+    private boolean  isRecipient;
 
     public Runner()
     {
@@ -109,6 +110,16 @@ public class Runner extends GeoUser
     public void setLevel(short level)
     {
         this.level=level;
+    }
+
+    public void isRecipient(boolean isRecipient)
+    {
+        this.isRecipient=isRecipient;
+    }
+
+    public boolean isRecipient()
+    {
+        return isRecipient;
     }
 
     @Exclude

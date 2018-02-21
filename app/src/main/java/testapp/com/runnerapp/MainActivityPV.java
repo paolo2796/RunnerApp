@@ -71,24 +71,21 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     public static FirebaseDatabase firebasedatabase;
     public static DatabaseReference databaseruns;
 
-    public static int ACTIVE_RUN_CODEREQ = 1;
-
-
+    private static int ACTIVE_RUN_CODEREQ = 1;
 
     // utente loggato
     public static Runner userlogged;
 
-    MyAdsFinishedFragment myadsfinishedfragment;
-    MyAdsFragment myadsfragment;
-    AdsActiveFragment adsactivefragment;
-    MyAdsPlannedFragment myadsplannedfragment;
-    FragmentManager fm;
-
+    private MyAdsFinishedFragment myadsfinishedfragment;
+    private MyAdsFragment myadsfragment;
+    private AdsActiveFragment adsactivefragment;
+    private MyAdsPlannedFragment myadsplannedfragment;
+    private FragmentManager fm;
 
     //Component View
-    BottomBar bottomBar;
-    CircleImageView myprofileimg;
-    Animation animscalingprofile;
+    private BottomBar bottomBar;
+    private CircleImageView myprofileimg;
+    private Animation animscalingprofile;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -215,8 +212,9 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
    @Override
     public void respondStartLiveActivity(int codrun) {
 
-        Intent intent = new Intent(MainActivityPV.this,MapsActivity.class);
-        intent.putExtra("codrun",myadsplannedfragment.arrayadapter.getItem(codrun).getId());
+        Intent intent = new Intent(MainActivityPV.this,LiveRunActivity.class);
+        intent.putExtra(LiveRunActivity.LIVERUN_RUNCODE_KEY,myadsplannedfragment.arrayadapter.getItem(codrun).getId());
+        intent.putExtra(LiveRunActivity.LIVERUN_REQCODE_KEY,ACTIVE_RUN_CODEREQ);
         startActivityForResult(intent,ACTIVE_RUN_CODEREQ);
     }
 

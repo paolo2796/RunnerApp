@@ -3,26 +3,12 @@ package it.unisa.runnerapp.utils;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
-
-import com.google.android.gms.maps.model.LatLng;
-
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -158,7 +144,6 @@ public class CheckUtils
         return bitmap;
     }
 
-
     public static short convertLevelFromStringToShort(String level){
 
         short levelnum=0;
@@ -176,5 +161,4 @@ public class CheckUtils
         return levelnum;
 
     }
-
 }

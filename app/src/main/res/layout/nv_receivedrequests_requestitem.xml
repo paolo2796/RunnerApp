@@ -11,9 +11,9 @@
         android:layout_height="64dp"
         android:layout_alignBottom="@id/senderInfoPanel"
         android:layout_alignTop="@id/senderInfoPanel"
+        android:foregroundGravity="center"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_marginLeft="5dp"/>
 
     <RelativeLayout
         android:id="@+id/senderInfoPanel"
@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:textSize="13dp"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/personalInfoIcon"
             tools:text="23 anni, Livello Master"/>
 
         <RelativeLayout
@@ -51,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="13dp"
                 android:layout_marginLeft="5dp"
-                android:text="Inviata il 20/10/2018"/>
+                tools:text="Inviata il 20/10/2018"/>
             <TextView
                 android:id="@+id/hourInfo"
                 android:layout_width="wrap_content"
@@ -59,7 +58,7 @@
                 android:textSize="13dp"
                 android:layout_marginLeft="5dp"
                 android:layout_below="@id/dateInfo"
-                android:text="Alle 20:03"/>
+                tools:text="Alle 20:03"/>
         </RelativeLayout>
     </RelativeLayout>
     <LinearLayout
@@ -72,14 +71,6 @@
         android:orientation="vertical"
         android:layout_alignParentRight="true">
 
-        <ImageButton
-            android:id="@+id/refuse"
-            android:layout_weight=".5"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_black_24dp"
-            android:tint="@android:color/white"
-            android:background="@color/refuse_request_color"/>
 
         <ImageButton
             android:id="@+id/accept"
@@ -87,7 +78,17 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_black_24dp"
-            android:tint="@android:color/white"
-            android:background="@color/accept_request_color"/>
+            android:tint="@color/background_list"
+            android:background="@color/accept_request"/>
+
+        <ImageButton
+            android:id="@+id/refuse"
+            android:layout_weight=".5"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@color/background_list"
+            android:background="@color/refuse_request"/>
+
     </LinearLayout>
 </RelativeLayout>
