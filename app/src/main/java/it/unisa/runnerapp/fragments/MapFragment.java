@@ -154,7 +154,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //Inizializzazione Firebase per la ricezione delle richieste
         registerRunnerForRequests();
         //Recupero richieste accettate
-        //retrieveAcceptedRequests();
+        retrieveAcceptedRequests();
 
         //Inizializzazione sliding panel
         //Istante di tempo in cui è stato ricevuto il primo aggiornamento

@@ -1,6 +1,8 @@
 package testapp.com.runnerapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -57,6 +59,12 @@ public class LiveRunActivity extends AppCompatActivity
 
     private MapFragment mapFragment;
 
+    private int runCode;
+    private int requestCode;
+
+    public static final String LIVERUN_RUNCODE_KEY="RunCode";
+    public static final String LIVERUN_REQCODE_KEY="RequestCode";
+
     public static Runner user=new Runner("paolo2796","pass","Mauro","Vitale",null,null,70,200,(short)1);;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,6 +73,14 @@ public class LiveRunActivity extends AppCompatActivity
 
         ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         setContentView(R.layout.live_run_panel);
+
+        //Recupero codice corsa e request code dall'intent
+        Intent intent=getIntent();
+        if(intent!=null)
+        {
+            runCode=intent.getIntExtra(LIVERUN_RUNCODE_KEY,-1);
+            requestCode=intent.getIntExtra(LIVERUN_REQCODE_KEY,-1);
+        }
 
         //Recupero container fragment map
         FrameLayout frameLayout=findViewById(R.id.container);
@@ -179,13 +195,19 @@ public class LiveRunActivity extends AppCompatActivity
                 FinishedRun finishedRun=new FinishedRun();
                 Runner runner=new Runner();
                 runner.setNickname(user.getNickname());
+                finishedRun.setId(runCode);
                 finishedRun.setRunner(runner);
-                //finishedRun.setId();
                 finishedRun.setAverageSpeed(mapFragment.getAvgVelocity());
                 finishedRun.setBurnedCal(mapFragment.getBurnedCalories());
                 finishedRun.setTraveledKm(mapFragment.getTraveledKilometers());
                 FinishedRunDao finishedRunDao=new FinishedRunDaoImpl();
-                //finishedRunDao.createFinishedRun(finishedRun);
+                finishedRunDao.createFinishedRun(finishedRun);
+                //Settaggio del codice corsa chiusa
+                Intent intent=new Intent();
+                intent.putExtra(LIVERUN_RUNCODE_KEY,runCode);
+                setResult(requestCode,intent);
+                //Chiusura activity corrente
+                finishActivity(requestCode);
             }
         };
     }
