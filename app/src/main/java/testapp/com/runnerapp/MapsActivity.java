@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
@@ -16,6 +17,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private DirectionFinderImpl directionfinder;
+    private Marker amarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +43,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(40.6960004, 9.186515999999983);
+        MarkerOptions markerOptions = new MarkerOptions().position(sydney).title("Marker Cava");
+       // mMap.addMarker(markerOptions);
+
+        //amarker = mMap.addMarker(new MarkerOptions().position(sydney).title("Hello World"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         directionfinder = new DirectionFinderImpl(getApplication(),googleMap, R.drawable.ic_datestart_30dp,R.drawable.ic_destination_35dp);
-        directionfinder.clearMap();
-        directionfinder.clearMap();
-
         directionfinder.executeDraw(new LatLng(40.729631, 14.705216), new LatLng(40.743340, 14.682257));
     }
 
@@ -57,7 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onBackPressed(){
 
-        directionfinder.executeDraw(new LatLng(40.7289515,14.705428799999936), new LatLng(40.7035379,14.708282000000054));
+         directionfinder.executeDraw(new LatLng(40.673944,14.770186200000012), new LatLng(40.7035379,14.708282000000054));
 
+       // amarker.remove();
     }
 }

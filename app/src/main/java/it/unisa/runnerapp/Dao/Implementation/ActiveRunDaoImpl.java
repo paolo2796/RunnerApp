@@ -469,7 +469,7 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and Corse.master= ? ORDER BY " + order + "");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>-1 and Corse.master= ? ORDER BY " + order + "");
                         ps.setString(1,nickname);
                         rs = ps.executeQuery();
 
