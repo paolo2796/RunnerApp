@@ -29,7 +29,6 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
     FragmentManager fm;
 
     static RelativeLayout authrl;
-    static int count=0;
 
     // DB Firebase
     public static DatabaseReference databaseusers;
@@ -51,7 +50,6 @@ public class AuthActivity extends CheckPermissionActivity implements LoginFragme
 
         fm = getFragmentManager();
 
-            count++;
             logfrag = new LoginFragment();
             FragmentTransaction ft = fm.beginTransaction();
             ft.add(R.id.containerfragment_frame, logfrag);
