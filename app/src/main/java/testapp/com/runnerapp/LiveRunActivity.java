@@ -56,7 +56,8 @@ public class LiveRunActivity extends AppCompatActivity
     public static final String LIVERUN_RUNCODE_KEY="RunCode";
     public static final String LIVERUN_REQCODE_KEY="RequestCode";
 
-    public static Runner user=new Runner("paolo2796","pass","Mauro","Vitale",null,null,70,200,(short)1);;
+    public static Runner user=MainActivityPV.userlogged;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

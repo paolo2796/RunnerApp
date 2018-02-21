@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -95,11 +96,21 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
     {
         return new View.OnClickListener()
         {
+
             @Override
             public void onClick(View view)
             {
                 try
                 {
+                    //Deattivazione altri pulsanti che mostrano altri percorsi
+                    ViewGroup root=(ViewGroup)view.getParent().getParent();
+                    for(int index=0;index<root.getChildCount();index++)
+                    {
+                        View row=root.getChildAt(index);
+                        ImageButton pathButton=(ImageButton)row.findViewById(R.id.pathButton);
+                        pathButton.setClickable(false);
+                    }
+
                     Location location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if(location!=null)
                     {
@@ -124,6 +135,14 @@ public class AcceptedRequestsAdapter extends ArrayAdapter<Runner>
                         clearButton.setOnClickListener(getClearMapListener());
                         //Viene mostrato il bottone per la pulizia della mappa
                         clearButton.setVisibility(View.VISIBLE);
+                    }
+
+                    //Attivazione altri pulsanti che mostrano altri percorsi
+                    for(int index=0;index<root.getChildCount();index++)
+                    {
+                        View row=root.getChildAt(index);
+                        ImageButton pathButton=(ImageButton)row.findViewById(R.id.pathButton);
+                        pathButton.setClickable(true);
                     }
                 }
                 catch (SecurityException ex)
