@@ -72,6 +72,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         lstHolders = new ArrayList<ViewHolder>();
         startUpdateTimer();
+        maprunpos = new HashMap<>();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -80,6 +81,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         MyAdPlannedAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+
             maprunpos.put(activeruncurrent.getId(),position);
             holder = new MyAdPlannedAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_myadsplanned, parent, false);

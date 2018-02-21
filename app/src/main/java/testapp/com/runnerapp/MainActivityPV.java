@@ -215,7 +215,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
    @Override
     public void respondStartLiveActivity(int codrun) {
 
-        Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(MainActivityPV.this,MapsActivity.class);
         intent.putExtra("codrun",myadsplannedfragment.arrayadapter.getItem(codrun).getId());
         startActivityForResult(intent,ACTIVE_RUN_CODEREQ);
