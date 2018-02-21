@@ -26,6 +26,11 @@ public interface PActiveRunDao {
 
 
 
+    // restituisce una gara attiva se essa è disponibile e l'utente non sta partecipando, altrimenti null
+    public ActiveRun checkAvailableByRunner(int codrun, String nickname);
+
+
+
 
 
     // Ricerca tutte le corse attive di un runner (solo id).

@@ -12,11 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.CheckUtils;
+import it.unisa.runnerapp.utils.LevelMapper;
 import testapp.com.runnerapp.R;
 
 /**
@@ -49,7 +51,7 @@ public class FollowersAdapter extends ArrayAdapter<Runner> {
 
             Runner runnercurrent = getItem(position);
             nicktw.setText(runnercurrent.getNickname());
-            leveltw.setText(parent.getResources().getString(R.string.level_runner) + " " + String.valueOf(runnercurrent.getLevel()));
+            leveltw.setText("Liv. " + LevelMapper.getLevelName(runnercurrent.getLevel()));
             runnerprofileimg.setImageDrawable(runnercurrent.getProfileImage());
 
         }

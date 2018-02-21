@@ -209,9 +209,22 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
             public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
 
                 Log.i("onDataEntered",dataSnapshot.getKey());
-                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                Log.i("Messaggio location",location.toString());
+                ActiveRun activerun = new PActiveRunDaoImpl().checkAvailableByRunner(Integer.valueOf(dataSnapshot.getKey()),MainActivityPV.userlogged.getNickname());
 
-                if(datestart>=System.currentTimeMillis()){
+                if(activerun!=null){
+                    arrayadapter.add(activerun);
+                    arrayadapter.notifyDataSetChanged();
+                    Log.i("Messaggio","NON STAVO PARTECIPANTO");
+                }
+
+                else{
+                    Log.i("Messaggio","STAVO PARTECIPANDO");
+
+                }
+
+
+            /*    if(datestart>=System.currentTimeMillis()){
                     Map<String, String> td = (HashMap<String,String>) dataSnapshot.child("participation").getValue();
                     Set list = td.keySet();
                     Iterator iter = list.iterator();
@@ -233,10 +246,9 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
                         Log.i(MESSAGE_LOG,"NON STO PARTECIPANDO");
                         // Inserisci gara all'interno della sezione partecipa
                         ActiveRun activeRun = new ActiveRunDaoImpl().findByID(Integer.valueOf(dataSnapshot.getKey()));
-                        arrayadapter.add(activeRun);
-                        arrayadapter.notifyDataSetChanged();
+
                     }
-                } //End if
+                } //End if */
             }
 
             @Override
