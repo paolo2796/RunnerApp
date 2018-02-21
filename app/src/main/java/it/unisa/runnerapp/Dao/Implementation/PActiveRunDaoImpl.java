@@ -198,12 +198,76 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         return null;
     }
 
-    @Override
-    public List<Run> findRunByRunnerFetchID(final String nickuser) {
 
+
+    @Override
+    public List<ActiveRun> findRunActiveByRunner(final String nickuser, final String order) {
 
         try {
 
+            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
+                @Override
+                protected List<ActiveRun> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+
+                    PreparedStatement ps = null;
+                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_timestamp(),data_inizio))>-1 and  pca.partecipante = ? ORDER BY " + order);
+                        ps.setString(1,nickuser);
+                        rs = ps.executeQuery();
+
+
+                        while(rs.next()) {
+
+                            ActiveRun run = new ActiveRun();
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+                            run.setEstimatedKm(rs.getDouble("km_previsti"));
+                            run.setEstimatedHours(rs.getInt("ore_previste"));
+                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+
+                            Runner master = new Runner();
+                            master.setNickname(rs.getString("Corse.master"));
+                            run.setMaster(master);
+
+                            activeruns.add(run);
+
+                        }
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return activeruns;
+                }
+
+                @Override
+                protected void onPostExecute( List<ActiveRun> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
+    }
+
+
+
+
+
+    @Override
+    public List<Run> findRunByRunnerFetchID(final String nickuser, final String order) {
+
+        try {
             return  new AsyncTask<Void, Void, List<Run>>() {
                 @Override
                 protected List<Run> doInBackground( final Void ... params ) {
@@ -213,7 +277,7 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     List<Run> activeruns = new ArrayList<Run>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "'");
+                        ps = ConnectionUtil.getConnection().prepareStatement("select Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa join Utenti on Utenti.nickname = Corse.master where pca.partecipante = '"  + nickuser +  "' ORDER BY " + order);
                         rs = ps.executeQuery();
 
                         while(rs.next()) {
@@ -314,6 +378,43 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
         return null;
 
 
+
+
+    }
+
+    @Override
+    public void deleteAllRunnerByRun(final int codrun) {
+
+        try {
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground( final Void ... params ) {
+                    PreparedStatement ps = null;
+                    String sql = "DELETE FROM Partecipazioni_Corse_Attive WHERE Partecipazioni_Corse_Attive.corsa =" + codrun;
+
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement(sql);
+                        int result = ps.executeUpdate();
+
+                    }
+
+                    catch (SQLException e) {
+                        Log.e("Exception",Log.getStackTraceString(e));
+                    }
+                    return null;
+                }
+
+
+
+            }.execute().get();
+
+        }
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
 
 
     }

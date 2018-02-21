@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
     <string name="app_name">RunnerApp</string>
     <string name="app_title"></string>
     <string name="adactive_participation">Partecipa</string>
@@ -19,9 +19,11 @@
     <string name="myads_editrun">Edit</string>
     <string name="adsactive_startlive">Avvia Live!</string>
     <string name="ads_followers">Followers</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_maps">Map</string>
     <string name="velocity_label">Velocità Media</string>
     <string name="burned_calories_label">Calorie Bruciate</string>
     <string name="traveled_distance_label">Distanza percorsa</string>
+    <string name="title_activity_add_notice">AddNoticeActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 </resources>

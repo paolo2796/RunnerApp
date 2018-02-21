@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,22 +12,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,6 +39,7 @@ import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.utils.CheckUtils;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -48,6 +52,8 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     Communicator communicator;
     private List<MyAdPlannedAdapter.ViewHolder> lstHolders;
     private Handler mHandler = new Handler();
+    HashMap<Integer,Integer> maprunpos;
+
 
     private Runnable updateRemainingTimeRunnable = new Runnable() {
         @Override
@@ -74,6 +80,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         MyAdPlannedAdapter.ViewHolder holder = null;
 
         if (convertView == null) {
+            maprunpos.put(activeruncurrent.getId(),position);
             holder = new MyAdPlannedAdapter.ViewHolder();
             convertView = inflater.inflate(R.layout.row_myadsplanned, parent, false);
             holder.starthour = (TextView) convertView.findViewById(R.id.starthour);
@@ -81,7 +88,10 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
             holder.timertw = (TextView) convertView.findViewById(R.id.timer);
             holder.cancelrunbtn = (Button) convertView.findViewById(R.id.cancelbtn);
             holder.startlivebtn = (Button) convertView.findViewById(R.id.startlive_btn);
-            holder.mapview = (MapView) convertView.findViewById(R.id.pointmeetmap);
+            holder.estimatedkmtw = (TextView) convertView.findViewById(R.id.estimatedkm_tw);
+            holder.estimatedtimetw = (TextView) convertView.findViewById(R.id.estimatedtime_tw);
+            holder.pointmeetingimg = (ImageView) convertView.findViewById(R.id.pointmeeting_img);
+
             convertView.setTag(holder);
             synchronized (lstHolders) {
                 lstHolders.add(holder);
@@ -117,11 +127,23 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int tag = Integer.parseInt(v.getTag().toString());
                 ActiveRun activeruncurren = (ActiveRun) getItem(tag);
-                new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(),"paolo2796");
-                MyAdPlannedAdapter.this.remove(activeruncurren);
-                MyAdPlannedAdapter.this.notifyDataSetChanged();
+
+
+                if(activeruncurren.getMaster().getNickname().equals(MainActivityPV.userlogged.getNickname())){
+
+                    Toast.makeText(MyAdPlannedAdapter.this.getContext(), "Sei il proprietario di questo annuncio. Devi partecipare in quanto sei master!", Toast.LENGTH_SHORT).show();
+
+
+                }
+                else {
+                    new PActiveRunDaoImpl().deleteParticipationRun(activeruncurren.getId(), MainActivityPV.userlogged.getNickname());
+                    MyAdsPlannedFragment.removeParticipationFirebase(activeruncurren, MainActivityPV.userlogged.getNickname());
+                    MyAdPlannedAdapter.this.remove(activeruncurren);
+                    MyAdPlannedAdapter.this.notifyDataSetChanged();
+                }
 
             }
         };
@@ -139,31 +161,20 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
 
     }
 
+    public View.OnClickListener getClicklPointMeetingListener(){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag = Integer.parseInt(v.getTag().toString());
+                communicator.respondDetailRun(tag);
+            }
+        };
+
+    }
 
 
-
-    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private final View myContentsView;
-        MyInfoWindowAdapter(){
-            myContentsView = inflater.inflate(R.layout.custom_info_direction, null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return myContentsView;
-        }
-    } // end class MyInfoWindowAdapter
-
-
-
-
-    private class ViewHolder implements OnMapReadyCallback{
+    private class ViewHolder{
 
         TextView datestart;
         TextView starthour;
@@ -171,9 +182,10 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
         Button cancelrunbtn;
         Button startlivebtn;
         ActiveRun activerun;
-        MapView mapview;
         LatLng pointmeeting;
-        GoogleMap googlemap;
+        TextView estimatedkmtw;
+        TextView estimatedtimetw;
+        ImageView pointmeetingimg;
         int position;
 
         public void setData(ActiveRun item, int position) {
@@ -182,14 +194,18 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
             this.position = position;
             cancelrunbtn.setTag(position);
             startlivebtn.setTag(position);
+            pointmeetingimg.setTag(position);
             cancelrunbtn.setOnClickListener(getCancelParticipation());
             startlivebtn.setOnClickListener(getStartLiveListener());
             starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
             pointmeeting = activerun.getMeetingPoint();
-            mapview.onCreate(null);
-            mapview.getMapAsync(this);
+            estimatedtimetw.setText(String.valueOf(item.getEstimatedHours() + " h " + item.getEstimatedMinutes() + "m"));
+            estimatedkmtw.setText(String.valueOf(item.getEstimatedKm()) + "km");
+            pointmeetingimg.setOnClickListener(getClicklPointMeetingListener());
 
+            Animation animation = AnimationUtils.loadAnimation(MyAdPlannedAdapter.this.getContext(),R.anim.scaling);
+            pointmeetingimg.startAnimation(animation);
 
             updateTimeRemaining(System.currentTimeMillis());
         }
@@ -201,7 +217,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
                 cancelrunbtn.setVisibility(View.VISIBLE);
                 int seconds = (int) (timeDiff / 1000) % 60;
                 int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
-                int hours = (int) ((timeDiff / (1000 * 60 * 60)) % 24);
+                int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
                 timertw.setText("Tempo Scaduto!");
@@ -210,50 +226,10 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
             }
         }
 
-        @Override
-        public void onMapReady(final GoogleMap googleMap) {
-
-            this.googlemap = googleMap;
-            googlemap.getUiSettings().setMapToolbarEnabled(false);
-            googlemap.getUiSettings().setAllGesturesEnabled(false);
-            googleMap.getUiSettings().setCompassEnabled(false);
-            if(googlemap!=null) {
-                final LatLng pointmeet = new LatLng(pointmeeting.latitude, pointmeeting.longitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(pointmeet)
-                        .zoom(17)                   // Imposta lo zoom
-                        .bearing(90)                // Imposta l'orientamento della camera verso est
-                        .tilt(30)                   // Rende l'inclinazione della fotocamera a 30°
-                        .build();                   // Crea una CameraPosition dal Builder
-                googlemap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                // Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(AdActiveAdapter.this.getContext(),R.drawable.ic_info_marker_54dp);
-                // marker.icon(BitmapDescriptorFactory.fromBitmap(bitmapicon));
-
-                Marker marker = googlemap.addMarker(new MarkerOptions()
-                        .position(pointmeet)
-                        .title("Title")
-                        .snippet("Snippet"));
-
-                marker.showInfoWindow();
-
-
-                googlemap.setInfoWindowAdapter(new MyAdPlannedAdapter.MyInfoWindowAdapter());
-                googlemap.setOnInfoWindowClickListener(new  GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-
-                        communicator.respondDetailRun(position);
-                    }
-                });
-
-
-            }
-        }
-
     } // End Class View Holder
 
 
+    public HashMap<Integer,Integer> getMapRunPos(){ return maprunpos;}
 
 
     public interface Communicator{
@@ -264,5 +240,7 @@ public class MyAdPlannedAdapter extends ArrayAdapter<ActiveRun> {
     public void setCommunicator(Communicator communicator) {
         this.communicator = communicator;
     }
+
+
 
 }

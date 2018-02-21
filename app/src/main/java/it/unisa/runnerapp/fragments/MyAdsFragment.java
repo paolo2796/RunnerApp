@@ -2,6 +2,7 @@ package it.unisa.runnerapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +14,13 @@ import android.widget.ListView;
 import java.util.List;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Interf.ActiveRunDao;
 import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.utils.ConnectionUtil;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.R;
 
 /**
@@ -36,7 +40,7 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        runs = new ActiveRunDaoImpl().findByRunnerWithin24hWithoutMaster("paolo2796","data_inizio");
+        runs = new ActiveRunDaoImpl().findActiveByRunnerWithoutMaster(MainActivityPV.userlogged.getNickname(),"data_inizio");
 
     }
 
@@ -53,12 +57,11 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
     @Override
     public void respondDetailRun(int position) {
         communicatoractivity.respondMyAdsDetailRun(position);
-
     }
 
     @Override
     public void respondEdit(int position) {
-
+        communicatoractivity.respondMyAdsEditRun(position);
     }
 
     @Override
@@ -74,16 +77,10 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
         nobtn.setTag(1);
         yesbtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
         nobtn.setOnClickListener(new MyAdsFragment.ClickConfirmedRunDialog(runtag));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.show();
 
     }
-
-
-
-
-
-
-
 
 
     class ClickConfirmedRunDialog implements View.OnClickListener{
@@ -97,8 +94,10 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
 
             if(Integer.parseInt(v.getTag().toString())==0){
+                new PActiveRunDaoImpl().deleteAllRunnerByRun(run.getId());
                 new ActiveRunDaoImpl().deleteActiveRun(run.getId());
                 MyAdsFragment.this.arrayadapter.remove(run);
+                removeRunFirebase((Run) run);
                 MyAdsFragment.this.arrayadapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
@@ -119,8 +118,13 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
 
     public interface CommunicatorActivity{
-
         public void respondMyAdsDetailRun(int index);
+        public void respondMyAdsEditRun(int index);
+    }
+
+
+    public void removeRunFirebase(Run run){
+        MainActivityPV.databaseruns.child(String.valueOf(run.getId())).removeValue();
     }
 
 

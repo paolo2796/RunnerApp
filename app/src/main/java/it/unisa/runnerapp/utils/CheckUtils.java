@@ -4,19 +4,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-
-import org.json.JSONObject;
-
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -137,13 +131,12 @@ public class CheckUtils
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
@@ -151,4 +144,21 @@ public class CheckUtils
         return bitmap;
     }
 
+    public static short convertLevelFromStringToShort(String level){
+
+        short levelnum=0;
+
+        if(level.equalsIgnoreCase("Principiante"))
+            levelnum = 1;
+        else if(level.equalsIgnoreCase("Dilettante"))
+            levelnum=2;
+        else if(level.equalsIgnoreCase("Esperto"))
+            levelnum=3;
+        else if(level.equalsIgnoreCase("Maratoner"))
+            levelnum=4;
+        else{}
+
+        return levelnum;
+
+    }
 }

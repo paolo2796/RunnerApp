@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.w3c.dom.Text;
 
@@ -62,6 +63,7 @@ import it.unisa.runnerapp.utils.DirectionFinderImpl;
 import it.unisa.runnerapp.utils.DirectionFinderListener;
 import it.unisa.runnerapp.utils.Route;
 import testapp.com.runnerapp.AdActiveDetailActivity;
+import testapp.com.runnerapp.MainActivityPV;
 import testapp.com.runnerapp.Manifest;
 import testapp.com.runnerapp.R;
 
@@ -96,6 +98,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private ArrayAdapter<Runner> arrayfollowersadapter;
     private Dialog dialog;
     private List<Runner> followers;
+    private AVLoadingIndicatorView loadingdirection;
+
 
 
     // component direction
@@ -120,6 +124,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
         locationmanager = ((AdActiveDetailActivity) getActivity()).getLocationmanager();
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
+
         //initialize
         mapview = (CustomMap) v.findViewById(R.id.mapview);
         datestarttw = (TextView) v.findViewById(R.id.datestart);
@@ -127,14 +132,20 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         estimatedkmtw = (TextView) v.findViewById(R.id.estimatedkm_tw);
         estimatedhmtw = (TextView) v.findViewById(R.id.estimatedhm_tw);
         followersbtn = (Button) v.findViewById(R.id.followers_btn);
-        followersbtn.setOnClickListener(getFollowersClickListener());
+        loadingdirection = (AVLoadingIndicatorView) v.findViewById(R.id.loading_direction);
 
+        // Set Value
         starthourtw.setText(CheckUtils.convertHMToStringFormat(run.getStartDate()));
         datestarttw.setText(CheckUtils.convertDateToStringFormat(run.getStartDate()));
         estimatedkmtw.setText(String.valueOf(run.getEstimatedKm()));
         estimatedhmtw.setText(String.valueOf(run.getEstimatedHours() + "h " + String.valueOf(run.getEstimatedMinutes()) + "m"));
         mapview.onCreate(savedInstanceState);
         mapview.getMapAsync(this);
+
+        //Set Listeners
+        followersbtn.setOnClickListener(getFollowersClickListener());
+        loadingdirection.show();
+
 
 
         return v;
@@ -243,6 +254,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
                 LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
                 sendRequest(origin);
                 locationmanager.removeUpdates(locationlistener);
+                loadingdirection.hide();
+                mapview.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -328,7 +341,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         providerid = null;
 
         if ((locationmanager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationmanager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))){
-            providerid = LocationManager.GPS_PROVIDER;
+            providerid = LocationManager.NETWORK_PROVIDER;
             locationlistener = getLocationListener();
             locationmanager.requestLocationUpdates(providerid, MIN_PERIOD, MIN_DIST, locationlistener);
         }

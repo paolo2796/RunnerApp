@@ -20,20 +20,46 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD_f5o9h2vynGCw64jHtpHeqXIF708ZwM8" />
 
-        <activity android:name=".LiveRunActivity">
+        <activity
+            android:name=".LiveRunActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".AdActiveDetailActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".FirebaseTestActivity" />
+        <activity android:name=".ErrorConnectionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CheckPermissionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MainActivityPV"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity android:name=".AddNoticeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EditRunActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MapsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".AuthActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AdActiveDetailActivity"></activity>
-        <activity android:name=".FirebaseTestActivity"></activity>
-        <activity android:name=".ErrorConnectionActivity"></activity>
-        <activity android:name=".CheckPermissionActivity"></activity>
-        <activity android:name=".MainActivityPV"></activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme"/>
 
         <service android:name="it.unisa.runnerapp.services.LocationUpdater" android:process=":location_updater_runnerapp" />
-
     </application>
 
 </manifest>

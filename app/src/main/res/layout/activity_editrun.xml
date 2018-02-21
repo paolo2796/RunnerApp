@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:text="Modifica Annuncio"/>
+
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+
+    <TextView
+        android:id="@+id/pointmeeting_tw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tieni premuto il marker per modificare il punto di incontro." />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_weight="1">
+
+
+        <LinearLayout
+            android:id="@+id/inforun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
+                    android:shrinkColumns="*">
+
+                    <TableRow
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/datestart_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textColor="@color/tempv_celestial"
+                            android:textStyle="italic"
+                            android:text="data" />
+
+                        <TextView
+                            android:id="@+id/starthour_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textColor="@color/tempv_celestial"
+                            android:textStyle="italic"
+                            android:text="20:30"/>
+                    </TableRow>
+
+
+                    <TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:text="Giorno"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:text="Ora"
+                            android:textStyle="bold"/>
+                    </TableRow>
+
+                </TableLayout>
+
+
+            <EditText
+                android:id="@+id/kmestimated_et"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/rectangle_corner"
+                android:drawableTop="@drawable/ic_estimatedkm_30dp"
+                android:textColorHint="#dedede"
+                android:textColor="#dedede"
+                android:hint="Quanti KM vuoi fare?"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:inputType="numberDecimal">
+            </EditText>
+
+
+            <Button
+                android:id="@+id/estimatedtime_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/rectangle_corner"
+                android:drawableTop="@drawable/ic_wristwatch_30dp"
+                android:textColorHint="#dedede"
+                android:textColor="#dedede"
+                android:hint="In quanto tempo?"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:onClick="onTimeEstimatedClicked">
+            </Button>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/oval_button" >
+
+        <Button
+            android:id="@+id/addrun_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:drawableLeft="@drawable/ic_runer_30dp"
+            android:gravity="center"
+            android:hint="Modifica"
+            android:textColorHint="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:onClick="onClickEditRun"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

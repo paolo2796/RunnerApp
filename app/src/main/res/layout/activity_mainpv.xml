@@ -3,26 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:map="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/box_myprofile"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f1f1f1"
+        android:layout_weight="0">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myprofileimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:civ_border_color="@color/tempv_celestial"
+            app:civ_border_width="1dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_myprofile_shoe_35dp"/>
+
+    </RelativeLayout>
+
+
+    <FrameLayout
+            android:id="@+id/containerfragment_frame"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></FrameLayout>
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
+        app:bb_activeTabColor="@color/colorPrimary"
         app:bb_tabXmlResource="@xml/navigation_bar_menu"
-        app:bb_behavior="underNavbar"/>
+        app:bb_behavior="underNavbar" />
 
 
 
-
-    <FrameLayout
-        android:id="@+id/containerfragment_frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></FrameLayout>
 
 
 

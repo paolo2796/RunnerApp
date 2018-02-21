@@ -1,51 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_margin="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="3dp">
 
-    <include layout="@layout/row_adsuper"></include>
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/deleterun_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/holo_red_dark"
-            android:text="@string/myads_removerun"
-            android:onClick="deleterRun"
-            android:visibility="visible"
-            android:textColor="#FFFFFF" />
+        <include layout="@layout/row_adsuper"></include>
 
-        <Button
-            android:id="@+id/editrun_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/tempv_celestial"
-            android:text="@string/myads_editrun"
-            android:onClick="editRun"
-            android:visibility="visible" />
-
-        <Button
-            android:id="@+id/delayparticipation_btn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="@color/delay_participation"
-            android:text="@string/adactive_start"
-            android:visibility="gone" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/deleterun_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/holo_red_dark"
+                android:text="@string/myads_removerun"
+                android:onClick="deleterRun"
+                android:visibility="visible"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/editrun_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/tempv_celestial"
+                android:text="@string/myads_editrun"
+                android:textColor="@android:color/white"
+                android:onClick="editRun"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/delayparticipation_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@color/delay_participation"
+                android:text="@string/adactive_start"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
 
-
-
-</LinearLayout>
-
+</android.support.v7.widget.CardView>

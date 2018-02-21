@@ -395,67 +395,7 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
     }
 
     @Override
-    public List<ActiveRun> findByRunnerWithin24hWithoutMaster(final String nickname, final String order) {
-
-        try {
-
-            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
-                @Override
-                protected List<ActiveRun> doInBackground( final Void ... params ) {
-                    ResultSet rs =null;
-
-                    PreparedStatement ps = null;
-                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
-                    try {
-
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and (timestampdiff(HOUR,current_timestamp(),data_inizio))<=24 and Corse.master= ? ORDER BY " + order + "");
-                        ps.setString(1,nickname);
-                        rs = ps.executeQuery();
-
-                        while(rs.next()) {
-
-                            ActiveRun run = new ActiveRun();
-
-                            run.setId(rs.getInt("id"));
-                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
-                            run.setMeetingPoint(latLng);
-                            run.setStartDate(rs.getTimestamp("data_inizio"));
-                            run.setEstimatedKm(rs.getDouble("km_previsti"));
-                            run.setEstimatedHours(rs.getInt("ore_previste"));
-                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
-
-                            activeruns.add(run);
-
-                        }
-                    }
-
-
-                    catch (SQLException e) {
-                        Log.e("SQLException",Log.getStackTraceString(e));
-                    }
-                    return activeruns;
-                }
-
-                @Override
-                protected void onPostExecute( List<ActiveRun> result ) {
-                    super.onPostExecute(result);
-                }
-            }.execute().get();
-        }
-
-
-        catch (Exception e) {
-            Log.e("Exception",Log.getStackTraceString(e));
-        }
-
-        return null;
-
-    }
-
-
-    @Override
-    public List<ActiveRun> getAvailableRunshByRunner(final String nickname,final String orderby){
-
+    public List<ActiveRun> getAvailableByRunner(final String nickname, String orderby) {
         try {
 
             return  new AsyncTask<Void, Void, List<ActiveRun>>() {
@@ -513,8 +453,67 @@ public class ActiveRunDaoImpl implements ActiveRunDao {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ActiveRun> findActiveByRunnerWithoutMaster(final String nickname, final String order) {
+
+        try {
+
+            return  new AsyncTask<Void, Void, List<ActiveRun>>() {
+                @Override
+                protected List<ActiveRun> doInBackground( final Void ... params ) {
+                    ResultSet rs =null;
+
+                    PreparedStatement ps = null;
+                    List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
+                    try {
+
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Corse_Attive join Corse on Corse_Attive.corsa = Corse.id  where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and Corse.master= ? ORDER BY " + order + "");
+                        ps.setString(1,nickname);
+                        rs = ps.executeQuery();
+
+                        while(rs.next()) {
+
+                            ActiveRun run = new ActiveRun();
+
+                            run.setId(rs.getInt("id"));
+                            LatLng latLng = new LatLng(rs.getDouble("punto_ritrovo_lat"), rs.getDouble("punto_ritrovo_lng"));
+                            run.setMeetingPoint(latLng);
+                            run.setStartDate(rs.getTimestamp("data_inizio"));
+                            run.setEstimatedKm(rs.getDouble("km_previsti"));
+                            run.setEstimatedHours(rs.getInt("ore_previste"));
+                            run.setEstimatedMinutes(rs.getInt("minuti_previsti"));
+
+                            activeruns.add(run);
+
+                        }
+                    }
+
+
+                    catch (SQLException e) {
+                        Log.e("SQLException",Log.getStackTraceString(e));
+                    }
+                    return activeruns;
+                }
+
+                @Override
+                protected void onPostExecute( List<ActiveRun> result ) {
+                    super.onPostExecute(result);
+                }
+            }.execute().get();
+        }
+
+
+        catch (Exception e) {
+            Log.e("Exception",Log.getStackTraceString(e));
+        }
+
+        return null;
 
     }
+
+
 
     @Override
     public List<ActiveRun> findByRunner(final String nickname) {

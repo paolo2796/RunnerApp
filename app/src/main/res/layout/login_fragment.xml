@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/welcome_tw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loading_signin"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:minHeight="60dp"
+        android:minWidth="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/tempv_celestial"
+        app:indicatorName="BallPulseIndicator"
+        />
+
+
+
+    <RelativeLayout
+        android:id="@+id/logininput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <EditText
+            android:id="@+id/user_tw"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_centerHorizontal="true"
+            android:inputType="textEmailAddress"
+            android:gravity="center"
+            android:background="@drawable/rectangle_corner_login"
+            android:hint="Email"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            />
+
+
+        <EditText
+            android:id="@+id/pass_tw"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/user_tw"
+            android:gravity="center"
+            android:inputType="textWebPassword"
+            android:background="@drawable/rectangle_corner_login"
+            android:hint="Password"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"/>
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/infologin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/logininput">
+
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rectangle_corner_login_btn"
+            android:textColor="@android:color/white"
+            android:text="Login" />
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/inforegistration"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/infologin">
+
+
+        <Button
+            android:id="@+id/registration_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:background="@null"
+            android:text="Registrati"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true" />
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout> <!-- fine login -->
+
+
+

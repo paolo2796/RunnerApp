@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "391686926440",
-    "firebase_url": "https://it-unisa-runners.firebaseio.com",
-    "project_id": "it-unisa-runners",
-    "storage_bucket": "it-unisa-runners.appspot.com"
+    "project_number": "387433254417",
+    "firebase_url": "https://users-ed69e.firebaseio.com",
+    "project_id": "users-ed69e",
+    "storage_bucket": "users-ed69e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:391686926440:android:6976f070661a5b9b",
+        "mobilesdk_app_id": "1:387433254417:android:6976f070661a5b9b",
         "android_client_info": {
           "package_name": "testapp.com.runnerapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "391686926440-rtgh102qubgoj9jt74et98ka3euenseg.apps.googleusercontent.com",
+          "client_id": "387433254417-q7r1qree99fl327tpbfo36rhqpdqr4fq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBzEdJYYOJbVr7zJx8anNdduseFtknVorU"
+          "current_key": "AIzaSyAw340H1VNMRxpnGlv-1_uea_70GxpIzV0"
         }
       ],
       "services": {

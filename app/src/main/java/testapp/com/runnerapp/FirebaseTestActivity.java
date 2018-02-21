@@ -26,15 +26,20 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
+import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
+import it.unisa.runnerapp.beans.GeoUser;
 import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
@@ -70,43 +75,69 @@ public class FirebaseTestActivity extends AppCompatActivity{
         geofire = new GeoFire(databaserunners);
 
 
-
-         List<Run> run = new RunDaoImpl().getAllRuns();
+       List<Run> run = new RunDaoImpl().getAllRuns();
         for(Run ru: run){
-             saveRunFirebase(ru);
+
+
+           List<Runner> runners = new PActiveRunDaoImpl().findRunnerByRun(ru.getId());
+            saveRunFirebase(ru,runners);
          }
 
-
+/*
         geofire.queryAtLocation(new GeoLocation(40.6960004,14.710742100000061),12).addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
             @Override
             public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
 
-                for(DataSnapshot data: dataSnapshot.getChildren()){
+                Log.i("onDataEntered",dataSnapshot.getKey());
+                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                if(datestart>=System.currentTimeMillis()){
+                    Map<String, String> td = (HashMap<String,String>) dataSnapshot.child("participation").getValue();
+                    Set list = td.keySet();
+                    Iterator iter = list.iterator();
+                    boolean istrue = false;
 
-                    String messagebody=data.getValue().toString();
+                    // Verifico se l'utente loggato sta già partecipando a questa gara
+                    while(iter.hasNext() && !istrue) {
+                        Object key = iter.next();
+                        String value = td.get(key);
+                        if(td.get(key).equals("paolo2796")){
+                            istrue=true;
+                        }
+                    } // End while
 
-                        Log.i("Messaggio",messagebody);
-                }
 
+                    if(!istrue){
+
+                        // Inserisci gara all'interno della sezione partecipa
+
+                    }
+                } //End if
 
             }
 
             @Override
             public void onDataExited(DataSnapshot dataSnapshot) {
 
-                Log.i("Messaggio exit",String.valueOf(dataSnapshot.getKey()));
+                Log.i("onDataExited",dataSnapshot.getKey());
+
+                Long datestart = dataSnapshot.child("datestart").getValue(Long.class);
+                if(datestart>=System.currentTimeMillis()){
+
+                    //rimuovi gara dalla sezione partecipa
+
+
+                } //End if
+
 
             }
 
             @Override
             public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
-                Log.i("Messaggio moved",String.valueOf(dataSnapshot.getKey()));
 
             }
 
             @Override
             public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
-                Log.i("Messaggio changed",String.valueOf(dataSnapshot.getKey()));
 
             }
 
@@ -119,20 +150,26 @@ public class FirebaseTestActivity extends AppCompatActivity{
             public void onGeoQueryError(DatabaseError error) {
 
             }
-        });
+        }); */
 
 
 
     }
 
 
-    public void saveRunFirebase(Run run){
+    public void saveRunFirebase(Run run, List<Runner> runners){
 
         databaserunners.child(String.valueOf(run.getId())).setValue(run);
         geofire.setLocation(String.valueOf(run.getId()), new GeoLocation(run.getMeetingPoint().latitude, run.getMeetingPoint().longitude));
         Map map = new HashMap();
         map.put("datestart",run.getStartDate().getTime());
         databaserunners.child(String.valueOf(run.getId())).updateChildren(map);
+
+        DatabaseReference refrun = databaserunners.child(String.valueOf(run.getId())).child("participation");
+
+        for(Runner runner: runners){
+            refrun.child(String.valueOf(runner.getNickname())).setValue(runner.getNickname());
+        }
 
     }
 

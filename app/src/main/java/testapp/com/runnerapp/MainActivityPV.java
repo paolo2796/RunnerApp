@@ -1,16 +1,24 @@
 package testapp.com.runnerapp;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -18,6 +26,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -26,10 +38,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.Request_LiveDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.adapters.MyAdPlannedAdapter;
+import it.unisa.runnerapp.adapters.MyAdsAdapater;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.RequestLive;
 import it.unisa.runnerapp.beans.Runner;
@@ -38,85 +53,87 @@ import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFinishedFragment;
 import it.unisa.runnerapp.fragments.MyAdsPlannedFragment;
 import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.CheckUtils;
 import it.unisa.runnerapp.utils.ConnectionUtil;
 import it.unisa.runnerapp.utils.DirectionFinder;
 import it.unisa.runnerapp.utils.DirectionFinderImpl;
+import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
  * Created by Paolo on 08/02/2018.
  */
 
-public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity{
+public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlannedFragment.CommunicatorActivity, MyAdsFragment.CommunicatorActivity,AdsActiveFragment.CommunicatorActivity, MyAdsFinishedFragment.CommunicatorActivity{
+
+    // DB Firebase
+    public static FirebaseApp firebaseapp;
+    public static FirebaseDatabase firebasedatabase;
+    public static DatabaseReference databaseruns;
+
+    public static int ACTIVE_RUN_CODEREQ = 1;
+
+
+
+    // utente loggato
+    public static Runner userlogged;
 
     MyAdsFinishedFragment myadsfinishedfragment;
     MyAdsFragment myadsfragment;
     AdsActiveFragment adsactivefragment;
     MyAdsPlannedFragment myadsplannedfragment;
     FragmentManager fm;
+
+
+    //Component View
     BottomBar bottomBar;
+    CircleImageView myprofileimg;
+    Animation animscalingprofile;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_mainpv);
 
-
             fm = getFragmentManager();
+
+            //Set component view
             bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+            myprofileimg = (CircleImageView) findViewById(R.id.myprofileimg);
+
+            //Set listeners
+            myprofileimg.setOnClickListener(getClickMyProfileListener());
+
+
+
             bottomBar.setOnTabSelectListener(getTabSelectListener());
-
-
-           RequestLive re = new Request_LiveDaoImpl().findByRunnerRecipient("mavit","paolo2796");
-           Log.i("Messaggio",String.valueOf(re.getCod()));
-
-
+            initFire();
 
     }
 
+    public void initFire(){
 
-
-
-
-
-
-   /* PER ORA NON SERVE
-    @Override
-    public void respondAdsFinished(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",adsfinishedfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
+        if(firebaseapp==null) {
+            firebaseapp = FirebaseUtils.getFirebaseApp(this.getApplicationContext(), RunnersDatabases.PARTICIPATION_API_KEY, RunnersDatabases.PARTICIPATION_APP_ID, RunnersDatabases.PARTICIPATION_DB_URL, RunnersDatabases.PARTICIPATION_DB_NAME);
+            firebasedatabase = FirebaseUtils.connectToDatabase(firebaseapp);
+            databaseruns = firebasedatabase.getReference(RunnersDatabases.PARTICIPATION_DB_ROOT);
+            Log.i("Firebase",databaseruns.toString());
+        }
     }
 
-    @Override
-    public void respondAdsActive(int position) {
 
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",adsactivefragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
+    public View.OnClickListener getClickMyProfileListener(){
 
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivityPV.this,ProfileActivity.class);
+                startActivity(intent);
+
+            }
+        };
     }
-
-    @Override
-    public void responMyAdsActiveDetailRun(int position) {
-
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-
-    }
-
-    @Override
-    public void responMyAdtiveDetailRun(int position) {
-        Intent intent = new Intent(this,AdActiveDetailActivity.class);
-        intent.putExtra("codrun",myadplannedfragment.arrayadapter.getItem(position).getId());
-        startActivity(intent);
-    } */
-
-
-
 
 
     public OnTabSelectListener getTabSelectListener() {
@@ -131,6 +148,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfragment);
                     ft.commit();
+
                     myadsfragment.setCommunicator(MainActivityPV.this);
 
                 }
@@ -141,6 +159,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     ft.replace(R.id.containerfragment_frame, adsactivefragment);
                     ft.commit();
 
+
                 }
                 else if (tabId == R.id.myadsfinished_tab) {
 
@@ -148,7 +167,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.containerfragment_frame, myadsfinishedfragment);
                     ft.commit();
-                 // Per ora non serve   adsfinishedfragment.setCommunicator(MainActivityPV.this);
+                    myadsfinishedfragment.setCommunicatoractivity(MainActivityPV.this);
                 }
                 else if(tabId == R.id.myplanned_tab){
                     myadsplannedfragment = new MyAdsPlannedFragment();
@@ -172,9 +191,14 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
         startActivity(intent);
     }
 
+    @Override
+    public void respondMyAdsEditRun(int index) {
 
-
-
+        Intent intent = new Intent(this,EditRunActivity.class);
+        intent.putExtra("codrun",myadsfragment.arrayadapter.getItem(index).getId());
+        Log.i("Messaggio",String.valueOf(intent.getIntExtra("codrun",-1)));
+        startActivity(intent);
+    }
 
 
     /* Communicator MyAdsPlannedFragment */
@@ -187,10 +211,14 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
     }
 
 
+   @SuppressLint("RestrictedApi")
    @Override
     public void respondStartLiveActivity(int codrun) {
-        Log.i("Messaggio",String.valueOf(codrun));
+
         Toast.makeText(this,"AVVIARE START LIVE",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivityPV.this,MapsActivity.class);
+        intent.putExtra("codrun",myadsplannedfragment.arrayadapter.getItem(codrun).getId());
+        startActivityForResult(intent,ACTIVE_RUN_CODEREQ);
     }
 
 
@@ -205,4 +233,46 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
     }
 
+    @Override
+    public void respondAddNotice(Location myposition){
+        Intent intent = new Intent(this,AddNoticeActivity.class);
+
+       if(myposition!=null){
+           intent.putExtra("mylatitude",myposition.getLatitude());
+           intent.putExtra("mylongitude",myposition.getLongitude());
+           startActivity(intent);
+        }
+
+        else{
+
+            startActivity(intent);
+       }
+
+    }
+
+    @Override
+    public void responMyFinishedDetailRun(int index) {
+
+        Intent intent = new Intent(this,AdActiveDetailActivity.class);
+        intent.putExtra("codrun",myadsfinishedfragment.arrayadapter.getItem(index).getId());
+        startActivity(intent);
+
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == ACTIVE_RUN_CODEREQ) {
+            if (resultCode == RESULT_OK) {
+
+                int codrun = data.getIntExtra("codrun",-1);
+                int position = myadsplannedfragment.arrayadapter.getMapRunPos().get(codrun);
+                ActiveRun activerun = myadsplannedfragment.arrayadapter.getItem(position);
+                myadsplannedfragment.arrayadapter.remove(activerun);
+
+            }
+        }
+    }
 }

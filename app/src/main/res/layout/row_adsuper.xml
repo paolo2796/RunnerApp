@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
+
 
     <LinearLayout
         android:id="@+id/infotext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:id="@+id/infotextsx"
@@ -24,14 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:src="@drawable/ic_datestart_24dp"/>
+                android:src="@drawable/ic_datestart_30dp"/>
 
             <TextView
                 android:id="@+id/datestart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:text="data" />
 
         </LinearLayout>
@@ -50,13 +54,13 @@
                 android:id="@+id/iconstart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_starthour_24dp"/>
+                android:src="@drawable/ic_starthour_30dp"/>
 
             <TextView
                 android:id="@+id/starthour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:text="20:30"/>
 
         </LinearLayout>
@@ -72,25 +76,76 @@
             android:id="@+id/ictimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_timer_24dp"/>
+            android:src="@drawable/ic_timer_30dp"/>
 
         <TextView
             android:id="@+id/timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="iniziata"/>
 
 
     </LinearLayout>
 
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/pointmeetmap"
-            android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:visibility="visible"
-            map:liteMode="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <ImageView
+            android:id="@+id/iconestimatedkm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_estimatedkm_30dp"/>
+
+        <TextView
+            android:id="@+id/estimatedkm_tw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconestimatedkm"
+            android:textSize="20sp"
+            android:text="10.50"/>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pointmeeting_img"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_pin_24dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:civ_border_width="50dp"
+            app:civ_border_color="@color/tempv_celestial"/>
+
+
+        <TextView
+            android:id="@+id/estimatedtime_tw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/iconestimatedtime"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:text="10.50"/>
+
+
+        <ImageView
+            android:id="@+id/iconestimatedtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_wristwatch_30dp"/>
+
+
+    </RelativeLayout>
+
 
 
 </LinearLayout>
+
