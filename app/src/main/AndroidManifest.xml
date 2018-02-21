@@ -35,7 +35,14 @@
         <activity
             android:name=".MainActivityPV"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".AddNoticeActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -44,11 +51,6 @@
         <activity android:name=".MapsActivity"
             android:screenOrientation="portrait">
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
         <activity
             android:name=".AuthActivity"
