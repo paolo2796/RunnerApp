@@ -35,19 +35,24 @@ public class MarkerWindowAdapter implements GoogleMap.InfoWindowAdapter
 
         String key=(String)marker.getTag();
 
-        Log.i("RUNNER",key);
-        RunnerDao runnerDao=new RunnerDaoImpl();
-        Runner runner=runnerDao.getByNick(key);
-        Log.i("RUNNER",runner.getName());
-        TextView tvNames=(TextView)v.findViewById(R.id.names);
-        TextView tvPersonalInfo=(TextView)v.findViewById(R.id.personalInfo);
-        TextView tvRunInfo=(TextView)v.findViewById(R.id.runInfo);
+        if(key!=null)
+        {
+            Log.i("RUNNER",key);
+            RunnerDao runnerDao=new RunnerDaoImpl();
+            Runner runner=runnerDao.getByNick(key);
+            Log.i("RUNNER",runner.getName());
+            TextView tvNames=(TextView)v.findViewById(R.id.names);
+            TextView tvPersonalInfo=(TextView)v.findViewById(R.id.personalInfo);
+            TextView tvRunInfo=(TextView)v.findViewById(R.id.runInfo);
 
-        tvNames.setText(runner.getName()+" "+runner.getSurname()+","+runner.getNickname());
-        tvPersonalInfo.setText(CheckUtils.getAge(runner.getBirthDare())+" anni, Livello "+ LevelMapper.getLevelName(runner.getLevel()));
-        tvRunInfo.setText(runner.getTraveledKilometers()+" km");
+            tvNames.setText(runner.getName()+" "+runner.getSurname()+","+runner.getNickname());
+            tvPersonalInfo.setText(CheckUtils.getAge(runner.getBirthDare())+" anni, Livello "+ LevelMapper.getLevelName(runner.getLevel()));
+            tvRunInfo.setText(runner.getTraveledKilometers()+" km");
 
-        return v;
+            return v;
+        }
+        else
+            return null;
     }
 
     @Override

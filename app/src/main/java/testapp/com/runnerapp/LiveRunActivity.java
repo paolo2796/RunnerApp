@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -166,6 +167,7 @@ public class LiveRunActivity extends CheckPermissionActivity
             @Override
             public void onClick(View view)
             {
+                Log.i("MAMMT","Cliccato");
                 //Viene stoppato l'avvio del service
                 mapFragment.stopBackgroundUpdates();
                 //Viene cancellata la posizione live del runner dal db
@@ -197,7 +199,7 @@ public class LiveRunActivity extends CheckPermissionActivity
                 intent.putExtra(LIVERUN_RUNCODE_KEY,runCode);
                 setResult(requestCode,intent);
                 //Chiusura activity corrente
-                finishActivity(requestCode);
+                finish();
             }
         };
     }
