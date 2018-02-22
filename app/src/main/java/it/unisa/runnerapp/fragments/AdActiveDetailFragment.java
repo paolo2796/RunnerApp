@@ -1,5 +1,6 @@
 package it.unisa.runnerapp.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -87,7 +88,6 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private AVLoadingIndicatorView loadingdirection;
 
 
-
     // component direction
     private GoogleMap mMap;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -96,7 +96,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     private static final int COLOR_POLYLINE = Color.YELLOW;
 
 
-    private static String PROVIDER_ID=LocationManager.GPS_PROVIDER;
+    private static String PROVIDER_ID = LocationManager.GPS_PROVIDER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +112,8 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         locationmanager = ((AdActiveDetailActivity) getActivity()).getLocationmanager();
+
+
         v = inflater.inflate(R.layout.adactivedetail_fragment, container, false);
 
         //initialize
@@ -134,6 +136,18 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         //Set Listeners
         followersbtn.setOnClickListener(getFollowersClickListener());
         loadingdirection.show();
+
+
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        }
+        Location location = locationmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
+        sendRequest(origin);
+        loadingdirection.hide();
+        mapview.setVisibility(View.VISIBLE);
 
 
 
@@ -305,7 +319,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
         public View getInfoWindow(Marker marker) {
             if(marker.getPosition().latitude == destination.latitude && marker.getPosition().longitude == destination.longitude){
 
-                Runner runnermaster = new RunnerDaoImpl().getByNick(run.getMaster().getNickname());
+              /*  Runner runnermaster = new RunnerDaoImpl().getByNick(run.getMaster().getNickname());
 
                 myContentsView = inflater.inflate(R.layout.custom_info_reach_master, null);
                 nickmastertw = (TextView) myContentsView.findViewById(R.id.masternickaname_tw);
@@ -313,7 +327,7 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
                 masterprofileimg.setImageDrawable(runnermaster.getProfileImage());
                 TextView destaddress = myContentsView.findViewById(R.id.destaddress_tw);
                 destaddress.setText(marker.getTitle());
-                nickmastertw.setText(runnermaster.getNickname());
+                nickmastertw.setText(runnermaster.getNickname()); */
             }
             else{
                 myContentsView = null;

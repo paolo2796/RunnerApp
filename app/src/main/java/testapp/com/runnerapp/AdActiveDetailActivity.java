@@ -2,11 +2,8 @@ package testapp.com.runnerapp;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
-import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.fragments.AdActiveDetailFragment;
 
