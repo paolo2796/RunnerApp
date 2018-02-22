@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="@string/successful_ads_adding"
-        android:textSize="23sp"
+        android:textSize="20sp"
         android:textColor="@android:color/darker_gray"/>
 
 

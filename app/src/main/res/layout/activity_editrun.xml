@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
@@ -29,9 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Trascina il marker per modificare il punto di incontro." />
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:scrollbars="vertical"
         android:layout_weight="1">
 
@@ -51,7 +53,6 @@
 
                     <TableRow
                         android:gravity="center">
-
                         <TextView
                             android:id="@+id/datestart_tw"
                             android:layout_width="wrap_content"
@@ -108,35 +109,40 @@
             </Button>
 
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccentDark" >
+
+
+                <Button
+                    android:id="@+id/editrun_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/ic_edit_black_24dp"
+                    android:gravity="center"
+                    android:hint="Modifica"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textSize="20sp"
+                    android:onClick="onClickEditRun"/>
+
+            </FrameLayout>
+
+
         </LinearLayout>
+
+
+
 
     </ScrollView>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorAccentDark" >
-
-
-        <Button
-            android:id="@+id/addrun_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:drawableLeft="@drawable/ic_edit_black_24dp"
-            android:gravity="center"
-            android:hint="Modifica"
-            android:drawablePadding="10dp"
-            android:drawableTint="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            android:onClick="onClickEditRun"/>
-
-    </FrameLayout>
 
 
 </LinearLayout>

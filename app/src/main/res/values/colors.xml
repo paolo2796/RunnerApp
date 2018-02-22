@@ -21,6 +21,7 @@
     <color name="icon_inforun">#AFB42B</color>
     <color name="btn_inforun">#9E9D24</color>
     <color name="btn_startlive">#AFB42B</color>
+    <color name="cancel_run">#00796B</color>
 
     <color name="foreground_sliding_panel">#EEEEEE</color>
     <color name="background_sliding_panel">#212121</color>

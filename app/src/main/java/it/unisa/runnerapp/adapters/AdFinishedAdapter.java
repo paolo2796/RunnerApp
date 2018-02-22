@@ -61,13 +61,13 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             TextView traveledkm = (TextView) v.findViewById(R.id.travelledkm_tw);
             Button detailrunbtn = (Button) v.findViewById(R.id.detailrun_btnfinished);
 
-
             //Set values
             starthour.setText(CheckUtils.convertHMToStringFormat(runcurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(runcurrent.getStartDate()));
             DecimalFormat formatter=new DecimalFormat("##.##");
             burnedkl.setText(formatter.format(runcurrent.getBurnedCal()));
-            traveledkm.setText(formatter.format(runcurrent.getTraveledKm()));
+            double mtokm = CheckUtils.convertMetersToKm(runcurrent.getTraveledKm());
+            traveledkm.setText(formatter.format(mtokm));
             detailrunbtn.setTag(position);
 
             //Set Listeners
@@ -76,8 +76,6 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
 
         return v;
     }
-
-
 
         public View.OnClickListener getDetailRunListener(){
 
