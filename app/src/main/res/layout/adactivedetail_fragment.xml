@@ -214,8 +214,9 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="20sp"
+        android:layout_marginTop="7dp"
         android:textColor="@android:color/white"
-        android:background="@color/colorAccent"
+        android:background="@color/colorAccentDark"
         android:text="Followers"/>
 
 

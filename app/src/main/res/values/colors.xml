@@ -29,7 +29,7 @@
 
     <color name="fab_show_path">#D84315</color>
     <color name="custom_dialog_background">#F5F5F5</color>
-    <color name="custom_dialog_background_dark">#E0E0E0</color>
+    <color name="custom_dialog_background_dark">#BDBDBD</color>
 
     <color name="background_profile_card">#EEEEEE</color>
     <color name="background_profile_card_light">#F5F5f5</color>

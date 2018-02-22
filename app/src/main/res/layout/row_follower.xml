@@ -20,8 +20,8 @@
         android:layout_toRightOf="@id/profilerunner_img"
         android:drawableLeft="@drawable/ic_face_black_24dp"
         android:drawablePadding="10dp"
-        android:drawableTint="@color/custom_dialog_background_dark"
-        android:textColor="@color/colorAccent"
+        android:drawableTint="@color/colorAccentDark"
+        android:textColor="@color/custom_dialog_background_dark"
         android:textSize="15sp" />
 
 
@@ -32,7 +32,7 @@
         android:layout_below="@id/nick_tw"
         android:drawableLeft="@drawable/ic_fitness_center_black_24dp"
         android:drawablePadding="10dp"
-        android:drawableTint="@color/custom_dialog_background_dark"
+        android:drawableTint="@color/colorAccentDark"
         android:layout_toRightOf="@id/profilerunner_img"
         android:textColor="@color/custom_dialog_background_dark"
         android:textSize="15sp">
