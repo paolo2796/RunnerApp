@@ -44,9 +44,7 @@ import testapp.com.runnerapp.R;
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.adsgen_fragment, container, false);
             listview = (ListView) v.findViewById(R.id.listview);
-            Log.i("CurrentTime",String.valueOf(new Timestamp(System.currentTimeMillis()).getTime()));
             runs = new PActiveRunDaoImpl().findRunActiveByRunner(MainActivityPV.userlogged.getNickname(), "data_inizio",new Timestamp(System.currentTimeMillis()));
-            Log.i("Query size",String.valueOf(runs.size()));
             arrayadapter = new MyAdPlannedAdapter(MyAdsPlannedFragment.this.getActivity(), R.layout.row_myadsplanned, runs);
             arrayadapter.setCommunicator(MyAdsPlannedFragment.this);
             listview.setAdapter(arrayadapter);

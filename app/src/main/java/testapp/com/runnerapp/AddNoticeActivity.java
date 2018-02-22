@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,7 +29,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +47,7 @@ import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
+import it.unisa.runnerapp.utils.CheckUtils;
 
 public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -117,10 +122,19 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googlemap = googleMap;
+        try{
+            boolean success = googlemap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));;
+        }
+        catch(Resources.NotFoundException e){
+            Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
+        }
+
         if(myposition!=null) {
-            googleMap.addMarker(new MarkerOptions().title("Punto Incontro").position(myposition).draggable(true));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 13));
-            googleMap.setOnMarkerDragListener(getOnMarkerDrag());
+            Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(this,R.drawable.ic_pin_start);
+            MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title("Punto Incontro").position(myposition).draggable(true);
+            googlemap.addMarker(destinationoptionmarker);
+            googlemap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 16));
+            googlemap.setOnMarkerDragListener(getOnMarkerDrag());
 
         }
     }
