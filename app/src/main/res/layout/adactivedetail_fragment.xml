@@ -41,8 +41,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/distance_img"
+                android:layout_marginLeft="7dp"
                 android:layout_centerVertical="true"
-                android:text="Caricamento.."/>
+                android:text="Sto cercando la tua posizione..."/>
 
             <TextView
                 android:id="@+id/distance_tw"

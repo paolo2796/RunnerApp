@@ -10,17 +10,18 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginRight="15dp"
-        android:layout_marginLeft="5dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FFFFFF"/>
+        android:layout_marginLeft="5dp"/>
 
     <TextView
         android:id="@+id/nick_tw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:textColor="@android:color/white"
         android:layout_toRightOf="@id/profilerunner_img"
+        android:drawableLeft="@drawable/ic_face_black_24dp"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/custom_dialog_background_dark"
+        android:textColor="@color/colorAccent"
         android:textSize="15sp" />
 
 
@@ -29,17 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick_tw"
+        android:drawableLeft="@drawable/ic_fitness_center_black_24dp"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/custom_dialog_background_dark"
         android:layout_toRightOf="@id/profilerunner_img"
-        android:textColor="@android:color/white"
+        android:textColor="@color/custom_dialog_background_dark"
         android:textSize="15sp">
 
     </TextView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="2dp"
-        android:layout_alignParentBottom="@id/profilerunner_img"
-        android:background="@android:color/white"></LinearLayout>
 
 </RelativeLayout>

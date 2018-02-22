@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
     android:background="@drawable/oval_button"
     android:gravity="center"
     android:orientation="vertical">
@@ -20,7 +21,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/ic_checked_48dp"/>
 
 </LinearLayout>
