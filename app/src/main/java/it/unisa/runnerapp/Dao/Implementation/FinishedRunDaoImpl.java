@@ -301,33 +301,10 @@ public class FinishedRunDaoImpl implements FinishedRunDao {
                             run.setMeetingPoint(latLng);
                             run.setStartDate(rs.getTimestamp("data_inizio"));
 
-                 /*           String idmaster = rs.getString("master");
-
-                            Runner runner = new Runner();
-                            runner.setNickname(rs.getString("nickname"));
-                            runner.setPassword(rs.getString("password"));
-                            runner.setName(rs.getString("nome"));
-                            runner.setSurname(rs.getString("cognome"));
-                            runner.setBirthDate(rs.getDate("data_nascita"));
-                            runner.setWeight(rs.getDouble("peso"));
-                            runner.setLevel(rs.getShort("livello"));
-                            runner.setTraveledKilometers(rs.getDouble("km_percorsi"));
-
-
-
-                            byte[] bytes_imgprofilo = rs.getBytes("img_profilo");
-
-                            if (bytes_imgprofilo != null) {
-
-                                runner.setProfileImage(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes_imgprofilo, 0, bytes_imgprofilo.length)));
-
-                            }
-
-                            run.setRunner(runner); */
 
 
                             run.setTraveledKm(rs.getDouble("km_percorsi"));
-                            run.setBurnedCal(rs.getInt("calorie_bruciate"));
+                            run.setBurnedCal(rs.getDouble("calorie_bruciate"));
                             run.setAverageSpeed(rs.getInt("velocita_media"));
 
                             finishedruns.add(run);

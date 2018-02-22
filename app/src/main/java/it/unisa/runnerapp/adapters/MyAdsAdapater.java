@@ -157,7 +157,7 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
                 int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
-                timertw.setText("Tempo Scaduto!");
+                timertw.setText(R.string.timer_delay);
                 deleterunbtn.setVisibility(View.GONE);
                 editrunbtn.setVisibility(View.GONE);
                 delayparticipation.setVisibility(View.VISIBLE);

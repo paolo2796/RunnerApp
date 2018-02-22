@@ -199,7 +199,7 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
                 int hours = (int) ((timeDiff / (1000 * 60 * 60)));
                 timertw.setText(CheckUtils.parseHourOrMinutes(hours) + ":" + CheckUtils.parseHourOrMinutes(minutes) + ":" + CheckUtils.parseHourOrMinutes(seconds));
             } else {
-                timertw.setText("Tempo Scaduto!");
+                timertw.setText(R.string.timer_delay);
                 participationbtn.setVisibility(View.GONE);
                 delayparticipation.setVisibility(View.VISIBLE);
             }
