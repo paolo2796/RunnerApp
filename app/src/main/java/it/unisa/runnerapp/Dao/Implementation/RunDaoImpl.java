@@ -83,7 +83,7 @@ public class RunDaoImpl implements RunDao {
                 @Override
                 protected Void doInBackground( final Void ... params ) {
                     PreparedStatement ps = null;
-                    String sql = "UPDATE Corse SET Corse.punto_ritrovo_lat = ?, Corse.punto_ritrovo_lng= ? , Corse.data_inizio= ?";
+                    String sql = "UPDATE Corse SET Corse.punto_ritrovo_lat = ?, Corse.punto_ritrovo_lng= ? , Corse.data_inizio= ? WHERE Corse.id=?";
 
                     try {
 
@@ -91,6 +91,7 @@ public class RunDaoImpl implements RunDao {
                         ps.setDouble(1, run.getMeetingPoint().latitude);
                         ps.setDouble(2,run.getMeetingPoint().longitude);
                         ps.setTimestamp(3,new Timestamp(run.getStartDate().getTime()));
+                        ps.setInt(4,run.getId());
                         int result = ps.executeUpdate();
 
                     }

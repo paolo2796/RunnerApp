@@ -161,4 +161,10 @@ public class CheckUtils
         return levelnum;
 
     }
+
+    public static double convertMetersToKm(double meters){
+
+        return  meters /1000;
+
+    }
 }
