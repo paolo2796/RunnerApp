@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:androdi="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+
+
+
+        <TextView
+            android:id="@+id/loading_adsactive_tw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/foreground_sliding_panel"
+            android:text="12 Km"
+            android:textSize="40sp"
+            android:layout_centerHorizontal="true"/>
+
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading_adsactive"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            app:indicatorName="BallScaleMultipleIndicator"
+            app:indicatorColor="@color/colorAccentDark" />
+
+
+
+    <Button
+        android:id="@+id/addrun_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/oval_shape"
+        android:text="+"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp"/>
+
+    <include layout="@layout/adsgen_fragment"></include>
+
+
+
+
+</RelativeLayout>

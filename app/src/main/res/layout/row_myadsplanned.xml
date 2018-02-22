@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="3dp">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/row_adsuper"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryLight"
+            android:layout_marginTop="5dp"
+            android:text="@string/adactive_cancel"
+            android:textColor="@android:color/white"
+            android:onClick="cancelParticipation"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/startlive_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/btn_startlive"
+            android:layout_marginTop="5dp"
+            android:text="@string/adsactive_startlive"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+</android.support.v7.widget.CardView>
+
+
+
+

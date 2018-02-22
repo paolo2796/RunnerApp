@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#78909C</color>
+    <color name="colorPrimaryDark">#4b636e</color>
+    <color name="colorPrimaryLight">#a7c0cd</color>
+    <color name="colorAccent">#d50000</color>
+    <color name="colorAccentLight">#ff5131</color>
+    <color name="colorAccentDark">#9b0000</color>
+
+    <color name="infowindow_custom_cloud_background">#EEEEEE</color>
+    <color name="infowindow_icons">#D84315</color>
+
+    <color name="accept_request">#F9A825</color>
+    <color name="refuse_request">#AD1457</color>
+    <color name="navigation_button">#D84315</color>
+
+    <color name="background_list">#EEEEEE</color>
+    <color name="delay_participation">#E10000</color>
+    <color name="tempv_celestial">#1976D2</color>
+    <color name="text_inforun">#dedede</color>
+    <color name="icon_inforun">#AFB42B</color>
+    <color name="btn_inforun">#9E9D24</color>
+    <color name="btn_startlive">#AFB42B</color>
+    <color name="cancel_run">#00796B</color>
+
+    <color name="foreground_sliding_panel">#EEEEEE</color>
+    <color name="background_sliding_panel">#212121</color>
+    <color name="icon_sliding_panel">#EEEEEE</color>
+
+    <color name="fab_show_path">#D84315</color>
+    <color name="custom_dialog_background">#F5F5F5</color>
+    <color name="custom_dialog_background_dark">#BDBDBD</color>
+
+    <color name="background_profile_card">#EEEEEE</color>
+    <color name="background_profile_card_light">#F5F5f5</color>
+
+    <color name="gradient_start">#d50000</color>
+    <color name="gradient_end">#9b0000</color>
 </resources>

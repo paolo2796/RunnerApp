@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="25sp"
+        android:textColor="@color/colorAccentDark"
+        android:text="Run, meet, enjoy!"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading_myposition"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:visibility="gone"
+            app:indicatorName="BallPulseIndicator"
+            app:indicatorColor="@color/colorAccentDark" />
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:text="Seleziona il punto di ritrovo"
+            android:drawableLeft="@drawable/ic_add_location_black_24dp"
+            android:drawableTint="@color/colorPrimaryDark"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:id="@+id/pointmeeting_tw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:text="Trascina il marker per muoverlo."
+            android:drawableLeft="@drawable/ic_touch_app_black_24dp"
+            android:drawableTint="@color/colorPrimaryDark"
+            android:drawablePadding="5dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_weight="1">
+
+
+            <LinearLayout
+                android:id="@+id/inforun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/date_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingLeft="10dp"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColor="@color/colorAccentLight"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:hint="In quale giorno vuoi correre?"
+                    android:onClick="onDateClicked"/>
+
+
+                <Button
+                    android:id="@+id/time_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColor="@color/colorAccentLight"
+                    android:hint="E in quale ora?"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:onClick="onTimeClicked">
+                </Button>
+
+
+
+                <EditText
+                    android:id="@+id/kmestimated_et"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColor="@color/colorAccentLight"
+                    android:hint="Quanti km vuoi fare?"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:inputType="numberDecimal">
+                </EditText>
+
+
+                <Button
+                    android:id="@+id/estimatedtime_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColor="@color/colorAccentLight"
+                    android:hint="Ed in quanto tempo?"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:onClick="onTimeEstimatedClicked">
+                </Button>
+
+
+
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:minHeight="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorAccentDark" >
+
+                    <Button
+                        android:id="@+id/addrun_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:drawableLeft="@drawable/ic_runer_30dp"
+                        android:gravity="center"
+                        android:hint="Aggiungi"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@android:color/white"
+                        android:textColorHint="@android:color/white"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:onClick="onClickAddRun"/>
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+
+</LinearLayout>

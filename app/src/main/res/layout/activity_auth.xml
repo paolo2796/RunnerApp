@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/authrl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background_login">
+    
+    <TextView
+        android:id="@+id/welcome_tw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="Benvenuto"
+        android:textColor="@android:color/white"
+        android:textSize="50sp"
+        android:layout_centerHorizontal="true">
+    </TextView>
+
+    <TextView
+        android:id="@+id/subtitle_tw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_tw"
+        android:gravity="center_horizontal"
+        android:text="Supera i tuoi limiti e conosci nuova gente"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:alpha=".7"
+        android:layout_centerHorizontal="true">
+    </TextView>
+
+
+
+    <FrameLayout
+        android:id="@+id/containerfragment_frame"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/subtitle_tw"></FrameLayout>
+
+
+
+</RelativeLayout>

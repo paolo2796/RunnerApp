@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:text="Modifica Annuncio"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/colorAccentDark"/>
+
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+
+    <TextView
+        android:id="@+id/pointmeeting_tw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trascina il marker per modificare il punto di incontro." />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:scrollbars="vertical"
+        android:layout_weight="1">
+
+
+        <LinearLayout
+            android:id="@+id/inforun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
+                    android:shrinkColumns="*">
+
+                    <TableRow
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/datestart_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="17sp"
+                            android:drawableLeft="@drawable/ic_datestart_24dp"
+                            android:drawablePadding="5dp"
+                            android:drawableTint="@color/colorAccentLight"
+                            android:gravity="center_vertical"
+                            android:text="data" />
+
+                        <TextView
+                            android:id="@+id/starthour_tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="17sp"
+                            android:drawableLeft="@drawable/ic_estimated_time_24dp"
+                            android:drawablePadding="5dp"
+                            android:drawableTint="@color/colorAccentLight"
+                            android:text="20:30"/>
+                    </TableRow>
+
+                </TableLayout>
+
+
+            <EditText
+                android:id="@+id/kmestimated_et"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"
+                android:textColor="@color/colorAccentLight"
+                android:hint="Quanti km vuoi fare?"
+                android:textSize="15sp"
+                android:textAlignment="center"
+                android:inputType="numberDecimal">
+            </EditText>
+
+
+            <Button
+                android:id="@+id/estimatedtime_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"
+                android:hint="Ed in quanto tempo?"
+                android:textSize="15sp"
+                android:textAlignment="center"
+                android:onClick="onTimeEstimatedClicked">
+            </Button>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccentDark" >
+
+
+                <Button
+                    android:id="@+id/editrun_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/ic_edit_black_24dp"
+                    android:gravity="center"
+                    android:hint="Modifica"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:onClick="onClickEditRun"/>
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>

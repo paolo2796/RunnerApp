@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/participate_tab"
+        icon="@drawable/ic_radio_button_checked_black_24dp"
+        activeColor="@color/colorAccent"/>
+    <tab
+        id="@+id/myads_tab"
+        icon="@drawable/ic_favorite_black_24dp"
+        activeColor="@color/colorAccent"
+        />
+
+    <tab
+        id="@+id/myplanned_tab"
+        icon="@drawable/ic_planning_24dp"
+        activeColor="@color/colorAccent" />
+
+
+    <tab
+        id="@+id/myadsfinished_tab"
+        icon="@drawable/ic_check_circle_black_24dp"
+        activeColor="@color/colorAccent"/>
+
+    <tab
+        id="@+id/myprofile"
+        icon="@drawable/ic_account_circle_black_24dp"
+        activeColor="@color/colorAccent"/>
+</tabs>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userImg"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignBottom="@id/userInfoPanel"
+        android:layout_alignTop="@id/userInfoPanel"
+        android:foregroundGravity="center"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="7dp"/>
+
+    <RelativeLayout
+        android:id="@+id/userInfoPanel"
+        android:layout_toRightOf="@id/userImg"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/names"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            tools:text="Mauro Vitale,Mavit"/>
+        <TextView
+            android:id="@+id/personalInfo"
+            android:layout_below="@id/names"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:layout_marginLeft="5dp"
+            tools:text="23 anni, Livello Master"/>
+    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/pathButton"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/userInfoPanel"
+        android:layout_alignTop="@id/userInfoPanel"
+        android:layout_alignParentRight="true"
+        android:foregroundGravity="center"
+        android:background="@color/navigation_button"
+        android:tint="@color/background_list"
+        android:src="@drawable/ic_navigation_black_24dp"/>
+</RelativeLayout>

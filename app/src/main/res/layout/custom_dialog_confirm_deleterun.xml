@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/oval_button"
+    android:padding="10dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/successtw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_my_ads"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:textColor="@android:color/darker_gray"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/successtw"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/yes_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="@color/cancel_run"
+            android:text="Cancella"/>
+
+        <Button
+            android:id="@+id/no_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/yes_btn"
+            android:textColor="@color/colorAccentDark"
+            android:text="Annulla"
+            android:background="@null" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

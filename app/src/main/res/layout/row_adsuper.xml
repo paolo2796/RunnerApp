@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/boxsxinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/boxinside_datestart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/icondatestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_datestart_24dp"
+                    android:tint="@color/icon_inforun"/>
+
+                <TextView
+                    android:id="@+id/datestart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="20:30"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/boxinside_starthour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconstart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_timer_30dp"
+                    android:tint="@color/icon_inforun"/>
+
+                <TextView
+                    android:id="@+id/starthour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="20:30"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/boxinside_estimatedkm"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconestimatedkm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_directions_run_24dp"
+                    android:tint="@color/icon_inforun" />
+
+                <TextView
+                    android:id="@+id/estimatedkm_tw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/iconestimatedkm"
+                    android:textSize="20sp"
+                    android:text="10.50"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/boxinside_estimatedtime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+
+                <ImageView
+                    android:id="@+id/iconestimatedtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_estimated_time_24dp"
+                    android:tint="@color/icon_inforun"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+                <TextView
+                    android:id="@+id/estimatedtime_tw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iconestimatedtime"
+                    android:layout_centerVertical="true"
+                    android:textSize="20sp"
+                    android:text="10.50"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+            </LinearLayout>
+
+        </LinearLayout> <!-- end boxinside sx -->
+
+
+        <RelativeLayout
+            android:id="@+id/boxdxinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/boxsxinfo"
+            android:layout_alignBottom="@id/boxsxinfo"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:padding="7dp"
+                android:textSize="50sp"
+                android:textColor="@color/text_inforun"
+                android:text="00:00:00"
+                />
+
+
+           <LinearLayout
+               android:id="@+id/waypointinfo"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:layout_alignParentRight="true"
+               android:layout_alignParentBottom="true"
+               android:gravity="center_vertical"
+               android:layout_below="@id/timer">
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textColor="@color/btn_inforun"
+                   android:text="Raggiungi punto incontro"/>
+
+               <ImageButton
+                   android:id="@+id/gowaypoint_btn"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+                   android:background="@android:color/transparent"
+                   android:tint="@color/btn_inforun"/>
+
+           </LinearLayout>
+
+        </RelativeLayout><!-- end box dx info -->
+
+</RelativeLayout>
+
+
