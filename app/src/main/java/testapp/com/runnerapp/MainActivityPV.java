@@ -111,7 +111,7 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
             Log.i("Firebase",databaseruns.toString());
         }
     }
-    
+
     public OnTabSelectListener getTabSelectListener() {
 
        return new OnTabSelectListener() {

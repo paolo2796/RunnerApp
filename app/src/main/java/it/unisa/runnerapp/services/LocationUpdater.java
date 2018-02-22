@@ -25,6 +25,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
 import it.unisa.runnerapp.fragments.MapFragment;
+import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
 
@@ -43,8 +44,6 @@ public class LocationUpdater extends Service
     public static final String USER_ID_KEY="UserKey";
     public static final String TIME_INTERVAL_KEY="TimeInterval";
     public static final String DISTANCE_INTERVAL_KEY="DistanceInterval";
-    //Nome SharedPreferences condiviso
-    public static final String RESULT_FILENAME="user_location";
 
     private static final int TIME_INTERVAL_DEFAULT=100;
     private static final int DISTANCE_INTERVAL_DEFAULT=1;
@@ -82,8 +81,13 @@ public class LocationUpdater extends Service
     public void onCreate()
     {
         FirebaseApp.initializeApp(this);
-        FirebaseDatabase fd=FirebaseDatabase.getInstance();
-        DatabaseReference dr=fd.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
+        FirebaseApp locationsApp=FirebaseUtils.getFirebaseApp(getApplicationContext(),
+                RunnersDatabases.USER_LOCATIONS_APP_ID,
+                RunnersDatabases.USER_LOCATIONS_API_KEY,
+                RunnersDatabases.USER_LOCATIONS_DB_URL,
+                RunnersDatabases.USER_LOCATIONS_DB_NAME);
+        FirebaseDatabase locationDatabase=FirebaseUtils.connectToDatabase(locationsApp);
+        DatabaseReference dr=locationDatabase.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
         gFire=new GeoFire(dr);
     }
 
