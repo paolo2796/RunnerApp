@@ -65,7 +65,6 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             starthour.setText(CheckUtils.convertHMToStringFormat(runcurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(runcurrent.getStartDate()));
             DecimalFormat formatter=new DecimalFormat("##.##");
-            Log.i("decimal formatter",formatter.format(runcurrent.getBurnedCal()));
             burnedkl.setText(formatter.format(runcurrent.getBurnedCal()));
             double mtokm = CheckUtils.convertMetersToKm(runcurrent.getTraveledKm());
             traveledkm.setText(formatter.format(mtokm));

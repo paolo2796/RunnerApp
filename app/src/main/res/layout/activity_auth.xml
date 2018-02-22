@@ -18,6 +18,7 @@
     </TextView>
 
     <TextView
+        android:id="@+id/subtitle_tw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_tw"
@@ -36,7 +37,8 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/welcome_tw"></FrameLayout>
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/subtitle_tw"></FrameLayout>
 
 
 
