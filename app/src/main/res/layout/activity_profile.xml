@@ -18,7 +18,7 @@
             android:layout_height="150dp"
             app:civ_border_width="4dp"
             android:src="@color/colorPrimary"
-            app:civ_border_color="@android:color/white"/>
+            app:civ_border_color="#F5F5F5"/>
 
 
         <RelativeLayout
@@ -58,6 +58,7 @@
         android:layout_width="350dp"
         android:layout_height="150dp"
         android:layout_margin="6dp"
+        card_view:cardBackgroundColor="@color/background_profile_card"
         card_view:cardUseCompatPadding="true"
         card_view:cardElevation="5dp"
         card_view:cardCornerRadius="3dp"
@@ -67,8 +68,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="40dp">
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Nickname"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorAccent"/>
 
 
                 <TextView
@@ -92,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Livello"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorAccent"/>
 
 
 
@@ -102,8 +105,8 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KM Percorsi"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="Distanza Percorsa"
+                    android:textColor="@color/colorAccent"/>
 
 
 
@@ -118,23 +121,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Nickname"
-                    android:textColor="@color/btn_inforun" />
+                    android:text="Nickname" />
 
                 <TextView
                     android:id="@+id/level_tw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Livello"
-                    android:textColor="@color/btn_inforun" />
+                    android:text="Livello" />
 
                 <TextView
                     android:id="@+id/travelledkm_tw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KM Percorsi"
-                    android:textColor="@color/btn_inforun" />
+                    android:text="Distanza Percorsa"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -145,20 +145,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/profileblue"
-        android:background="#f1f1f1">
+        android:background="@color/background_profile_card_light">
 
-        <Button
+        <ImageButton
             android:id="@+id/logout_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/oval_shape"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_power_settings_new_black_24dp"
+            android:tint="@android:color/white"
+            android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Logout"
-            android:textColor="@color/colorAccentDark"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:textColor="@color/background_profile_card_light"
+            android:textSize="18sp"
             android:onClick="onClickAddRun"/>
 
     </RelativeLayout>

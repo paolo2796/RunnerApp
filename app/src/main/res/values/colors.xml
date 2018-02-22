@@ -10,13 +10,13 @@
     <color name="infowindow_custom_cloud_background">#EEEEEE</color>
     <color name="infowindow_icons">#D84315</color>
 
-    <color name="accept_request">#00838F</color>
-    <color name="refuse_request">#C2185B</color>
-    <color name="navigation_button">#FFA000</color>
+    <color name="accept_request">#F9A825</color>
+    <color name="refuse_request">#AD1457</color>
+    <color name="navigation_button">#D84315</color>
 
     <color name="background_list">#EEEEEE</color>
     <color name="delay_participation">#E10000</color>
-    <color name="tempv_celestial">#1bb4c6</color>
+    <color name="tempv_celestial">#1565C0</color>
     <color name="text_inforun">#dedede</color>
     <color name="icon_inforun">#AFB42B</color>
     <color name="btn_inforun">#9E9D24</color>
@@ -27,4 +27,9 @@
     <color name="icon_sliding_panel">#EEEEEE</color>
 
     <color name="fab_show_path">#D84315</color>
+    <color name="custom_dialog_background">#F5F5F5</color>
+    <color name="custom_dialog_background_dark">#EEEEEE</color>
+
+    <color name="background_profile_card">#EEEEEE</color>
+    <color name="background_profile_card_light">#F5F5f5</color>
 </resources>

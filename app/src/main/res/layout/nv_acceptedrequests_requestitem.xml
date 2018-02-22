@@ -42,7 +42,7 @@
     </RelativeLayout>
     <ImageButton
         android:id="@+id/pathButton"
-        android:layout_width="48dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/userInfoPanel"
         android:layout_alignTop="@id/userInfoPanel"

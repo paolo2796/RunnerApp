@@ -12,18 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Annuncio inserito con successo!"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"/>
+        android:text="@string/successful_ads_adding"
+        android:textSize="23sp"
+        android:textColor="@android:color/darker_gray"/>
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_checked_48dp"
-        android:background="@android:color/white"/>
-
-
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_checked_48dp"/>
 
 </LinearLayout>
