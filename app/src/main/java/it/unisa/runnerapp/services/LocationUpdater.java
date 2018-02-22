@@ -28,6 +28,7 @@ import it.unisa.runnerapp.fragments.MapFragment;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
+import it.unisa.runnerapp.utils.ServiceBuffer;
 
 public class LocationUpdater extends Service
 {
@@ -81,12 +82,7 @@ public class LocationUpdater extends Service
     public void onCreate()
     {
         FirebaseApp.initializeApp(this);
-        FirebaseApp locationsApp=FirebaseUtils.getFirebaseApp(getApplicationContext(),
-                RunnersDatabases.USER_LOCATIONS_APP_ID,
-                RunnersDatabases.USER_LOCATIONS_API_KEY,
-                RunnersDatabases.USER_LOCATIONS_DB_URL,
-                RunnersDatabases.USER_LOCATIONS_DB_NAME);
-        FirebaseDatabase locationDatabase=FirebaseUtils.connectToDatabase(locationsApp);
+        FirebaseDatabase locationDatabase = ServiceBuffer.locationsDb;
         DatabaseReference dr=locationDatabase.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
         gFire=new GeoFire(dr);
     }
