@@ -27,4 +27,5 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="successful_ads_adding">Hai pubblicato il tuo annuncio!</string>
+    <string name="delete_my_ads">Vuoi davvero cancellare questo annuncio?</string>
 </resources>

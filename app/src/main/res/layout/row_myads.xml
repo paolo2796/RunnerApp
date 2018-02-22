@@ -32,7 +32,7 @@
                 android:text="@string/myads_removerun"
                 android:onClick="deleterRun"
                 android:visibility="visible"
-                android:textColor="#FFFFFF" />
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/editrun_btn"
