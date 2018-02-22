@@ -22,10 +22,6 @@
 
 
 
-
-
-
-
     <FrameLayout
         android:id="@+id/containerfragment_frame"
         android:layout_weight="1"

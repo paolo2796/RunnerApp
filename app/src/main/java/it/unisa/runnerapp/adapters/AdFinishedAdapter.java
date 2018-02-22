@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,7 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             TextView starthour = (TextView) v.findViewById(R.id.starthour);
             TextView datestart = (TextView) v.findViewById(R.id.datestart);
             TextView burnedkl = (TextView) v.findViewById(R.id.burnedkal);
-            TextView traveledkm = (TextView) v.findViewById(R.id.traveledkm);
+            TextView traveledkm = (TextView) v.findViewById(R.id.travelledkm_tw);
             Button detailrunbtn = (Button) v.findViewById(R.id.detailrun_btnfinished);
 
 
@@ -65,6 +66,7 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             starthour.setText(CheckUtils.convertHMToStringFormat(runcurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(runcurrent.getStartDate()));
             DecimalFormat formatter=new DecimalFormat("##.##");
+            Log.i("decimal formatter",formatter.format(runcurrent.getBurnedCal()));
             burnedkl.setText(formatter.format(runcurrent.getBurnedCal()));
             traveledkm.setText(formatter.format(runcurrent.getTraveledKm()));
             detailrunbtn.setTag(position);
