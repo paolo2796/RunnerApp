@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
@@ -132,20 +133,39 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         lManager = GeoUtils.getLocationManager(ctx);
         lProvider = GeoUtils.getBestProvider(lManager);
 
-        //Connessione al db firebase per le posizioni
-        FirebaseApp locationsApp=FirebaseUtils.getFirebaseApp(getContext(),
-                RunnersDatabases.USER_LOCATIONS_APP_ID,
-                RunnersDatabases.USER_LOCATIONS_API_KEY,
-                RunnersDatabases.USER_LOCATIONS_DB_URL,
-                RunnersDatabases.USER_LOCATIONS_DB_NAME);
+        List<FirebaseApp> apps=FirebaseApp.getApps(ctx);
+        int cont = 0;
+        for(int i=0;i<apps.size();i++)
+        {
+            FirebaseApp app=apps.get(i);
+            if(app.getName().equals(RunnersDatabases.USER_LOCATIONS_DB_NAME)||app.getName().equals(RunnersDatabases.LIVE_REQUEST_DB_NAME))
+                cont++;
+        }
+        FirebaseApp locationsApp;
+        FirebaseApp liveRequestsApp;
+        if(cont==2)
+        {
+            locationsApp=FirebaseApp.getInstance(RunnersDatabases.USER_LOCATIONS_DB_NAME);
+            liveRequestsApp=FirebaseApp.getInstance(RunnersDatabases.LIVE_REQUEST_DB_NAME);
+        }
+        else
+        {
+            //Connessione al db firebase per le posizioni
+            locationsApp=FirebaseUtils.getFirebaseApp(getContext(),
+                    RunnersDatabases.USER_LOCATIONS_APP_ID,
+                    RunnersDatabases.USER_LOCATIONS_API_KEY,
+                    RunnersDatabases.USER_LOCATIONS_DB_URL,
+                    RunnersDatabases.USER_LOCATIONS_DB_NAME);
+            //Connessione al db per le richieste in live
+            liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
+                    RunnersDatabases.LIVE_REQUEST_APP_ID,
+                    RunnersDatabases.LIVE_REQUEST_API_KEY,
+                    RunnersDatabases.LIVE_REQUEST_DB_URL,
+                    RunnersDatabases.LIVE_REQUEST_DB_NAME);
+            //Connessione al db Firebase per le richieste in live
+        }
+
         locationsDB=FirebaseUtils.connectToDatabase(locationsApp);
-        //Connessione al db per le richieste in live
-        FirebaseApp liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
-                RunnersDatabases.LIVE_REQUEST_APP_ID,
-                RunnersDatabases.LIVE_REQUEST_API_KEY,
-                RunnersDatabases.LIVE_REQUEST_DB_URL,
-                RunnersDatabases.LIVE_REQUEST_DB_NAME);
-        //Connessione al db Firebase per le richieste in live
         liveRequestsDB=FirebaseUtils.connectToDatabase(liveRequestsApp);
 
         //Inizializzazione Adapter Richieste in Arrivo
@@ -366,7 +386,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 {
                     Marker marker=gMap.addMarker(new MarkerOptions()
                             .position(new LatLng(location.latitude,location.longitude))
-                            .icon(BitmapDescriptorFactory.fromBitmap(CheckUtils.getBitmapFromVectorDrawable(getContext(),getRandomIcon()))));
+                            .icon(BitmapDescriptorFactory.fromBitmap(CheckUtils.getBitmapFromVectorDrawable(ctx,getRandomIcon()))));
                     marker.setTag(key);
                     nearbyRunners.put(key,marker);
                 }
