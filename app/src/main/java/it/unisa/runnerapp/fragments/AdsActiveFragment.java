@@ -68,8 +68,8 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
     private GeoQueryDataEventListener geoquerydataeventlistener;
 
 
-    private static int MINTIME = 10000;
-    private static int MINDISTANCE = 100;
+    private static int MINTIME = 1000;
+    private static int MINDISTANCE = 5;
     private static String MESSAGE_LOG = "Messaggio AdsActiveF";
 
 
@@ -115,15 +115,26 @@ public class AdsActiveFragment extends Fragment implements AdActiveAdapter.Commu
         addnoticebtn.setOnClickListener(getOnClickAddNoticeListener());
 
 
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+
         //start loading
         loadingadsactive.show();
-
 
 
         locationmanager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         geofire = new GeoFire(MainActivityPV.databaseruns);
         mylocationlistener = getMyLocationListener();
         geoquerydataeventlistener = getGeoQueryDataEventListener();
+
+        myposition = locationmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(myposition!=null) {
+            geoquery = geofire.queryAtLocation(new GeoLocation(myposition.getLatitude(), myposition.getLongitude()), 12);
+            geoquery.addGeoQueryDataEventListener(geoquerydataeventlistener);
+            loadingadsactive.hide();
+            loading_adsactivetw.setVisibility(View.GONE);
+        }
+
 
         return v;
     }

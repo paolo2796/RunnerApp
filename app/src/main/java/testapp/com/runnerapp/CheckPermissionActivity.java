@@ -3,28 +3,12 @@ package testapp.com.runnerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import javax.security.auth.login.LoginException;
-
-import it.unisa.runnerapp.utils.ConnectionUtil;
-import it.unisa.runnerapp.utils.FirebaseUtils;
-import it.unisa.runnerapp.utils.RunnersDatabases;
 
 /**
  * Created by Paolo on 10/02/2018.
