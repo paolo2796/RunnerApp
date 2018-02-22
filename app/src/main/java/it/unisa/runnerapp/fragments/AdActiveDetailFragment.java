@@ -144,12 +144,13 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
 
         }
         Location location = locationmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
-        sendRequest(origin);
-        loadingdirection.hide();
-        mapview.setVisibility(View.VISIBLE);
-
-
+        if(location!=null)
+        {
+            LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
+            sendRequest(origin);
+            loadingdirection.hide();
+            mapview.setVisibility(View.VISIBLE);
+        }
 
         return v;
     }

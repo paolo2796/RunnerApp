@@ -165,7 +165,6 @@ public class LiveRunActivity extends CheckPermissionActivity
             @Override
             public void onClick(View view)
             {
-                Log.i("MAMMT","Cliccato");
                 //Viene stoppato l'avvio del service
                 mapFragment.stopBackgroundUpdates();
                 //Viene cancellata la posizione live del runner dal db
