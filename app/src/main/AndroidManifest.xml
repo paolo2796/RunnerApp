@@ -22,8 +22,8 @@
 
         <activity
             android:name=".LiveRunActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".AdActiveDetailActivity"
             android:screenOrientation="portrait"
             />

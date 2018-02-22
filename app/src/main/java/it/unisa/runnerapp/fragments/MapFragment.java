@@ -62,7 +62,6 @@ import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.NotificationUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
-import it.unisa.runnerapp.utils.ServiceBuffer;
 import testapp.com.runnerapp.LiveRunActivity;
 import testapp.com.runnerapp.R;
 
@@ -86,7 +85,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private LiveRequestsAdapter     inboxRequestsAdapter;
     private AcceptedRequestsAdapter acceptedRequestsAdapter;
 
-    private FirebaseDatabase  locationsDB;
+    private FirebaseDatabase locationsDB;
     private FirebaseDatabase  liveRequestsDB;
     private DatabaseReference userLocationReference;
 
@@ -140,8 +139,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 RunnersDatabases.USER_LOCATIONS_DB_URL,
                 RunnersDatabases.USER_LOCATIONS_DB_NAME);
         locationsDB=FirebaseUtils.connectToDatabase(locationsApp);
-        //Inserimento riferimento per permettere connessione al service
-        ServiceBuffer.locationsDb=locationsDB;
         //Connessione al db per le richieste in live
         FirebaseApp liveRequestsApp=FirebaseUtils.getFirebaseApp(getContext(),
                 RunnersDatabases.LIVE_REQUEST_APP_ID,
@@ -708,7 +705,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     public FirebaseDatabase getLocationDatabase()
     {
-        return locationsDB;
+            return locationsDB;
     }
 
     public FirebaseDatabase getLiveRequestsDatabase()
