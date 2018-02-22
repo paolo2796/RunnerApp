@@ -130,6 +130,7 @@
                     android:drawablePadding="10dp"
                     android:drawableTint="@android:color/white"
                     android:textColorHint="@android:color/white"
+                    android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:onClick="onClickEditRun"/>
 
@@ -137,8 +138,6 @@
 
 
         </LinearLayout>
-
-
 
 
     </ScrollView>
