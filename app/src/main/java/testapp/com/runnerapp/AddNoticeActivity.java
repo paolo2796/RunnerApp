@@ -5,24 +5,21 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -32,31 +29,25 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import it.unisa.runnerapp.Dao.Implementation.ActiveRunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.PActiveRunDaoImpl;
-import it.unisa.runnerapp.Dao.Implementation.RunDaoImpl;
 import it.unisa.runnerapp.Dao.Implementation.RunnerDaoImpl;
 import it.unisa.runnerapp.beans.ActiveRun;
 import it.unisa.runnerapp.beans.Run;
 import it.unisa.runnerapp.beans.Runner;
-import it.unisa.runnerapp.customwidgets.CustomMap;
-import it.unisa.runnerapp.fragments.MyAdsFragment;
+import it.unisa.runnerapp.utils.CheckUtils;
 
 public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -126,21 +117,24 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
 
 
         }
-
-
-
-
-
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googlemap = googleMap;
+        try{
+            boolean success = googlemap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));;
+        }
+        catch(Resources.NotFoundException e){
+            Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
+        }
+
         if(myposition!=null) {
-            googleMap.addMarker(new MarkerOptions().title("Punto Incontro").position(myposition).draggable(true));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 13));
-            googleMap.setOnMarkerDragListener(getOnMarkerDrag());
+            Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(this,R.drawable.ic_pin_start);
+            MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title("Punto Incontro").position(myposition).draggable(true);
+            googlemap.addMarker(destinationoptionmarker);
+            googlemap.moveCamera(CameraUpdateFactory.newLatLngZoom(myposition, 16));
+            googlemap.setOnMarkerDragListener(getOnMarkerDrag());
 
         }
     }
@@ -151,27 +145,20 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
         if(checkField()){
             addrun.setText("Attendi...");
             addrun.setEnabled(false);
-            java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
-            Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
-
-
-            double estimatedkm = Double.parseDouble(estimatedkmet.getEditableText().toString());
-            int hourcale = estimatedtim.get(Calendar.HOUR_OF_DAY);
-            int mincale = estimatedtim.get(Calendar.MINUTE);
-            ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,hourcale,mincale);
-
-
-            new ActiveRunDaoImpl().createActiveRun(activeRun);
-            new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
-
-            this.saveRunFirebase((Run) activeRun);
-
-            Dialog dialog = new Dialog(this);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.custom_dialog_successfully);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            dialog.show();
-
+                java.util.Date date = new java.util.Date(mdateandtime.getTimeInMillis());
+                Runner runner = new RunnerDaoImpl().getByNick(MainActivityPV.userlogged.getNickname());
+                double estimatedkm = Double.parseDouble(estimatedkmet.getEditableText().toString());
+                int hourcale = estimatedtim.get(Calendar.HOUR_OF_DAY);
+                int mincale = estimatedtim.get(Calendar.MINUTE);
+                ActiveRun activeRun = new ActiveRun(waypoint,date,runner,estimatedkm,hourcale,mincale);
+                new ActiveRunDaoImpl().createActiveRun(activeRun);
+                new PActiveRunDaoImpl().createParticipationRun(activeRun.getId(),runner.getNickname());
+                this.saveRunFirebase((Run) activeRun);
+                Dialog dialog = new Dialog(this);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.custom_dialog_successfully);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.show();
             addrun.setText("Aggiungi");
             addrun.setEnabled(true);
 
@@ -202,7 +189,6 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
                 mdateandtime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 mdateandtime.set(Calendar.MINUTE, minute);
                 updateDateAndTimeDisplay();
-                //Toast.makeText(AddNoticeActivity.this,"HO SETTATO L'ORA",Toast.LENGTH_LONG).show();
             }
         };
 
@@ -248,7 +234,7 @@ public class AddNoticeActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void updateEstimatedTimeDisplay(){
-        estimatedtimebtn.setText(DateUtils.formatDateTime(this,estimatedtim.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME));
+        estimatedtimebtn.setText(estimatedtim.get(Calendar.HOUR_OF_DAY) + " h " + estimatedtim.get(Calendar.MINUTE)  + " m");
     }
 
 

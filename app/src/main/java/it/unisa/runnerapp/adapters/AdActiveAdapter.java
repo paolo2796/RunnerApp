@@ -181,8 +181,8 @@ public class AdActiveAdapter extends ArrayAdapter<ActiveRun> {
             starthour.setText(CheckUtils.convertHMToStringFormat(item.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(item.getStartDate()));
             pointmeeting = activerun.getMeetingPoint();
-            estimatedtimetw.setText(String.valueOf(item.getEstimatedHours() + " h " + item.getEstimatedMinutes() + "m"));
-            estimatedkmtw.setText(String.valueOf(item.getEstimatedKm()));
+            estimatedtimetw.setText(String.valueOf(item.getEstimatedHours() + " h " + item.getEstimatedMinutes() + " m"));
+            estimatedkmtw.setText(String.valueOf(item.getEstimatedKm()) + " km");
             pointmeetingimg.setOnClickListener(getClicklPointMeetingListener());
             Animation animation = AnimationUtils.loadAnimation(AdActiveAdapter.this.getContext(),R.anim.scaling);
             pointmeetingimg.startAnimation(animation);

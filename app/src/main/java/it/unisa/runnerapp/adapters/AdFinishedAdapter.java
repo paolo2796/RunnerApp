@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import it.unisa.runnerapp.beans.ActiveRun;
@@ -59,10 +60,13 @@ public class AdFinishedAdapter extends ArrayAdapter<FinishedRun> {
             TextView traveledkm = (TextView) v.findViewById(R.id.traveledkm);
             Button detailrunbtn = (Button) v.findViewById(R.id.detailrun_btnfinished);
 
+
+            //Set values
             starthour.setText(CheckUtils.convertHMToStringFormat(runcurrent.getStartDate()));
             datestart.setText(CheckUtils.convertDateToStringFormat(runcurrent.getStartDate()));
-            burnedkl.setText(String.valueOf(runcurrent.getBurnedCal()));
-            traveledkm.setText(String.valueOf(runcurrent.getTraveledKm()));
+            DecimalFormat formatter=new DecimalFormat("##.##");
+            burnedkl.setText(formatter.format(runcurrent.getBurnedCal()));
+            traveledkm.setText(formatter.format(runcurrent.getTraveledKm()));
             detailrunbtn.setTag(position);
 
             //Set Listeners
