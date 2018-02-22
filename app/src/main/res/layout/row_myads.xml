@@ -52,6 +52,7 @@
                 android:layout_weight="0"
                 android:background="@color/delay_participation"
                 android:text="@string/adactive_start"
+                android:textColor="@android:color/white"
                 android:visibility="gone" />
 
 

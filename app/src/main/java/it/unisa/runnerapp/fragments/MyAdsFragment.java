@@ -96,7 +96,6 @@ public class MyAdsFragment extends Fragment implements MyAdsAdapater.Communicato
 
             if(Integer.parseInt(v.getTag().toString())==0){
 
-                Log.i("MYADS","DELETE");
                 new PActiveRunDaoImpl().deleteAllRunnerByRun(run.getId());
                 new ActiveRunDaoImpl().deleteActiveRun(run.getId());
                 new RunDaoImpl().deleteRun(run.getId());

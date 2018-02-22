@@ -213,9 +213,11 @@ public class MyAdsAdapater extends ArrayAdapter<ActiveRun> {
     }
 
     public interface Communicator{
+
         public void respondDetailRun(int position);
         public void respondEdit(int position);
         public void respondConfirmDelete(ActiveRun runtag);
+
     }
 
 }

@@ -190,9 +190,12 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
             distancetw = (TextView) v.findViewById(R.id.distance_tw);
             durationtw.setText(route.duration.text);
             distancetw.setText(" / " + route.distance.text);
-            mMap.addMarker(new MarkerOptions().title("Ti trovi qui").position(route.startLocation));
 
-            Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_destination_35dp);
+            Bitmap bitmapiconsource = CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_pin_start);
+            MarkerOptions sourceoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapiconsource)).title("Ti trovi qui").position(route.startLocation);
+            mMap.addMarker(sourceoptionmarker);
+
+            Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(getActivity(),R.drawable.ic_pin_end);
             MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title(route.endAddress).position(route.endLocation);
             mMap.addMarker(destinationoptionmarker);
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(route.startLocation,route.endLocation));
