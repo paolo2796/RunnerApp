@@ -10,7 +10,6 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -18,17 +17,10 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-
 import it.unisa.runnerapp.fragments.MapFragment;
 import it.unisa.runnerapp.utils.FirebaseUtils;
 import it.unisa.runnerapp.utils.GeoUtils;
 import it.unisa.runnerapp.utils.RunnersDatabases;
-import it.unisa.runnerapp.utils.ServiceBuffer;
 
 public class LocationUpdater extends Service
 {
@@ -40,6 +32,8 @@ public class LocationUpdater extends Service
 
     private LocationListener locationListener;
     private Location         currentLocation;
+
+    private FirebaseApp locationsApp;
 
     //Keys per il recupero dei dati passati dal chiamante
     public static final String USER_ID_KEY="UserKey";
@@ -81,8 +75,18 @@ public class LocationUpdater extends Service
     @Override
     public void onCreate()
     {
-        FirebaseApp.initializeApp(this);
-        FirebaseDatabase locationDatabase = ServiceBuffer.locationsDb;
+        if(FirebaseApp.getApps(getApplicationContext()).size()==0)
+        {
+            locationsApp=FirebaseUtils.getFirebaseApp(getApplicationContext(),
+                    RunnersDatabases.USER_LOCATIONS_APP_ID,
+                    RunnersDatabases.USER_LOCATIONS_API_KEY,
+                    RunnersDatabases.USER_LOCATIONS_DB_URL,
+                    RunnersDatabases.USER_LOCATIONS_DB_NAME);
+        }
+        else
+            locationsApp=FirebaseApp.getApps(getApplicationContext()).get(0);
+
+        FirebaseDatabase locationDatabase = FirebaseUtils.connectToDatabase(locationsApp);
         DatabaseReference dr=locationDatabase.getReference(RunnersDatabases.USER_LOCATIONS_DB_ROOT);
         gFire=new GeoFire(dr);
     }
