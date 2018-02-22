@@ -144,12 +144,10 @@ public class AdActiveDetailFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-            mMap = googleMap;
-
+        mMap = googleMap;
         try{
-            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapview_direction_style_json));;
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style));;
         }
-
         catch(Resources.NotFoundException e){
             Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
         }

@@ -245,10 +245,9 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == ACTIVE_RUN_CODEREQ) {
-            if (resultCode == RESULT_OK) {
 
                 int codrun = data.getIntExtra(LiveRunActivity.LIVERUN_RUNCODE_KEY,-1);
                 int position = myadsplannedfragment.arrayadapter.getMapRunPos().get(codrun);
@@ -256,7 +255,6 @@ public class MainActivityPV extends CheckPermissionActivity implements MyAdsPlan
                 myadsplannedfragment.arrayadapter.remove(activerun);
                 myadsplannedfragment.arrayadapter.notifyDataSetChanged();
 
-            }
         }
     }
 }

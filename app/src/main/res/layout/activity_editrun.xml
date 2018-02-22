@@ -21,7 +21,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="300dp" />
 
 
     <TextView
@@ -58,8 +58,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:textSize="15sp"
-                            android:textColor="@color/tempv_celestial"
-                            android:textStyle="italic"
+                            android:textColor="@color/colorAccent"
                             android:text="data" />
 
                         <TextView
@@ -68,8 +67,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:textSize="15sp"
-                            android:textColor="@color/tempv_celestial"
-                            android:textStyle="italic"
+                            android:textColor="@color/colorAccent"
                             android:text="20:30"/>
                     </TableRow>
 
@@ -135,16 +133,16 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="80dp"
         android:layout_weight="1"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/oval_button" >
+        android:background="@color/colorAccent" >
 
         <Button
             android:id="@+id/addrun_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@null"
             android:drawableLeft="@drawable/ic_runer_30dp"

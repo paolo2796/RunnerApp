@@ -2,10 +2,13 @@ package testapp.com.runnerapp;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -82,7 +87,9 @@ public class EditRunActivity extends AppCompatActivity implements OnMapReadyCall
         datestart_tw.setText(CheckUtils.convertDateToStringFormat(activerun.getStartDate()));
         starthour_tw.setText(CheckUtils.convertHMToStringFormat(activerun.getStartDate()));
         estimatedkmet.setText(String.valueOf(activerun.getEstimatedKm()));
-        estimatedtimebtn.setText(String.valueOf(activerun.getEstimatedHours()+ ":" + activerun.getEstimatedMinutes()));
+        estimatedtimebtn.setText(String.valueOf(activerun.getEstimatedHours()+ " h " + activerun.getEstimatedMinutes()) + " m");
+        estimatedtim.set(Calendar.HOUR_OF_DAY,activerun.getEstimatedHours());
+        estimatedtim.set(Calendar.MINUTE,activerun.getEstimatedMinutes());
         waypoint = activerun.getMeetingPoint();
 
 
@@ -96,8 +103,18 @@ public class EditRunActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-            this.googlemap = googleMap;
-            googleMap.addMarker(new MarkerOptions().title("Punto Incontro").position(waypoint).draggable(true));
+        this.googlemap = googleMap;
+
+        try{
+            boolean success = googlemap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));;
+        }
+        catch(Resources.NotFoundException e){
+            Log.e(MESSAGE_LOG, "Mappa non trovata: Errore: ", e);
+        }
+
+            Bitmap bitmapicon =  CheckUtils.getBitmapFromVectorDrawable(this,R.drawable.ic_pin_start);
+            MarkerOptions destinationoptionmarker= new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapicon)).title("Punto Incontro").position(waypoint).draggable(true);
+            googlemap.addMarker(destinationoptionmarker);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waypoint, 13));
             googleMap.setOnMarkerDragListener(getOnMarkerDrag());
 
@@ -134,11 +151,10 @@ public class EditRunActivity extends AppCompatActivity implements OnMapReadyCall
 
             activerun.setMeetingPoint(waypoint);
             activerun.setEstimatedKm(Double.parseDouble(estimatedkmet.getEditableText().toString()));
-            String[] stringarray = estimatedtimebtn.getText().toString().split(":");
-            int estimatedhour = Integer.parseInt(stringarray[0]);
-            int estimatedmin = Integer.parseInt(stringarray[1]);
-            activerun.setEstimatedHours(estimatedhour);
-            activerun.setEstimatedMinutes(estimatedmin);
+            int hourcale = estimatedtim.get(Calendar.HOUR_OF_DAY);
+            int mincale = estimatedtim.get(Calendar.MINUTE);
+            activerun.setEstimatedHours(hourcale);
+            activerun.setEstimatedMinutes(mincale);
             new RunDaoImpl().updateRun(activerun);
             new ActiveRunDaoImpl().updateActiveRun(activerun);
             updateRunFirebase(activerun);
@@ -172,7 +188,7 @@ public class EditRunActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void updateEstimatedTimeDisplay(){
-        estimatedtimebtn.setText(DateUtils.formatDateTime(this,estimatedtim.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME));
+        estimatedtimebtn.setText(estimatedtim.get(Calendar.HOUR_OF_DAY) + ":" + estimatedtim.get(Calendar.MINUTE));
     }
 
     private void updateRunFirebase(Run run){
