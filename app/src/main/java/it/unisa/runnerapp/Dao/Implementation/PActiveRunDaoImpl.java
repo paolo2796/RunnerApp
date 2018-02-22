@@ -217,7 +217,7 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     List<ActiveRun> activeruns = new ArrayList<ActiveRun>();
                     try {
 
-                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_time(),data_inizio))>-1 and  pca.partecipante = ? ORDER BY " + order);
+                        ps = ConnectionUtil.getConnection().prepareStatement("select * from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_timestamp(),data_inizio))>0 and  pca.partecipante = ? ORDER BY " + order);
                         ps.setString(1,nickuser);
 
                         rs = ps.executeQuery();
@@ -280,8 +280,8 @@ public class PActiveRunDaoImpl implements PActiveRunDao {
                     ActiveRun run = null;
                     try {
 
-                        String query1 ="SELECT * FROM Corse  JOIN Corse_Attive ca ON ca.corsa = Corse.id JOIN Partecipazioni_Corse_Attive pca ON pca.corsa=Corse.id WHERE Corse.id =? and Corse.id NOT IN ";
-                        String query2 = "(SELECT Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_time(),data_inizio))>-1 and  pca.partecipante = ? and pca.corsa = ? )";
+                        String query1 ="SELECT * FROM Corse  JOIN Corse_Attive ca ON ca.corsa = Corse.id JOIN Partecipazioni_Corse_Attive pca ON pca.corsa=Corse.id WHERE (timestampdiff(HOUR,current_time(),data_inizio))>0 and Corse.id =? and Corse.id NOT IN ";
+                        String query2 = "(SELECT Corse.id from Partecipazioni_Corse_Attive pca join Corse_Attive ca on pca.corsa = ca.corsa join Corse on Corse.id = ca.corsa where (timestampdiff(HOUR,current_time(),data_inizio))>0 and  pca.partecipante = ? and pca.corsa = ? )";
                         ps = ConnectionUtil.getConnection().prepareStatement(query1 + query2);
                         ps.setInt(1,codrun);
                         ps.setString(2,nickname);
