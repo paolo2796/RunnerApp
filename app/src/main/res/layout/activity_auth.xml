@@ -4,19 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background_login">
-
-
-
-
+    
     <TextView
         android:id="@+id/welcome_tw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
         android:text="Benvenuto"
         android:textColor="@android:color/white"
         android:textSize="50sp"
+        android:layout_centerHorizontal="true">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_tw"
+        android:gravity="center_horizontal"
+        android:text="Supera i tuoi limiti e conosci nuova gente"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:alpha=".7"
         android:layout_centerHorizontal="true">
     </TextView>
 

@@ -11,10 +11,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
         android:textSize="25sp"
-        android:textColor="@color/colorAccent"
-        android:text="Annuncio"/>
+        android:textColor="@color/colorAccentDark"
+        android:text="Run, meet, enjoy!"/>
 
 
     <LinearLayout
@@ -32,7 +32,7 @@
             android:minWidth="60dp"
             android:visibility="gone"
             app:indicatorName="BallPulseIndicator"
-            app:indicatorColor="@color/tempv_celestial" />
+            app:indicatorColor="@color/colorAccentDark" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapview"
@@ -50,10 +50,24 @@
         android:layout_margin="10dp">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:text="Seleziona il punto di ritrovo"
+            android:drawableLeft="@drawable/ic_add_location_black_24dp"
+            android:drawableTint="@color/colorPrimaryDark"
+            android:drawablePadding="5dp"/>
+
+        <TextView
             android:id="@+id/pointmeeting_tw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tieni premuto il marker per muoverlo." />
+            android:textColor="@color/colorPrimary"
+            android:text="Trascina il marker per muoverlo."
+            android:drawableLeft="@drawable/ic_touch_app_black_24dp"
+            android:drawableTint="@color/colorPrimaryDark"
+            android:drawablePadding="5dp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -77,9 +91,9 @@
                     android:paddingLeft="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textColor="@color/colorAccentLight"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:textAlignment="center"
-                    android:hint="Giorno"
+                    android:hint="In quale giorno vuoi correre?"
                     android:onClick="onDateClicked"/>
 
 
@@ -92,8 +106,8 @@
                     android:paddingLeft="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textColor="@color/colorAccentLight"
-                    android:hint="Ora"
-                    android:textSize="20sp"
+                    android:hint="E in quale ora?"
+                    android:textSize="15sp"
                     android:textAlignment="center"
                     android:onClick="onTimeClicked">
                 </Button>
@@ -109,8 +123,8 @@
                     android:paddingLeft="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textColor="@color/colorAccentLight"
-                    android:hint="Quanti KM vuoi fare?"
-                    android:textSize="20sp"
+                    android:hint="Quanti km vuoi fare?"
+                    android:textSize="15sp"
                     android:textAlignment="center"
                     android:inputType="numberDecimal">
                 </EditText>
@@ -125,8 +139,8 @@
                     android:paddingLeft="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textColor="@color/colorAccentLight"
-                    android:hint="In quanto tempo?"
-                    android:textSize="20sp"
+                    android:hint="Ed in quanto tempo?"
+                    android:textSize="15sp"
                     android:textAlignment="center"
                     android:onClick="onTimeEstimatedClicked">
                 </Button>
@@ -141,7 +155,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="55dp"
             android:minHeight="60dp"
             android:layout_weight="1"
             android:layout_marginBottom="5dp"
@@ -157,9 +171,10 @@
                 android:drawableLeft="@drawable/ic_runer_30dp"
                 android:gravity="center"
                 android:hint="Aggiungi"
+                android:drawablePadding="10dp"
+                android:drawableTint="@android:color/white"
                 android:textColorHint="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 android:onClick="onClickAddRun"/>
 
         </FrameLayout>

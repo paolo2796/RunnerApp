@@ -26,4 +26,5 @@
     <string name="title_activity_add_notice">AddNoticeActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="successful_ads_adding">Hai pubblicato il tuo annuncio!</string>
 </resources>

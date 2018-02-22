@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="#1bb4c6"/>
+    <solid android:color="@color/custom_dialog_background"/>
 
     <stroke android:width="3dp"
-        android:color="@android:color/white" />
+        android:color="@color/custom_dialog_background_dark" />
 
     <padding android:left="1dp"
         android:top="1dp"
